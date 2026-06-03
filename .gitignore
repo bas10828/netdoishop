@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+build
+.env
+.env*.local
+*.log
+.DS_Store
+next-env.d.ts
+
+# business secrets — NEVER commit (public repo)
+# cost prices (ราคาช่าง) live in products.json; price sheets show ราคาช่าง too
+data/products.json
+data/sheets/
