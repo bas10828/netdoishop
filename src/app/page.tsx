@@ -50,7 +50,7 @@ export default async function ShopHome() {
       price: publicPrice(r.id, r.onlineMin, r.onlineMax),
       image: deviceImage(r.model),
     }))
-    .filter((p) => p.price !== null)
+    .filter((p): p is typeof p & { price: number } => p.price !== null)
     .sort((a, b) => {
       const ca = CATEGORY_ORDER.indexOf(a.category);
       const cb = CATEGORY_ORDER.indexOf(b.category);
