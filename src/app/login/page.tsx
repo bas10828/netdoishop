@@ -1,7 +1,7 @@
 "use client";
 
-import { Suspense, useState } from "react";
-import { signIn } from "next-auth/react";
+import { Suspense, useEffect, useState } from "react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -13,6 +13,13 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // already logged in? skip the form, go straight to catalog
+  useEffect(() => {
+    getSession().then((s) => {
+      if (s) router.replace(callbackUrl);
+    });
+  }, [router, callbackUrl]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

@@ -94,7 +94,7 @@ export default function ShopClient({
               f Facebook
             </a>
             <Link
-              href="/login"
+              href="/catalog"
               className="rounded-md border border-slate-600 px-3 py-2 text-slate-300 hover:bg-slate-800"
             >
               พนักงาน
