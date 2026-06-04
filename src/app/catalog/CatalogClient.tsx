@@ -27,10 +27,12 @@ export default function CatalogClient({
   products,
   categories,
   username,
+  pendingCount,
 }: {
   products: Product[];
   categories: { key: string; label: string }[];
   username: string;
+  pendingCount: number;
 }) {
   const [items, setItems] = useState<Product[]>(products);
   const [q, setQ] = useState("");
@@ -110,6 +112,17 @@ export default function CatalogClient({
           </div>
         </Link>
         <div className="flex items-center gap-3 text-sm">
+          <Link
+            href="/catalog/orders"
+            className="relative rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
+          >
+            📋 ออเดอร์
+            {pendingCount > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">
+                {pendingCount}
+              </span>
+            )}
+          </Link>
           <Link
             href="/"
             className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"

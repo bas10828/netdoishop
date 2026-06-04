@@ -21,6 +21,7 @@ export default async function CatalogPage() {
   if (!session) redirect("/login");
 
   const products = await prisma.product.findMany();
+  const pendingCount = await prisma.order.count({ where: { status: "PENDING" } });
 
   // stable category ordering, then brand, then model
   products.sort((a, b) => {
@@ -41,6 +42,7 @@ export default async function CatalogPage() {
       products={products}
       categories={categories}
       username={session.user?.name ?? ""}
+      pendingCount={pendingCount}
     />
   );
 }

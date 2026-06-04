@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { addToCart, useCart, cartCount, cartTotal } from "@/lib/cart";
 
 // Public product. Deliberately has NO cost price and NO min/max range —
 // only a single sale price computed on the server.
@@ -35,6 +36,24 @@ export default function ShopClient({
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
   const [showLine, setShowLine] = useState(false);
+  const [justAdded, setJustAdded] = useState<number | null>(null);
+  // per-card quantity chooser (before adding to cart)
+  const [qtys, setQtys] = useState<Record<number, number>>({});
+
+  const cart = useCart();
+  const count = cartCount(cart);
+  const total = cartTotal(cart);
+
+  const qtyOf = (id: number) => qtys[id] ?? 1;
+  const setQtyOf = (id: number, v: number) =>
+    setQtys((prev) => ({ ...prev, [id]: Math.max(1, Math.floor(v) || 1) }));
+
+  const handleAdd = (p: PublicProduct) => {
+    addToCart(p, qtyOf(p.id));
+    setJustAdded(p.id);
+    setQtys((prev) => ({ ...prev, [p.id]: 1 })); // reset chooser after adding
+    setTimeout(() => setJustAdded((cur) => (cur === p.id ? null : cur)), 1500);
+  };
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -56,46 +75,58 @@ export default function ShopClient({
   return (
     <div className="min-h-screen">
       {/* header */}
-      <header className="bg-slate-900 text-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 p-4">
-          <Link href="/" className="flex items-center gap-3" title="หน้าแรก">
+      <header className="sticky top-0 z-30 bg-slate-900 text-white">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 p-3 sm:gap-3 sm:p-4">
+          <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3" title="หน้าแรก">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"
               alt="NETDOI"
-              className="h-12 w-auto rounded bg-white p-1"
+              className="h-9 w-auto rounded bg-white p-1 sm:h-12"
             />
-            <div>
-              <h1 className="text-2xl font-bold tracking-wide">NETDOI</h1>
-              <p className="text-xs text-slate-300">
+            <div className="min-w-0">
+              <h1 className="text-lg font-bold tracking-wide sm:text-2xl">NETDOI</h1>
+              <p className="hidden text-xs text-slate-300 sm:block">
                 อุปกรณ์เน็ตเวิร์ก กล้องวงจรปิด ครบวงจร · ส่งทั่วไทย · ติดตั้งแม่สาย
               </p>
             </div>
           </Link>
-          <div className="flex flex-wrap items-center gap-2 text-sm">
+          <div className="flex shrink-0 items-center gap-2 text-sm">
             <a
               href={`tel:${PHONE}`}
               className="rounded-md bg-emerald-500 px-3 py-2 font-medium hover:brightness-110"
+              aria-label="โทร"
             >
-              📞 {PHONE}
+              📞<span className="hidden sm:inline"> {PHONE}</span>
             </a>
             <button
               onClick={() => setShowLine(true)}
               className="rounded-md bg-[#06C755] px-3 py-2 font-medium hover:brightness-110"
             >
-              💬 LINE
+              💬<span className="hidden sm:inline"> LINE</span>
             </button>
             <a
               href={FB_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-md bg-[#1877F2] px-3 py-2 font-medium hover:brightness-110"
+              className="hidden rounded-md bg-[#1877F2] px-3 py-2 font-medium hover:brightness-110 sm:inline-block"
             >
               f Facebook
             </a>
             <Link
+              href="/checkout"
+              className="relative rounded-md bg-amber-500 px-3 py-2 font-medium text-slate-900 hover:brightness-110"
+            >
+              🛒<span className="hidden sm:inline"> ตะกร้า</span>
+              {count > 0 && (
+                <span className="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">
+                  {count}
+                </span>
+              )}
+            </Link>
+            <Link
               href="/catalog"
-              className="rounded-md border border-slate-600 px-3 py-2 text-slate-300 hover:bg-slate-800"
+              className="hidden rounded-md border border-slate-600 px-3 py-2 text-slate-300 hover:bg-slate-800 sm:inline-block"
             >
               พนักงาน
             </Link>
@@ -113,7 +144,7 @@ export default function ShopClient({
               setQ(e.target.value);
               setPage(1);
             }}
-            className="w-72 rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
+            className="w-full rounded-md border border-slate-300 px-3 py-2 text-base outline-none focus:border-slate-500 sm:w-72"
           />
           <select
             value={cat}
@@ -121,7 +152,7 @@ export default function ShopClient({
               setCat(e.target.value);
               setPage(1);
             }}
-            className="rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
+            className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-base outline-none focus:border-slate-500 sm:flex-none"
           >
             <option value="all">ทุกหมวด</option>
             {categories.map((c) => (
@@ -130,7 +161,7 @@ export default function ShopClient({
               </option>
             ))}
           </select>
-          <label className="flex items-center gap-1 text-sm text-slate-500">
+          <label className="hidden items-center gap-1 text-sm text-slate-500 sm:flex">
             แสดง
             <select
               value={pageSize}
@@ -173,18 +204,43 @@ export default function ShopClient({
               <div className="text-xs font-semibold text-sky-700">{p.brand}</div>
               <div className="font-bold">{p.model}</div>
               <p className="mb-3 mt-1 flex-1 text-sm text-slate-600">{p.name}</p>
-              <div className="flex items-end justify-between">
-                <span className="text-xl font-bold text-emerald-600">
-                  ฿{baht(p.price)}
-                </span>
-                <a
-                  href={LINE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-md bg-[#06C755] px-3 py-1.5 text-sm font-medium text-white hover:brightness-110"
+              <span className="text-xl font-bold text-emerald-600">
+                ฿{baht(p.price)}
+              </span>
+              <div className="mt-2 flex items-center gap-2">
+                {/* quantity chooser */}
+                <div className="flex items-center rounded-md border border-slate-300">
+                  <button
+                    onClick={() => setQtyOf(p.id, qtyOf(p.id) - 1)}
+                    className="h-9 w-9 text-lg font-bold text-slate-600 hover:bg-slate-100"
+                    aria-label="ลดจำนวน"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="number"
+                    min={1}
+                    value={qtyOf(p.id)}
+                    onChange={(e) => setQtyOf(p.id, Number(e.target.value))}
+                    className="h-9 w-10 border-x border-slate-300 text-center text-base outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                    aria-label="จำนวน"
+                  />
+                  <button
+                    onClick={() => setQtyOf(p.id, qtyOf(p.id) + 1)}
+                    className="h-9 w-9 text-lg font-bold text-slate-600 hover:bg-slate-100"
+                    aria-label="เพิ่มจำนวน"
+                  >
+                    +
+                  </button>
+                </div>
+                <button
+                  onClick={() => handleAdd(p)}
+                  className={`h-9 flex-1 rounded-md text-sm font-semibold text-white hover:brightness-110 ${
+                    justAdded === p.id ? "bg-emerald-600" : "bg-amber-500"
+                  }`}
                 >
-                  💬 สั่งซื้อ
-                </a>
+                  {justAdded === p.id ? "✓ เพิ่มแล้ว" : "🛒 ใส่ตะกร้า"}
+                </button>
               </div>
             </div>
           ))}
@@ -250,7 +306,24 @@ export default function ShopClient({
           </a>
         </div>
         NETDOI Technology · อุปกรณ์เน็ตเวิร์ก & กล้องวงจรปิด · ส่งทั่วไทย ติดตั้งโซนแม่สาย-เชียงราย
+        {count > 0 && <div className="h-20 sm:hidden" />}
       </footer>
+
+      {/* sticky cart bar — mobile only, shown when cart has items */}
+      {count > 0 && (
+        <Link
+          href="/checkout"
+          className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-amber-600 bg-amber-500 px-4 py-3 font-bold text-slate-900 shadow-lg sm:hidden"
+        >
+          <span className="flex items-center gap-2">
+            🛒 {count} ชิ้น
+            <span className="text-emerald-900">฿{baht(total)}</span>
+          </span>
+          <span className="rounded-md bg-slate-900 px-4 py-2 text-white">
+            ดูตะกร้า →
+          </span>
+        </Link>
+      )}
 
       {showLine && (
         <div

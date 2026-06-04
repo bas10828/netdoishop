@@ -34,3 +34,23 @@ model Product {
   @@unique([brand, model])
   @@index([category])
 }
+
+// Customer order submitted from the public shop. Prices/total are recomputed
+// server-side at creation (never trust the client cart snapshot). Admins move
+// it through the status workflow in the staff catalog.
+model Order {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  customerName  String   @default("")
+  customerPhone String   @default("")
+  address       String   @default("")
+  items         Json // [{ id, brand, model, name, price, qty }]
+  total         Int
+  // PENDING -> APPROVED -> SHIPPED -> DONE, or CANCELLED at any point
+  status        String   @default("PENDING")
+  note          String   @default("")
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}

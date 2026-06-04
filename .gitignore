@@ -7,6 +7,7 @@ build
 *.log
 .DS_Store
 next-env.d.ts
+*.tsbuildinfo
 
 # business secrets — NEVER commit (public repo)
 # cost prices (ราคาช่าง) live in products.json; price sheets show ราคาช่าง too
