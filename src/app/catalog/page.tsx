@@ -2,16 +2,26 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { publicPrice } from "@/lib/pricing";
+import { deviceImage } from "@/lib/deviceImage";
 import CatalogClient from "./CatalogClient";
 
 const CATEGORY_ORDER = [
   "router",
-  "camera",
+  "switch",
+  "camera-analog",
+  "camera-ip",
+  "camera-wifi",
   "nvr",
+  "dvr",
   "cable",
   "storage",
+  "monitor",
+  "satellite",
+  "access-control",
   "peripheral",
   "mobile-accessory",
+  "accessory",
 ];
 
 export const dynamic = "force-dynamic";
@@ -20,8 +30,16 @@ export default async function CatalogPage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
 
-  const products = await prisma.product.findMany();
+  const rows = await prisma.product.findMany();
   const pendingCount = await prisma.order.count({ where: { status: "PENDING" } });
+
+  // staff view (login-gated): attach the resolved product image and the
+  // effective storefront price (override, else auto within min/max).
+  const products = rows.map((r) => ({
+    ...r,
+    image: deviceImage(r.model),
+    publicPrice: publicPrice(r.id, r.onlineMin, r.onlineMax, r.publicPriceOverride),
+  }));
 
   // stable category ordering, then brand, then model
   products.sort((a, b) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { addToCart, useCart, cartCount, cartTotal } from "@/lib/cart";
 
@@ -71,6 +71,62 @@ export default function ShopClient({
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const curPage = Math.min(page, totalPages);
   const paged = filtered.slice((curPage - 1) * pageSize, curPage * pageSize);
+
+  // marker at the top of the list so paging can scroll back up to it
+  const listTopRef = useRef<HTMLDivElement>(null);
+  const firstRender = useRef(true);
+
+  // scroll back to the top of the list AFTER the new page has rendered, so the
+  // grid swap + browser scroll-anchoring don't cancel the smooth scroll
+  // (happens on big jumps like « แรก / สุดท้าย »).
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    listTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [curPage]);
+
+  const goToPage = (n: number) => {
+    setPage(Math.min(Math.max(1, n), totalPages));
+  };
+
+  const renderPager = () =>
+    totalPages <= 1 ? null : (
+      <div className="my-4 flex items-center justify-center gap-2 text-sm">
+        <button
+          onClick={() => goToPage(1)}
+          disabled={curPage === 1}
+          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
+        >
+          « แรก
+        </button>
+        <button
+          onClick={() => goToPage(curPage - 1)}
+          disabled={curPage === 1}
+          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
+        >
+          ‹ ก่อนหน้า
+        </button>
+        <span className="px-2">
+          หน้า {curPage} / {totalPages}
+        </span>
+        <button
+          onClick={() => goToPage(curPage + 1)}
+          disabled={curPage === totalPages}
+          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
+        >
+          ถัดไป ›
+        </button>
+        <button
+          onClick={() => goToPage(totalPages)}
+          disabled={curPage === totalPages}
+          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
+        >
+          สุดท้าย »
+        </button>
+      </div>
+    );
 
   return (
     <div className="min-h-screen">
@@ -182,6 +238,10 @@ export default function ShopClient({
           <span className="text-sm text-slate-500">{filtered.length} รายการ</span>
         </div>
 
+        {/* scroll target + top pager */}
+        <div ref={listTopRef} className="scroll-mt-24" />
+        {renderPager()}
+
         {/* product grid */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {paged.map((p) => (
@@ -251,41 +311,7 @@ export default function ShopClient({
           )}
         </div>
 
-        {totalPages > 1 && (
-          <div className="mt-6 flex items-center justify-center gap-2 text-sm">
-            <button
-              onClick={() => setPage(1)}
-              disabled={curPage === 1}
-              className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
-            >
-              « แรก
-            </button>
-            <button
-              onClick={() => setPage(curPage - 1)}
-              disabled={curPage === 1}
-              className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
-            >
-              ‹ ก่อนหน้า
-            </button>
-            <span className="px-2">
-              หน้า {curPage} / {totalPages}
-            </span>
-            <button
-              onClick={() => setPage(curPage + 1)}
-              disabled={curPage === totalPages}
-              className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
-            >
-              ถัดไป ›
-            </button>
-            <button
-              onClick={() => setPage(totalPages)}
-              disabled={curPage === totalPages}
-              className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
-            >
-              สุดท้าย »
-            </button>
-          </div>
-        )}
+        {renderPager()}
       </main>
 
       <footer className="mt-8 border-t border-slate-200 py-6 text-center text-sm text-slate-500">

@@ -14,11 +14,16 @@ type Product = {
   priceMember: number | null;
   onlineMin: number | null;
   onlineMax: number | null;
+  publicPriceOverride: number | null;
+  publicPrice: number | null; // effective storefront price (override ?? auto)
+  image: string;
   status: string;
   sourceFile: string;
   sheetDate: string;
   note: string;
 };
+
+type EditField = "cost" | "public";
 
 const baht = (n: number | null) =>
   n === null ? "-" : n.toLocaleString("th-TH");
@@ -38,13 +43,14 @@ export default function CatalogClient({
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string>("all");
 
-  // inline cost-price editing
+  // inline price editing — cost (ราคาทุน) or public storefront price
   const [editId, setEditId] = useState<number | null>(null);
+  const [editField, setEditField] = useState<EditField>("cost");
   const [draft, setDraft] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  // price-sheet image popup
+  // image popup (price sheet OR product photo)
   const [sheetSrc, setSheetSrc] = useState<string | null>(null);
   const [sheetName, setSheetName] = useState("");
 
@@ -61,10 +67,12 @@ export default function CatalogClient({
     });
   }, [items, q, cat]);
 
-  function startEdit(p: Product) {
+  function startEdit(p: Product, field: EditField) {
     setError("");
     setEditId(p.id);
-    setDraft(p.priceMember === null ? "" : String(p.priceMember));
+    setEditField(field);
+    const cur = field === "cost" ? p.priceMember : p.publicPriceOverride;
+    setDraft(cur === null ? "" : String(cur));
   }
 
   function cancelEdit() {
@@ -77,10 +85,15 @@ export default function CatalogClient({
     setSaving(true);
     setError("");
     try {
+      const value = draft === "" ? null : Number(draft);
+      const body =
+        editField === "cost"
+          ? { priceMember: value }
+          : { publicPriceOverride: value };
       const res = await fetch(`/api/products/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceMember: draft === "" ? null : Number(draft) }),
+        body: JSON.stringify(body),
       });
       if (!res.ok) {
         setError("บันทึกไม่สำเร็จ");
@@ -88,7 +101,11 @@ export default function CatalogClient({
         return;
       }
       const updated: Product = await res.json();
-      setItems((prev) => prev.map((p) => (p.id === id ? updated : p)));
+      // PATCH returns the bare row + effective publicPrice; keep the image
+      // (not part of the DB row) from the existing client copy.
+      setItems((prev) =>
+        prev.map((p) => (p.id === id ? { ...updated, image: p.image } : p))
+      );
       setEditId(null);
       setDraft("");
     } catch {
@@ -96,6 +113,43 @@ export default function CatalogClient({
     } finally {
       setSaving(false);
     }
+  }
+
+  // shared inline number-editor (used by both price columns)
+  function priceEditor(p: Product) {
+    return (
+      <div className="flex items-center justify-end gap-1">
+        <input
+          type="number"
+          min={0}
+          autoFocus
+          value={draft}
+          disabled={saving}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") saveEdit(p.id);
+            if (e.key === "Escape") cancelEdit();
+          }}
+          className="w-24 rounded border border-slate-400 px-2 py-1 text-right outline-none focus:border-slate-700"
+        />
+        <button
+          onClick={() => saveEdit(p.id)}
+          disabled={saving}
+          title="บันทึก"
+          className="rounded bg-emerald-600 px-2 py-1 text-white hover:bg-emerald-700 disabled:opacity-50"
+        >
+          ✓
+        </button>
+        <button
+          onClick={cancelEdit}
+          disabled={saving}
+          title="ยกเลิก"
+          className="rounded bg-slate-300 px-2 py-1 hover:bg-slate-400"
+        >
+          ✕
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -161,7 +215,8 @@ export default function CatalogClient({
         <span className="text-sm text-slate-500">{filtered.length} รายการ</span>
       </div>
       <p className="mb-3 text-xs text-slate-400">
-        💡 คลิกที่ราคาทุนเพื่อแก้ไข — ราคาออนไลน์จะคำนวณใหม่อัตโนมัติ
+        💡 คลิกราคาทุนเพื่อแก้ (ออนไลน์คำนวณใหม่อัตโนมัติ) · คลิกราคาหน้าร้านเพื่อตั้งราคาเอง
+        (เว้นว่าง = กลับไปใช้ราคาอัตโนมัติ) · คลิกรูปเพื่อขยาย
       </p>
       {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
 
@@ -169,6 +224,7 @@ export default function CatalogClient({
         <table className="w-full border-collapse text-sm">
           <thead className="bg-slate-800 text-white">
             <tr>
+              <th className="px-3 py-2 text-left">รูป</th>
               <th className="px-3 py-2 text-left">หมวด</th>
               <th className="px-3 py-2 text-left">แบรนด์</th>
               <th className="px-3 py-2 text-left">รุ่น</th>
@@ -176,6 +232,7 @@ export default function CatalogClient({
               <th className="px-3 py-2 text-right">ราคาทุน (ช่าง)</th>
               <th className="px-3 py-2 text-right">ออนไลน์ min</th>
               <th className="px-3 py-2 text-right">ออนไลน์ max</th>
+              <th className="px-3 py-2 text-right">ราคาหน้าร้าน</th>
               <th className="px-3 py-2 text-left">สถานะ</th>
               <th className="px-3 py-2 text-left">ใบราคา</th>
             </tr>
@@ -183,6 +240,19 @@ export default function CatalogClient({
           <tbody>
             {filtered.map((p) => (
               <tr key={p.id} className="border-t border-slate-100 hover:bg-slate-50">
+                <td className="px-2 py-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={p.image}
+                    alt={p.model}
+                    loading="lazy"
+                    onClick={() => {
+                      setSheetSrc(p.image);
+                      setSheetName(`${p.brand} ${p.model}`);
+                    }}
+                    className="h-12 w-12 cursor-zoom-in rounded border border-slate-200 bg-white object-contain"
+                  />
+                </td>
                 <td className="px-3 py-2 text-slate-500">{p.categoryLabel}</td>
                 <td className="px-3 py-2 font-medium">{p.brand}</td>
                 <td className="px-3 py-2">{p.model}</td>
@@ -195,41 +265,11 @@ export default function CatalogClient({
                   )}
                 </td>
                 <td className="px-3 py-2 text-right">
-                  {editId === p.id ? (
-                    <div className="flex items-center justify-end gap-1">
-                      <input
-                        type="number"
-                        min={0}
-                        autoFocus
-                        value={draft}
-                        disabled={saving}
-                        onChange={(e) => setDraft(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") saveEdit(p.id);
-                          if (e.key === "Escape") cancelEdit();
-                        }}
-                        className="w-24 rounded border border-slate-400 px-2 py-1 text-right outline-none focus:border-slate-700"
-                      />
-                      <button
-                        onClick={() => saveEdit(p.id)}
-                        disabled={saving}
-                        title="บันทึก"
-                        className="rounded bg-emerald-600 px-2 py-1 text-white hover:bg-emerald-700 disabled:opacity-50"
-                      >
-                        ✓
-                      </button>
-                      <button
-                        onClick={cancelEdit}
-                        disabled={saving}
-                        title="ยกเลิก"
-                        className="rounded bg-slate-300 px-2 py-1 hover:bg-slate-400"
-                      >
-                        ✕
-                      </button>
-                    </div>
+                  {editId === p.id && editField === "cost" ? (
+                    priceEditor(p)
                   ) : (
                     <button
-                      onClick={() => startEdit(p)}
+                      onClick={() => startEdit(p, "cost")}
                       title="คลิกเพื่อแก้ราคาทุน"
                       className="rounded px-2 py-1 font-medium hover:bg-amber-100"
                     >
@@ -242,6 +282,32 @@ export default function CatalogClient({
                 </td>
                 <td className="px-3 py-2 text-right text-emerald-700">
                   {baht(p.onlineMax)}
+                </td>
+                <td className="px-3 py-2 text-right">
+                  {editId === p.id && editField === "public" ? (
+                    priceEditor(p)
+                  ) : (
+                    <button
+                      onClick={() => startEdit(p, "public")}
+                      title={
+                        p.publicPriceOverride === null
+                          ? "ราคาอัตโนมัติ — คลิกเพื่อตั้งราคาเอง"
+                          : "ตั้งราคาเอง — คลิกเพื่อแก้ (เว้นว่าง = อัตโนมัติ)"
+                      }
+                      className={
+                        "rounded px-2 py-1 font-semibold hover:bg-sky-100 " +
+                        (p.publicPriceOverride !== null
+                          ? "text-sky-700"
+                          : "text-slate-700")
+                      }
+                    >
+                      {baht(p.publicPrice)}
+                      {p.publicPriceOverride !== null && (
+                        <span className="ml-1 text-[10px] text-sky-600">●แก้เอง</span>
+                      )}{" "}
+                      ✏️
+                    </button>
+                  )}
                 </td>
                 <td className="px-3 py-2">
                   {p.status === "SOLD OUT" ? (
@@ -271,7 +337,7 @@ export default function CatalogClient({
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={9} className="px-3 py-8 text-center text-slate-400">
+                <td colSpan={11} className="px-3 py-8 text-center text-slate-400">
                   ไม่พบรายการ
                 </td>
               </tr>

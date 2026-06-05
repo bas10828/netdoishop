@@ -57,11 +57,16 @@ export function deviceImage(model: string): string {
   //   - drop trailing "-<digits>" length variant (e.g. "US-9045-1" -> "US-9045")
   //   - both
   const slashBase = model.split("/")[0];
+  // file names can't contain "/", so the source pics replace it with "-"
+  // (e.g. model "DS-7204HGHI-M1/T" -> file "DS-7204HGHI-M1-T.png").
+  const dashed = model.replace(/\//g, "-");
   const candidates = [
     model,
+    dashed,
     slashBase,
     model.replace(/-\d+$/, ""),
     slashBase.replace(/-\d+$/, ""),
+    dashed.replace(/-\d+$/, ""),
   ];
   for (const c of candidates) {
     const f = map.get(norm(c));

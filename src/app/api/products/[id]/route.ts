@@ -2,10 +2,24 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { onlinePrices } from "@/lib/pricing";
+import { onlinePrices, publicPrice } from "@/lib/pricing";
 
-// PATCH /api/products/:id  { priceMember: number | null }
-// Updates cost price and recomputes online min/max. Login required.
+// PATCH /api/products/:id  — partial update, login required. Accepts either or
+// both of:
+//   { priceMember: number | null }         -> cost price; recomputes online min/max
+//   { publicPriceOverride: number | null }  -> exact storefront price (null = auto)
+// Returns the updated row plus the effective storefront price.
+type Prisma = typeof import("@/lib/prisma").prisma;
+type ProductUpdate = Parameters<Prisma["product"]["update"]>[0]["data"];
+
+// parse a nullable non-negative int from a request field; "" -> null
+function parsePrice(raw: unknown): number | null | undefined {
+  if (raw === null || raw === "") return null;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 0) return undefined; // invalid
+  return Math.round(n);
+}
+
 export async function PATCH(
   req: Request,
   { params }: { params: { id: string } }
@@ -26,27 +40,44 @@ export async function PATCH(
   } catch {
     return NextResponse.json({ error: "bad json" }, { status: 400 });
   }
+  const b = body as Record<string, unknown>;
 
-  const raw = (body as { priceMember?: unknown }).priceMember;
-  let priceMember: number | null;
-  if (raw === null || raw === "") {
-    priceMember = null;
-  } else {
-    const n = Number(raw);
-    if (!Number.isFinite(n) || n < 0) {
+  const data: ProductUpdate = {};
+
+  if ("priceMember" in b) {
+    const priceMember = parsePrice(b.priceMember);
+    if (priceMember === undefined) {
       return NextResponse.json({ error: "bad price" }, { status: 400 });
     }
-    priceMember = Math.round(n);
+    const { onlineMin, onlineMax } = onlinePrices(priceMember);
+    data.priceMember = priceMember;
+    data.onlineMin = onlineMin;
+    data.onlineMax = onlineMax;
   }
 
-  const { onlineMin, onlineMax } = onlinePrices(priceMember);
+  if ("publicPriceOverride" in b) {
+    const override = parsePrice(b.publicPriceOverride);
+    if (override === undefined) {
+      return NextResponse.json({ error: "bad price" }, { status: 400 });
+    }
+    data.publicPriceOverride = override;
+  }
+
+  if (Object.keys(data).length === 0) {
+    return NextResponse.json({ error: "nothing to update" }, { status: 400 });
+  }
 
   try {
-    const updated = await prisma.product.update({
-      where: { id },
-      data: { priceMember, onlineMin, onlineMax },
+    const updated = await prisma.product.update({ where: { id }, data });
+    return NextResponse.json({
+      ...updated,
+      publicPrice: publicPrice(
+        updated.id,
+        updated.onlineMin,
+        updated.onlineMax,
+        updated.publicPriceOverride
+      ),
     });
-    return NextResponse.json(updated);
   } catch {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }

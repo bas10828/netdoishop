@@ -25,6 +25,9 @@ model Product {
   priceMember   Int?
   onlineMin     Int?
   onlineMax     Int?
+  // staff-set exact storefront price. When non-null it overrides the auto price
+  // computed within [onlineMin, onlineMax]. Never derived from products.json.
+  publicPriceOverride Int?
   status        String   @default("in stock")
   sourceFile    String
   sheetDate     String

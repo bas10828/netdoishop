@@ -5,12 +5,20 @@ import ShopClient from "./ShopClient";
 
 const CATEGORY_ORDER = [
   "router",
-  "camera",
+  "switch",
+  "camera-analog",
+  "camera-ip",
+  "camera-wifi",
   "nvr",
+  "dvr",
   "cable",
   "storage",
+  "monitor",
+  "satellite",
+  "access-control",
   "peripheral",
   "mobile-accessory",
+  "accessory",
 ];
 
 export const dynamic = "force-dynamic";
@@ -35,6 +43,7 @@ export default async function ShopHome() {
       name: true,
       onlineMin: true,
       onlineMax: true,
+      publicPriceOverride: true,
     },
   });
 
@@ -47,7 +56,7 @@ export default async function ShopHome() {
       categoryLabel: r.categoryLabel,
       model: r.model,
       name: r.name,
-      price: publicPrice(r.id, r.onlineMin, r.onlineMax),
+      price: publicPrice(r.id, r.onlineMin, r.onlineMax, r.publicPriceOverride),
       image: deviceImage(r.model),
     }))
     .filter((p): p is typeof p & { price: number } => p.price !== null)

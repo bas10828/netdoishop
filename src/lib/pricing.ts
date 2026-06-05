@@ -24,8 +24,11 @@ export function onlinePrices(price: number | null): {
 export function publicPrice(
   id: number,
   min: number | null,
-  max: number | null
+  max: number | null,
+  override?: number | null
 ): number | null {
+  // staff-set exact storefront price wins, regardless of the min/max range
+  if (override !== null && override !== undefined) return override;
   if (min === null || max === null) return null;
   if (max <= min) return min;
   // cheap deterministic pseudo-random from id -> [0,1)
