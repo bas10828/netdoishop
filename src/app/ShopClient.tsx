@@ -20,6 +20,21 @@ type PublicProduct = {
 
 const baht = (n: number) => n.toLocaleString("th-TH");
 
+// brands shown first in the filter row (best sellers). Names must match the
+// brand strings in the catalog exactly. Any not present are skipped.
+const POPULAR_BRANDS = [
+  "Hikvision",
+  "Dahua",
+  "Reyee",
+  "TP-Link",
+  "TP-Link Tapo",
+  "TP-Link VIGI",
+  "Imou",
+  "EZVIZ",
+  "Huawei",
+  "UNV",
+];
+
 const FB_URL = "https://www.facebook.com/profile.php?id=100087740514812";
 const LINE_ID = "@ndtech";
 const LINE_URL = "https://line.me/R/ti/p/%40ndtech";
@@ -34,6 +49,7 @@ export default function ShopClient({
 }) {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("all");
+  const [brand, setBrand] = useState("all");
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
   const [showLine, setShowLine] = useState(false);
@@ -56,10 +72,20 @@ export default function ShopClient({
     setTimeout(() => setJustAdded((cur) => (cur === p.id ? null : cur)), 1500);
   };
 
+  // brand chips list — popular brands first (in this order), the rest A-Z,
+  // "all" always leading.
+  const brands = useMemo(() => {
+    const present = new Set(products.map((p) => p.brand));
+    const popular = POPULAR_BRANDS.filter((b) => present.has(b));
+    const rest = [...present].filter((b) => !popular.includes(b)).sort();
+    return ["all", ...popular, ...rest];
+  }, [products]);
+
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
     return products.filter((p) => {
       if (cat !== "all" && p.category !== cat) return false;
+      if (brand !== "all" && p.brand !== brand) return false;
       if (!term) return true;
       return (
         p.brand.toLowerCase().includes(term) ||
@@ -67,7 +93,7 @@ export default function ShopClient({
         p.name.toLowerCase().includes(term)
       );
     });
-  }, [products, q, cat]);
+  }, [products, q, cat, brand]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const curPage = Math.min(page, totalPages);
@@ -237,6 +263,26 @@ export default function ShopClient({
             /หน้า
           </label>
           <span className="text-sm text-slate-500">{filtered.length} รายการ</span>
+        </div>
+
+        {/* brand filter chips */}
+        <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
+          {brands.map((b) => (
+            <button
+              key={b}
+              onClick={() => {
+                setBrand(b);
+                setPage(1);
+              }}
+              className={`shrink-0 rounded-full border px-3 py-1 text-sm ${
+                brand === b
+                  ? "border-sky-600 bg-sky-600 text-white"
+                  : "border-slate-300 hover:border-slate-400"
+              }`}
+            >
+              {b === "all" ? "ทุกแบรนด์" : b}
+            </button>
+          ))}
         </div>
 
         {/* scroll target + top pager */}
