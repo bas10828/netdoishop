@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { publicPrice } from "@/lib/pricing";
 import { deviceImage } from "@/lib/deviceImage";
+import { productSlug } from "@/lib/seo";
 import ShopClient from "./ShopClient";
 
 const CATEGORY_ORDER = [
@@ -18,6 +19,7 @@ const CATEGORY_ORDER = [
   "access-control",
   "peripheral",
   "mobile-accessory",
+  "power",
   "accessory",
 ];
 
@@ -57,7 +59,8 @@ export default async function ShopHome() {
       model: r.model,
       name: r.name,
       price: publicPrice(r.id, r.onlineMin, r.onlineMax, r.publicPriceOverride),
-      image: deviceImage(r.model),
+      image: deviceImage(r.model, r.brand),
+      slug: productSlug(r),
     }))
     .filter((p): p is typeof p & { price: number } => p.price !== null)
     .sort((a, b) => {

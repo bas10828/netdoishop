@@ -15,6 +15,7 @@ type PublicProduct = {
   name: string;
   price: number;
   image: string;
+  slug: string;
 };
 
 const baht = (n: number) => n.toLocaleString("th-TH");
@@ -249,21 +250,24 @@ export default function ShopClient({
               key={p.id}
               className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md"
             >
-              <div className="mb-3 flex h-36 items-center justify-center rounded bg-slate-50 p-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={p.image}
-                  alt={p.model}
-                  loading="lazy"
-                  className="max-h-full max-w-full object-contain"
-                />
-              </div>
-              <span className="mb-1 inline-block w-fit rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
-                {p.categoryLabel}
-              </span>
-              <div className="text-xs font-semibold text-sky-700">{p.brand}</div>
-              <div className="font-bold">{p.model}</div>
-              <p className="mb-3 mt-1 flex-1 text-sm text-slate-600">{p.name}</p>
+              <Link href={`/product/${p.slug}`} className="group block">
+                <div className="mb-3 flex h-36 items-center justify-center rounded bg-slate-50 p-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={p.image}
+                    alt={p.model}
+                    loading="lazy"
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+                <span className="mb-1 inline-block w-fit rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
+                  {p.categoryLabel}
+                </span>
+                <div className="text-xs font-semibold text-sky-700">{p.brand}</div>
+                <div className="font-bold group-hover:text-sky-700">{p.model}</div>
+                <p className="mt-1 text-sm text-slate-600">{p.name}</p>
+              </Link>
+              <div className="mb-3 mt-1 flex-1" />
               <span className="text-xl font-bold text-emerald-600">
                 ฿{baht(p.price)}
               </span>

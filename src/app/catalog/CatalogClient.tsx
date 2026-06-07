@@ -49,6 +49,7 @@ export default function CatalogClient({
   const [draft, setDraft] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [togglingId, setTogglingId] = useState<number | null>(null);
 
   // image popup (price sheet OR product photo)
   const [sheetSrc, setSheetSrc] = useState<string | null>(null);
@@ -112,6 +113,32 @@ export default function CatalogClient({
       setError("เชื่อมต่อไม่ได้");
     } finally {
       setSaving(false);
+    }
+  }
+
+  // toggle stock state (พร้อมขาย <-> SOLD OUT) when restocking / selling out
+  async function toggleStatus(p: Product) {
+    const next = p.status === "SOLD OUT" ? "in stock" : "SOLD OUT";
+    setTogglingId(p.id);
+    setError("");
+    try {
+      const res = await fetch(`/api/products/${p.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: next }),
+      });
+      if (!res.ok) {
+        setError("เปลี่ยนสถานะไม่สำเร็จ");
+        return;
+      }
+      const updated: Product = await res.json();
+      setItems((prev) =>
+        prev.map((x) => (x.id === p.id ? { ...updated, image: x.image } : x))
+      );
+    } catch {
+      setError("เชื่อมต่อไม่ได้");
+    } finally {
+      setTogglingId(null);
     }
   }
 
@@ -216,7 +243,7 @@ export default function CatalogClient({
       </div>
       <p className="mb-3 text-xs text-slate-400">
         💡 คลิกราคาทุนเพื่อแก้ (ออนไลน์คำนวณใหม่อัตโนมัติ) · คลิกราคาหน้าร้านเพื่อตั้งราคาเอง
-        (เว้นว่าง = กลับไปใช้ราคาอัตโนมัติ) · คลิกรูปเพื่อขยาย
+        (เว้นว่าง = กลับไปใช้ราคาอัตโนมัติ) · คลิกป้ายสถานะเพื่อสลับ พร้อมขาย ⇄ SOLD OUT · คลิกรูปเพื่อขยาย
       </p>
       {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
 
@@ -310,15 +337,23 @@ export default function CatalogClient({
                   )}
                 </td>
                 <td className="px-3 py-2">
-                  {p.status === "SOLD OUT" ? (
-                    <span className="rounded bg-red-100 px-2 py-0.5 text-xs text-red-700">
-                      SOLD OUT
-                    </span>
-                  ) : (
-                    <span className="rounded bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700">
-                      พร้อมขาย
-                    </span>
-                  )}
+                  <button
+                    onClick={() => toggleStatus(p)}
+                    disabled={togglingId === p.id}
+                    title="คลิกเพื่อสลับสถานะ (พร้อมขาย ↔ SOLD OUT)"
+                    className={
+                      "rounded px-2 py-0.5 text-xs hover:ring-2 hover:ring-offset-1 disabled:opacity-50 " +
+                      (p.status === "SOLD OUT"
+                        ? "bg-red-100 text-red-700 hover:ring-red-300"
+                        : "bg-emerald-100 text-emerald-700 hover:ring-emerald-300")
+                    }
+                  >
+                    {togglingId === p.id
+                      ? "…"
+                      : p.status === "SOLD OUT"
+                      ? "SOLD OUT ⇄"
+                      : "พร้อมขาย ⇄"}
+                  </button>
                 </td>
                 <td className="px-3 py-2 text-xs">
                   <button

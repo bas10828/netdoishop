@@ -21,6 +21,7 @@ const CATEGORY_ORDER = [
   "access-control",
   "peripheral",
   "mobile-accessory",
+  "power",
   "accessory",
 ];
 
@@ -37,7 +38,7 @@ export default async function CatalogPage() {
   // effective storefront price (override, else auto within min/max).
   const products = rows.map((r) => ({
     ...r,
-    image: deviceImage(r.model),
+    image: deviceImage(r.model, r.brand),
     publicPrice: publicPrice(r.id, r.onlineMin, r.onlineMax, r.publicPriceOverride),
   }));
 

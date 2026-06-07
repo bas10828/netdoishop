@@ -5,6 +5,35 @@ export const SITE_URL = (
 
 export const SITE_NAME = "NETDOI Technology";
 
+// URL-safe slug from arbitrary text. Keeps a-z0-9 and Thai chars; everything
+// else collapses to a single "-". (model strings carry "/", spaces, "()", ".").
+export function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9฀-๿]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+// Product detail slug = decorative "brand-model" + the numeric id as the final
+// segment. The id is the source of truth on lookup (idFromSlug); the prefix is
+// for humans/SEO only, so any prefix resolves to the same product and the page's
+// canonical points back at this exact form.
+export function productSlug(p: {
+  brand: string;
+  model: string;
+  id: number;
+}): string {
+  return `${slugify(`${p.brand}-${p.model}`)}-${p.id}`;
+}
+
+// Pull the product id back out of a slug (last "-" segment). Returns null for a
+// malformed slug so callers can 404 instead of querying with NaN.
+export function idFromSlug(slug: string): number | null {
+  const last = slug.split("-").pop();
+  const n = Number(last);
+  return Number.isInteger(n) && n > 0 ? n : null;
+}
+
 // Business contact / NAP — keep in sync with ShopClient.tsx footer.
 export const BUSINESS = {
   name: SITE_NAME,

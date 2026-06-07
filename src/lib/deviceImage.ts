@@ -8,8 +8,8 @@ const DEVICES_DIR = join(process.cwd(), "public", "devices");
 const norm = (s: string) => s.toLowerCase().replace(/[()\s]/g, "");
 
 // supported image extensions, in preference order (png first for transparency)
-const EXTS = [".png", ".jpg", ".jpeg", ".webp", ".jfif"];
-const extRe = /\.(png|jpe?g|webp|jfif)$/i;
+const EXTS = [".png", ".jpg", ".jpeg", ".webp", ".jfif", ".avif"];
+const extRe = /\.(png|jpe?g|webp|jfif|avif)$/i;
 
 let cache: Map<string, string> | null = null;
 
@@ -49,7 +49,7 @@ function getMap(): Map<string, string> {
   return m;
 }
 
-export function deviceImage(model: string): string {
+export function deviceImage(model: string, brand?: string): string {
   const map = getMap();
   // try several candidate names, in order:
   //   - exact
@@ -60,7 +60,7 @@ export function deviceImage(model: string): string {
   // file names can't contain "/", so the source pics replace it with "-"
   // (e.g. model "DS-7204HGHI-M1/T" -> file "DS-7204HGHI-M1-T.png").
   const dashed = model.replace(/\//g, "-");
-  const candidates = [
+  const base = [
     model,
     dashed,
     slashBase,
@@ -68,6 +68,15 @@ export function deviceImage(model: string): string {
     slashBase.replace(/-\d+$/, ""),
     dashed.replace(/-\d+$/, ""),
   ];
+  // drop a trailing parenthetical qualifier that the file omits, e.g.
+  // model "Adapter 12V 3.2A (หัวกล้อง)" -> file "Adapter 12V 3.2A.jpg".
+  // low priority (pushed last) so an exact "(...)" file still wins.
+  const parenless = model.replace(/\s*\([^)]*\)\s*$/, "");
+  if (parenless !== model) base.push(parenless);
+  // many source files glue the brand onto the model with no separator
+  // (e.g. brand "Dahua" + model "DH-HAC-..." -> file "DahuaDH-HAC-...png").
+  // try each candidate again with the brand prepended.
+  const candidates = brand ? base.concat(base.map((c) => brand + c)) : base;
   for (const c of candidates) {
     const f = map.get(norm(c));
     if (f) return `/devices/${f}`;

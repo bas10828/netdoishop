@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { onlinePrices, publicPrice } from "@/lib/pricing";
+import { productSlug } from "@/lib/seo";
 
 // PATCH /api/products/:id  — partial update, login required. Accepts either or
 // both of:
@@ -63,12 +65,23 @@ export async function PATCH(
     data.publicPriceOverride = override;
   }
 
+  if ("status" in b) {
+    // staff toggles stock state when restocking / selling out.
+    // Only the two known states are allowed.
+    if (b.status !== "in stock" && b.status !== "SOLD OUT") {
+      return NextResponse.json({ error: "bad status" }, { status: 400 });
+    }
+    data.status = b.status;
+  }
+
   if (Object.keys(data).length === 0) {
     return NextResponse.json({ error: "nothing to update" }, { status: 400 });
   }
 
   try {
     const updated = await prisma.product.update({ where: { id }, data });
+    // the cached ISR detail page must reflect the new price/stock immediately
+    revalidatePath(`/product/${productSlug(updated)}`);
     return NextResponse.json({
       ...updated,
       publicPrice: publicPrice(
