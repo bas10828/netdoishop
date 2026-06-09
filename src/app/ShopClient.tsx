@@ -16,6 +16,7 @@ type PublicProduct = {
   price: number;
   image: string;
   slug: string;
+  viewCount: number;
 };
 
 const baht = (n: number) => n.toLocaleString("th-TH");
@@ -313,6 +314,9 @@ export default function ShopClient({
                 <div className="font-bold group-hover:text-sky-700">{p.model}</div>
                 <p className="mt-1 text-sm text-slate-600">{p.name}</p>
               </Link>
+              <div className="mt-1 text-xs text-slate-400">
+                👁 เข้าชม {baht(p.viewCount)} ครั้ง
+              </div>
               <div className="mb-3 mt-1 flex-1" />
               <span className="text-xl font-bold text-emerald-600">
                 ฿{baht(p.price)}

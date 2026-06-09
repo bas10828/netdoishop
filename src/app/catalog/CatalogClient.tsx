@@ -17,6 +17,7 @@ type Product = {
   publicPriceOverride: number | null;
   publicPrice: number | null; // effective storefront price (override ?? auto)
   image: string;
+  viewCount: number;
   status: string;
   sourceFile: string;
   sheetDate: string;
@@ -260,6 +261,7 @@ export default function CatalogClient({
               <th className="px-3 py-2 text-right">ออนไลน์ min</th>
               <th className="px-3 py-2 text-right">ออนไลน์ max</th>
               <th className="px-3 py-2 text-right">ราคาหน้าร้าน</th>
+              <th className="px-3 py-2 text-right">เข้าชม</th>
               <th className="px-3 py-2 text-left">สถานะ</th>
               <th className="px-3 py-2 text-left">ใบราคา</th>
             </tr>
@@ -335,6 +337,9 @@ export default function CatalogClient({
                       ✏️
                     </button>
                   )}
+                </td>
+                <td className="px-3 py-2 text-right text-slate-500">
+                  👁 {baht(p.viewCount)}
                 </td>
                 <td className="px-3 py-2">
                   <button

@@ -46,6 +46,7 @@ export default async function ShopHome() {
       onlineMin: true,
       onlineMax: true,
       publicPriceOverride: true,
+      viewCount: true,
     },
   });
 
@@ -61,6 +62,7 @@ export default async function ShopHome() {
       price: publicPrice(r.id, r.onlineMin, r.onlineMax, r.publicPriceOverride),
       image: deviceImage(r.model, r.brand),
       slug: productSlug(r),
+      viewCount: r.viewCount,
     }))
     .filter((p): p is typeof p & { price: number } => p.price !== null)
     .sort((a, b) => {

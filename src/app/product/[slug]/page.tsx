@@ -6,6 +6,7 @@ import { publicPrice } from "@/lib/pricing";
 import { deviceImage } from "@/lib/deviceImage";
 import { SITE_URL, SITE_NAME, productSlug, idFromSlug } from "@/lib/seo";
 import ProductActions from "./ProductActions";
+import ViewCounter from "./ViewCounter";
 
 // ISR: detail pages are cached and refreshed at most hourly. A staff price
 // edit (publicPriceOverride) also revalidates this path on demand via the
@@ -24,6 +25,7 @@ const PUBLIC_SELECT = {
   onlineMax: true,
   publicPriceOverride: true,
   status: true,
+  viewCount: true,
 } as const;
 
 const baht = (n: number) => n.toLocaleString("th-TH");
@@ -53,6 +55,7 @@ async function getProduct(slug: string) {
     name: r.name,
     price, // the ONLY price that may reach the client / structured data
     image: deviceImage(r.model, r.brand),
+    viewCount: r.viewCount,
   };
 }
 
@@ -210,6 +213,10 @@ export default async function ProductPage({
             <div className="text-sm font-semibold text-sky-700">{p.brand}</div>
             <h1 className="text-2xl font-bold">{p.model}</h1>
             <p className="mt-2 text-slate-600">{p.name}</p>
+
+            <div className="mt-2">
+              <ViewCounter productId={p.id} initial={p.viewCount} />
+            </div>
 
             <div className="my-5 text-3xl font-bold text-emerald-600">
               ฿{baht(p.price)}
