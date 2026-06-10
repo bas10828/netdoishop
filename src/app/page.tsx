@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { publicPrice } from "@/lib/pricing";
 import { deviceImage } from "@/lib/deviceImage";
-import { productSlug } from "@/lib/seo";
+import { productSlug, SITE_URL } from "@/lib/seo";
 import ShopClient from "./ShopClient";
 
 const CATEGORY_ORDER = [
@@ -78,5 +78,5 @@ export default async function ShopHome() {
     return label ? { key, label } : null;
   }).filter(Boolean) as { key: string; label: string }[];
 
-  return <ShopClient products={products} categories={categories} />;
+  return <ShopClient products={products} categories={categories} siteUrl={SITE_URL} />;
 }

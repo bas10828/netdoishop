@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { addToCart, useCart, cartCount, cartTotal } from "@/lib/cart";
 import ShareButton from "@/components/ShareButton";
-import { SITE_URL } from "@/lib/seo";
 
 // Public product. Deliberately has NO cost price and NO min/max range —
 // only a single sale price computed on the server.
@@ -46,9 +45,11 @@ const PHONE = "052029550";
 export default function ShopClient({
   products,
   categories,
+  siteUrl,
 }: {
   products: PublicProduct[];
   categories: { key: string; label: string }[];
+  siteUrl: string;
 }) {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("all");
@@ -358,7 +359,7 @@ export default function ShopClient({
                   {justAdded === p.id ? "✓ เพิ่มแล้ว" : "🛒 ใส่ตะกร้า"}
                 </button>
                 <ShareButton
-                  url={`${SITE_URL}/product/${p.slug}`}
+                  url={`${siteUrl}/product/${p.slug}`}
                   title={`${p.brand} ${p.model}`}
                   text={`${p.brand} ${p.model} — ${p.name}`}
                   size="sm"
