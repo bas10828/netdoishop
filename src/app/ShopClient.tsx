@@ -300,7 +300,12 @@ export default function ShopClient({
               key={p.id}
               className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md"
             >
-              <Link href={`/product/${p.slug}`} className="group block">
+              <Link
+                href={`/product/${p.slug}`}
+                target="_blank"
+                rel="noopener"
+                className="group block"
+              >
                 <div className="mb-3 flex h-36 items-center justify-center rounded bg-slate-50 p-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img

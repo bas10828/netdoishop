@@ -4,6 +4,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { publicPrice } from "@/lib/pricing";
 import { deviceImage } from "@/lib/deviceImage";
+import { productDoc } from "@/data/descriptions";
 import { SITE_URL, SITE_NAME, productSlug, idFromSlug } from "@/lib/seo";
 import ProductActions from "./ProductActions";
 import ViewCounter from "./ViewCounter";
@@ -56,6 +57,7 @@ async function getProduct(slug: string) {
     price, // the ONLY price that may reach the client / structured data
     image: deviceImage(r.model, r.brand),
     viewCount: r.viewCount,
+    doc: productDoc(r.brand, r.model),
   };
 }
 
@@ -116,7 +118,7 @@ export default async function ProductPage({
     "@context": "https://schema.org",
     "@type": "Product",
     name: `${p.brand} ${p.model}`,
-    description: p.name,
+    description: p.doc ? `${p.name}. ${p.doc.body.replace(/\n+/g, " ")}` : p.name,
     sku: p.model,
     mpn: p.model,
     category: p.categoryLabel,
@@ -213,6 +215,11 @@ export default async function ProductPage({
             <div className="text-sm font-semibold text-sky-700">{p.brand}</div>
             <h1 className="text-2xl font-bold">{p.model}</h1>
             <p className="mt-2 text-slate-600">{p.name}</p>
+            {p.doc && (
+              <p className="mt-2 text-sm font-medium text-slate-700">
+                {p.doc.tagline}
+              </p>
+            )}
 
             <div className="mt-2">
               <ViewCounter productId={p.id} initial={p.viewCount} />
@@ -254,6 +261,36 @@ export default async function ProductPage({
             </div>
           </div>
         </div>
+
+        {/* description + spec sheet (static content map; absent for products
+            without sourced copy, so the section just doesn't render) */}
+        {p.doc && (
+          <section className="mt-6 grid gap-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2 sm:p-6">
+            <div>
+              <h2 className="mb-3 text-lg font-bold text-slate-800">
+                รายละเอียดสินค้า
+              </h2>
+              {p.doc.body.split("\n\n").map((para, i) => (
+                <p key={i} className="mb-3 text-sm leading-relaxed text-slate-600">
+                  {para}
+                </p>
+              ))}
+            </div>
+            <div>
+              <h2 className="mb-3 text-lg font-bold text-slate-800">
+                สเปคสินค้า
+              </h2>
+              <ul className="space-y-2">
+                {p.doc.specs.map((s, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-slate-700">
+                    <span className="mt-0.5 text-emerald-600">✓</span>
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );
