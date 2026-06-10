@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { addToCart, useCart, cartCount } from "@/lib/cart";
+import ShareButton from "@/components/ShareButton";
 
 // Public, cost-free product snapshot — same shape the cart stores.
 type ActionProduct = {
@@ -14,7 +15,13 @@ type ActionProduct = {
   image: string;
 };
 
-export default function ProductActions({ product }: { product: ActionProduct }) {
+export default function ProductActions({
+  product,
+  shareUrl,
+}: {
+  product: ActionProduct;
+  shareUrl: string;
+}) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const count = cartCount(useCart());
@@ -73,6 +80,12 @@ export default function ProductActions({ product }: { product: ActionProduct }) 
           </span>
         )}
       </Link>
+      <ShareButton
+        url={shareUrl}
+        title={`${product.brand} ${product.model}`}
+        text={`${product.brand} ${product.model} — ${product.name}`}
+        size="md"
+      />
     </div>
   );
 }
