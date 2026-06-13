@@ -20,6 +20,7 @@ const CATEGORY_ORDER = [
   "peripheral",
   "mobile-accessory",
   "power",
+  "smart-home",
   "accessory",
 ];
 
