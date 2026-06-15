@@ -62,15 +62,19 @@ async function getProduct(slug: string) {
 }
 
 export async function generateStaticParams() {
-  const rows = await prisma.product.findMany({
-    where: {
-      status: { not: "SOLD OUT" },
-      onlineMin: { not: null },
-      onlineMax: { not: null },
-    },
-    select: { id: true, brand: true, model: true },
-  });
-  return rows.map((r) => ({ slug: productSlug(r) }));
+  try {
+    const rows = await prisma.product.findMany({
+      where: {
+        status: { not: "SOLD OUT" },
+        onlineMin: { not: null },
+        onlineMax: { not: null },
+      },
+      select: { id: true, brand: true, model: true },
+    });
+    return rows.map((r) => ({ slug: productSlug(r) }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({

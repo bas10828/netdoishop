@@ -1,23 +1,14 @@
-# Deploys ONLY this app. Joins the existing postgres network as an external
-# network — it does NOT define or touch postgres_db, nginx, cloudflared, or any
-# other container already on the host.
 services:
-  netdoi-money-web:
+  netdoishop_app:
     build: .
-    container_name: netdoi_money_web
+    container_name: netdoishop_app
     restart: unless-stopped
-    environment:
-      # all secrets come from the host environment / .env — never hardcode here
-      DATABASE_URL: "${DATABASE_URL}"
-      NEXTAUTH_URL: "${NEXTAUTH_URL}"
-      NEXTAUTH_SECRET: "${NEXTAUTH_SECRET}"
-      SEED_ADMIN_USERNAME: "${SEED_ADMIN_USERNAME:-admin}"
-      SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD}"
-    ports:
-      - "3005:3005"
+    env_file: .env
+    expose:
+      - "3005"
     networks:
-      - postgresql_default
+      - biw_net
 
 networks:
-  postgresql_default:
+  biw_net:
     external: true
