@@ -8,6 +8,8 @@ import CatalogClient from "./CatalogClient";
 
 const CATEGORY_ORDER = [
   "router",
+  "access-point",
+  "wireless-bridge",
   "switch",
   "camera-analog",
   "camera-ip",

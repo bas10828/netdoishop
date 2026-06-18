@@ -11,13 +11,27 @@ const norm = (s: string) => s.toLowerCase().replace(/[()\s]/g, "");
 const EXTS = [".png", ".jpg", ".jpeg", ".webp", ".jfif", ".avif"];
 const extRe = /\.(png|jpe?g|webp|jfif|avif)$/i;
 
-let cache: Map<string, string> | null = null;
+// extra gallery images for a product share its base name plus a "__<n>" suffix
+// (double underscore), e.g. "US-1005SC1.png" + "US-1005SC1__2.png". The double
+// underscore is deliberately NOT "-<n>" so it never collides with the trailing
+// "-<digits>" length-variant logic below (e.g. "US-9045-1" vs "US-9045").
+const galleryRe = /__\d+$/;
 
-function getMap(): Map<string, string> {
+interface Maps {
+  // norm(model) -> primary image filename
+  byKey: Map<string, string>;
+  // norm(base without "__<n>") -> ordered list of filenames (primary first)
+  groups: Map<string, string[]>;
+}
+
+let cache: Maps | null = null;
+
+function getMaps(): Maps {
   // cache only in production; in dev re-read so newly added images show up
   // without a server restart
   if (cache && process.env.NODE_ENV === "production") return cache;
   const m = new Map<string, string>();
+  const groups = new Map<string, string[]>();
   try {
     const put = (key: string, f: string, allowOverride: boolean) => {
       const existing = m.get(key);
@@ -34,6 +48,15 @@ function getMap(): Map<string, string> {
     for (const f of readdirSync(DEVICES_DIR).sort()) {
       if (!extRe.test(f)) continue;
       const base = f.replace(extRe, "");
+      // group gallery siblings (sorted readdir -> primary "" before "__2"...)
+      const gbase = base.replace(galleryRe, "");
+      const gkey = norm(gbase);
+      const list = groups.get(gkey);
+      if (list) list.push(f);
+      else groups.set(gkey, [f]);
+      // "__<n>" files are gallery extras only; never register them as a
+      // primary lookup key (the base file is the one cards/OG resolve to).
+      if (galleryRe.test(base)) continue;
       // primary key: full filename
       put(norm(base), f, true);
       // alias: filename with a leading brand word stripped, e.g.
@@ -45,12 +68,12 @@ function getMap(): Map<string, string> {
   } catch {
     // dir missing -> everything falls back to default
   }
-  cache = m;
-  return m;
+  cache = { byKey: m, groups };
+  return cache;
 }
 
-export function deviceImage(model: string, brand?: string): string {
-  const map = getMap();
+// resolve the primary image filename (not path) for a model, or null
+function resolveFile(model: string, brand: string | undefined, map: Map<string, string>): string | null {
   // try several candidate names, in order:
   //   - exact
   //   - drop part after "/"  (e.g. "IPC-B7ED-...-EU/FSP14" -> "IPC-B7ED-...-EU")
@@ -79,7 +102,27 @@ export function deviceImage(model: string, brand?: string): string {
   const candidates = brand ? base.concat(base.map((c) => brand + c)) : base;
   for (const c of candidates) {
     const f = map.get(norm(c));
-    if (f) return `/devices/${f}`;
+    if (f) return f;
   }
-  return `/devices/default.png`;
+  return null;
+}
+
+/** Primary image path for a model (cards, OG, cart). Falls back to default.png. */
+export function deviceImage(model: string, brand?: string): string {
+  const f = resolveFile(model, brand, getMaps().byKey);
+  return f ? `/devices/${f}` : `/devices/default.png`;
+}
+
+/**
+ * Ordered gallery image paths for a model (primary first), for the detail page.
+ * Includes the primary plus any "<base>__<n>" siblings. Returns [default.png]
+ * when no image matches.
+ */
+export function deviceImages(model: string, brand?: string): string[] {
+  const { byKey, groups } = getMaps();
+  const file = resolveFile(model, brand, byKey);
+  if (!file) return ["/devices/default.png"];
+  const gkey = norm(file.replace(extRe, "").replace(galleryRe, ""));
+  const list = groups.get(gkey) ?? [file];
+  return list.map((f) => `/devices/${f}`);
 }

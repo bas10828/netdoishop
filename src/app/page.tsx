@@ -6,6 +6,8 @@ import ShopClient from "./ShopClient";
 
 const CATEGORY_ORDER = [
   "router",
+  "access-point",
+  "wireless-bridge",
   "switch",
   "camera-analog",
   "camera-ip",
