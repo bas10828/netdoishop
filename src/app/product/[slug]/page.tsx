@@ -3,11 +3,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { publicPrice } from "@/lib/pricing";
-import { deviceImage } from "@/lib/deviceImage";
+import { deviceImage, deviceImages } from "@/lib/deviceImage";
 import { productDoc } from "@/data/descriptions";
 import { SITE_URL, SITE_NAME, productSlug, idFromSlug } from "@/lib/seo";
 import ProductActions from "./ProductActions";
 import ViewCounter from "./ViewCounter";
+import Gallery from "./Gallery";
 
 // ISR: detail pages are cached and refreshed at most hourly. A staff price
 // edit (publicPriceOverride) also revalidates this path on demand via the
@@ -56,6 +57,7 @@ async function getProduct(slug: string) {
     name: r.name,
     price, // the ONLY price that may reach the client / structured data
     image: deviceImage(r.model, r.brand),
+    images: deviceImages(r.model, r.brand),
     viewCount: r.viewCount,
     doc: productDoc(r.brand, r.model),
   };
@@ -123,7 +125,7 @@ export default async function ProductPage({
     mpn: p.model,
     category: p.categoryLabel,
     brand: { "@type": "Brand", name: p.brand },
-    image: `${SITE_URL}${p.image}`,
+    image: p.images.map((i) => `${SITE_URL}${i}`),
     offers: {
       "@type": "Offer",
       url: canonicalUrl,
@@ -197,15 +199,8 @@ export default async function ProductPage({
         </nav>
 
         <div className="grid gap-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2 sm:p-6">
-          {/* image */}
-          <div className="flex h-72 items-center justify-center rounded bg-slate-50 p-4 sm:h-96">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={p.image}
-              alt={`${p.brand} ${p.model} ${p.name}`}
-              className="max-h-full max-w-full object-contain"
-            />
-          </div>
+          {/* image gallery */}
+          <Gallery images={p.images} alt={`${p.brand} ${p.model} ${p.name}`} />
 
           {/* info */}
           <div className="flex flex-col">
