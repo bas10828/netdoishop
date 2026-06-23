@@ -213,9 +213,9 @@ export default function ShopClient({
             </Link>
             <Link
               href="/catalog"
-              className="hidden rounded-md border border-slate-600 px-3 py-2 text-slate-300 hover:bg-slate-800 sm:inline-block"
+              className="rounded-md border border-slate-600 px-3 py-2 font-medium text-slate-300 hover:bg-slate-800"
             >
-              พนักงาน
+              👔<span className="hidden sm:inline"> พนักงาน</span>
             </Link>
           </div>
         </div>
