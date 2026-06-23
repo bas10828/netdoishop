@@ -19,7 +19,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3005
 
-RUN apk add --no-cache openssl && addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
+RUN apk add --no-cache openssl chromium && addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
+ENV CHROMIUM_PATH=/usr/bin/chromium-browser
 
 # Next.js standalone output
 COPY --from=builder /app/public ./public
