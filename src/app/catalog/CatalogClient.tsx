@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -78,16 +78,6 @@ export default function CatalogClient({
       );
     });
   }, [items, q, cat]);
-
-  // a filter change can hide a previously-selected row; prune so the next
-  // "generate proposal" request never silently includes an invisible item.
-  useEffect(() => {
-    const visibleIds = new Set(filtered.map((p) => p.id));
-    setSelected((prev) => {
-      const next = new Set([...prev].filter((id) => visibleIds.has(id)));
-      return next.size === prev.size ? prev : next;
-    });
-  }, [filtered]);
 
   function toggleSelected(id: number) {
     setSelected((prev) => {
@@ -458,16 +448,25 @@ export default function CatalogClient({
                   </button>
                 </td>
                 <td className="px-3 py-2 text-xs">
-                  <button
-                    onClick={() => {
-                      setSheetSrc(`/api/sheets/${p.sourceFile}`);
-                      setSheetName(`${p.sourceFile} — ${p.sheetDate}`);
-                    }}
-                    title="คลิกดูใบราคา (มีวันที่ในรูป)"
-                    className="text-sky-600 underline hover:text-sky-800"
-                  >
-                    🧾 ดูใบ
-                  </button>
+                  {p.sourceFile.toLowerCase().endsWith(".jpg") ? (
+                    <button
+                      onClick={() => {
+                        setSheetSrc(`/api/sheets/${p.sourceFile}`);
+                        setSheetName(`${p.sourceFile} — ${p.sheetDate}`);
+                      }}
+                      title="คลิกดูใบราคา (มีวันที่ในรูป)"
+                      className="text-sky-600 underline hover:text-sky-800"
+                    >
+                      🧾 ดูใบ
+                    </button>
+                  ) : (
+                    <span
+                      title="ที่มา: ไฟล์ pricelist ของผู้แทนจำหน่าย ไม่มีรูปใบราคา"
+                      className="text-slate-400"
+                    >
+                      🧾 {p.sourceFile}
+                    </span>
+                  )}
                   <div className="text-slate-400">{p.sheetDate}</div>
                 </td>
               </tr>
