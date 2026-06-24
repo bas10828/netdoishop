@@ -65,6 +65,11 @@ async function seedProducts() {
       note: p.note ?? "",
     };
 
+    // CMIT priceMember = our raw cost. SiS priceMember = SiS's own suggested
+    // resale price (build_catalog.py decides which one goes in); either way
+    // onlineMin/onlineMax apply the same multipliers on top, untouched here.
+    const supplier = p.supplier ?? "CMIT";
+
     if (!existing) {
       await prisma.product.create({
         data: {
@@ -72,6 +77,7 @@ async function seedProducts() {
           model: p.model,
           ...descriptive,
           priceMember: p.priceMember,
+          supplier,
           onlineMin: p.onlineMin,
           onlineMax: p.onlineMax,
           status: p.status,
@@ -90,6 +96,7 @@ async function seedProducts() {
         data: {
           ...descriptive,
           priceMember: p.priceMember,
+          supplier,
           onlineMin: p.onlineMin,
           onlineMax: p.onlineMax,
           status: p.status,

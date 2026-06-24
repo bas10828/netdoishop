@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { productDoc } from "@/data/descriptions";
 
 type Product = {
   id: number;
@@ -12,6 +13,7 @@ type Product = {
   model: string;
   name: string;
   priceMember: number | null;
+  supplier: string;
   onlineMin: number | null;
   onlineMax: number | null;
   publicPriceOverride: number | null;
@@ -58,7 +60,7 @@ export default function CatalogClient({
 
   // multi-select -> price-proposal generator (PDF/PNG for a customer quote)
   const [selected, setSelected] = useState<Set<number>>(new Set());
-  const [priceDisplay, setPriceDisplay] = useState<"member" | "public" | "both">("both");
+  const [priceDisplay, setPriceDisplay] = useState<"member" | "public" | "both">("public");
   const [generating, setGenerating] = useState<"pdf" | "png" | null>(null);
   const [showSummary, setShowSummary] = useState(false);
   // editable price per item for THIS document only (id -> draft string), prefilled
@@ -71,10 +73,15 @@ export default function CatalogClient({
     return items.filter((p) => {
       if (cat !== "all" && p.category !== cat) return false;
       if (!term) return true;
+      const doc = productDoc(p.brand, p.model);
+      const docText = doc
+        ? `${doc.tagline} ${doc.body} ${doc.specs.join(" ")}`.toLowerCase()
+        : "";
       return (
         p.brand.toLowerCase().includes(term) ||
         p.model.toLowerCase().includes(term) ||
-        p.name.toLowerCase().includes(term)
+        p.name.toLowerCase().includes(term) ||
+        docText.includes(term)
       );
     });
   }, [items, q, cat]);
@@ -295,7 +302,7 @@ export default function CatalogClient({
 
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <input
-          placeholder="ค้นหา แบรนด์ / รุ่น / ชื่อ..."
+          placeholder="ค้นหา แบรนด์ / รุ่น / ชื่อ / รายละเอียด..."
           value={q}
           onChange={(e) => setQ(e.target.value)}
           className="w-64 rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
@@ -379,6 +386,28 @@ export default function CatalogClient({
                       ⚠️
                     </span>
                   )}
+                  {(() => {
+                    const doc = productDoc(p.brand, p.model);
+                    if (!doc) {
+                      return (
+                        <div className="mt-0.5 text-xs text-slate-400">
+                          ไม่มีรายละเอียดหน้าร้าน
+                        </div>
+                      );
+                    }
+                    return (
+                      <details className="mt-0.5">
+                        <summary className="cursor-pointer text-xs text-sky-600 hover:text-sky-800">
+                          {doc.tagline}
+                        </summary>
+                        <ul className="mt-1 list-disc space-y-0.5 pl-4 text-xs text-slate-500">
+                          {doc.specs.map((s, i) => (
+                            <li key={i}>{s}</li>
+                          ))}
+                        </ul>
+                      </details>
+                    );
+                  })()}
                 </td>
                 <td className="px-3 py-2 text-right">
                   {editId === p.id && editField === "cost" ? (
@@ -386,9 +415,18 @@ export default function CatalogClient({
                   ) : (
                     <button
                       onClick={() => startEdit(p, "cost")}
-                      title="คลิกเพื่อแก้ราคาทุน"
+                      title={
+                        p.supplier === "SiS"
+                          ? "ราคานี้คือราคาแนะนำจาก SiS (ไม่ใช่ต้นทุนเรา) — คลิกเพื่อแก้"
+                          : "คลิกเพื่อแก้ราคาทุน"
+                      }
                       className="rounded px-2 py-1 font-medium hover:bg-amber-100"
                     >
+                      {p.supplier === "SiS" && (
+                        <span className="mr-1 rounded bg-indigo-100 px-1 text-[10px] text-indigo-700">
+                          SiS
+                        </span>
+                      )}
                       {baht(p.priceMember)} ✏️
                     </button>
                   )}

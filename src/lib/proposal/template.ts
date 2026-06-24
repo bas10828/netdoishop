@@ -4,9 +4,8 @@ import type { ProposalItem } from "./data";
 
 export const WIDTH = 900;
 export const HEADER_HEIGHT = 96;
-export const CARD_HEIGHT = 200;
+export const CARD_MIN_HEIGHT = 200;
 export const ITEMS_PER_PAGE = 5;
-const MAX_SPECS = 4;
 
 const COLOR_TEXT = "#1e2833";
 const COLOR_TAGLINE = "#2c70c9";
@@ -62,14 +61,14 @@ function pricesHtml(item: ProposalItem, priceDisplay: PriceDisplay): string {
 }
 
 function cardHtml(item: ProposalItem, priceDisplay: PriceDisplay, isPageBreak: boolean): string {
-  const specs = item.doc?.specs.slice(0, MAX_SPECS) ?? [];
+  const specs = item.doc?.specs ?? [];
   return `
     <div class="card${isPageBreak ? " page-break" : ""}">
       <img src="${imageDataUri(item)}" width="160" height="160" />
       <div class="info">
         <div class="name">${escapeHtml(item.brand)} ${escapeHtml(item.model)}</div>
         ${item.doc ? `<div class="tagline">${escapeHtml(item.doc.tagline)}</div>` : ""}
-        ${specs.map((s) => `<div class="spec">•&nbsp; ${escapeHtml(s)}</div>`).join("")}
+        ${specs.length > 0 ? `<div class="specs">${specs.map((s) => `<div class="spec">•&nbsp; ${escapeHtml(s)}</div>`).join("")}</div>` : ""}
         <div class="prices">${pricesHtml(item, priceDisplay)}</div>
       </div>
     </div>
@@ -94,15 +93,16 @@ export async function buildProposalHtml(
         .header img { height: 48px; width: auto; }
         .title { font-size: 24px; font-weight: 700; color: ${COLOR_TEXT}; }
         .card {
-          display: flex; height: ${CARD_HEIGHT}px; overflow: hidden;
+          display: flex; min-height: ${CARD_MIN_HEIGHT}px;
           border-bottom: 1px solid ${COLOR_LINE}; padding: 12px 24px;
         }
-        .card img { object-fit: contain; margin-right: 20px; }
-        .info { display: flex; flex-direction: column; flex: 1; }
-        .name { font-size: 20px; font-weight: 700; color: ${COLOR_TEXT}; }
-        .tagline { font-size: 13px; color: ${COLOR_TAGLINE}; margin-top: 4px; }
-        .spec { font-size: 12px; color: #333; margin-top: 2px; }
-        .prices { margin-top: auto; display: flex; gap: 16px; }
+        .card img { object-fit: contain; margin-right: 20px; flex-shrink: 0; }
+        .info { display: flex; flex-direction: column; flex: 1; justify-content: center; }
+        .name { font-size: 22px; font-weight: 700; color: ${COLOR_TEXT}; }
+        .tagline { font-size: 15px; color: ${COLOR_TAGLINE}; margin-top: 6px; }
+        .specs { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; margin-top: 8px; }
+        .spec { font-size: 14px; color: #333; margin-top: 3px; }
+        .prices { margin-top: 12px; display: flex; gap: 24px; }
         .price { font-size: 15px; font-weight: 700; color: ${COLOR_PRICE}; }
         .price.public { color: #1e8449; }
         .card.page-break { break-after: page; page-break-after: always; }

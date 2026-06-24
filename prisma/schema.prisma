@@ -24,6 +24,11 @@ model Product {
   model         String
   name          String
   priceMember   Int?
+  // distributor this cost/price came from — "CMIT" (priceMember = raw cost)
+  // or "SiS" (priceMember = SiS's own suggested resale price, not our cost).
+  // Drives no pricing logic by itself; onlineMin/onlineMax always apply the
+  // same multipliers to priceMember regardless of supplier.
+  supplier      String   @default("CMIT")
   onlineMin     Int?
   onlineMax     Int?
   // staff-set exact storefront price. When non-null it overrides the auto price
