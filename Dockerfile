@@ -22,13 +22,14 @@ ENV PORT=3005
 RUN apk add --no-cache openssl chromium && addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 ENV CHROMIUM_PATH=/usr/bin/chromium-browser
 
-# Next.js standalone output
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+# Next.js standalone output — chown to nextjs so runtime ISR cache writes
+# (revalidate) can update prerendered HTML on disk, not just root at build time
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Prisma client + schema + seed data (for running migrations/seed in container)
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 
 USER nextjs
 EXPOSE 3005
