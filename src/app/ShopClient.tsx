@@ -201,6 +201,13 @@ export default function ShopClient({
               f Facebook
             </a>
             <Link
+              href="/calculator"
+              className="rounded-md bg-violet-600 px-3 py-2 font-medium text-white hover:brightness-110"
+              title="คำนวณพื้นที่เก็บ CCTV"
+            >
+              📊<span className="hidden sm:inline"> คำนวณ HDD</span>
+            </Link>
+            <Link
               href="/checkout"
               className="relative rounded-md bg-amber-500 px-3 py-2 font-medium text-slate-900 hover:brightness-110"
             >
