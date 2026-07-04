@@ -64,6 +64,7 @@ export default async function CatalogPage() {
       products={products}
       categories={categories}
       username={session.user?.name ?? ""}
+      role={session.user?.role ?? "staff"}
       pendingCount={pendingCount}
     />
   );

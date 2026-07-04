@@ -9,6 +9,8 @@ import { SITE_URL, SITE_NAME, productSlug, idFromSlug } from "@/lib/seo";
 import ProductActions from "./ProductActions";
 import ViewCounter from "./ViewCounter";
 import Gallery from "./Gallery";
+import MemberPriceLine from "./MemberPriceLine";
+import MemberAuthControl from "../../MemberAuthControl";
 
 // ISR: detail pages are cached and refreshed at most hourly. A staff price
 // edit (publicPriceOverride) also revalidates this path on demand via the
@@ -181,12 +183,15 @@ export default async function ProductPage({
             />
             <span className="text-lg font-bold tracking-wide sm:text-2xl">NETDOI</span>
           </Link>
-          <Link
-            href="/"
-            className="rounded-md border border-slate-600 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
-          >
-            ← สินค้าทั้งหมด
-          </Link>
+          <div className="flex items-center gap-2 text-sm">
+            <Link
+              href="/"
+              className="rounded-md border border-slate-600 px-3 py-2 text-slate-300 hover:bg-slate-800"
+            >
+              ← สินค้าทั้งหมด
+            </Link>
+            <MemberAuthControl />
+          </div>
         </div>
       </header>
 
@@ -227,6 +232,7 @@ export default async function ProductPage({
             <div className="my-5 text-3xl font-bold text-emerald-600">
               ฿{baht(p.price)}
             </div>
+            <MemberPriceLine productId={p.id} />
 
             <ProductActions
               product={{

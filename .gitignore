@@ -13,3 +13,6 @@ next-env.d.ts
 # cost prices (ราคาช่าง) live in products.json; price sheets show ราคาช่าง too
 data/products.json
 data/sheets/
+
+# staff-uploaded sales report photos (local dev only — prod uses a Docker volume)
+public/uploads/

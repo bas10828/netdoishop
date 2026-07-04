@@ -35,11 +35,13 @@ export default function CatalogClient({
   products,
   categories,
   username,
+  role,
   pendingCount,
 }: {
   products: Product[];
   categories: { key: string; label: string }[];
   username: string;
+  role: string;
   pendingCount: number;
 }) {
   const [items, setItems] = useState<Product[]>(products);
@@ -284,6 +286,20 @@ export default function CatalogClient({
               </span>
             )}
           </Link>
+          <Link
+            href="/catalog/sales"
+            className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
+          >
+            🧾 รายงานการขาย
+          </Link>
+          {role === "admin" && (
+            <Link
+              href="/catalog/users"
+              className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
+            >
+              👤 จัดการผู้ใช้
+            </Link>
+          )}
           <Link
             href="/"
             className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"

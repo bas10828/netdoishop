@@ -6,9 +6,14 @@ services:
     env_file: .env
     expose:
       - "3005"
+    volumes:
+      - sales_uploads:/app/public/uploads/sales
     networks:
       - biw_net
 
 networks:
   biw_net:
     external: true
+
+volumes:
+  sales_uploads:

@@ -22,6 +22,11 @@ ENV PORT=3005
 RUN apk add --no-cache openssl chromium && addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 ENV CHROMIUM_PATH=/usr/bin/chromium-browser
 
+# Uploads directory must exist with nextjs ownership before the volume is
+# mounted, or Docker creates the mountpoint as root on first mount and
+# writes from the nextjs user fail.
+RUN mkdir -p /app/public/uploads/sales && chown -R nextjs:nodejs /app/public/uploads
+
 # Next.js standalone output — chown to nextjs so runtime ISR cache writes
 # (revalidate) can update prerendered HTML on disk, not just root at build time
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public

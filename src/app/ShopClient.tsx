@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { addToCart, useCart, cartCount, cartTotal } from "@/lib/cart";
 import ShareButton from "@/components/ShareButton";
+import MemberAuthControl from "./MemberAuthControl";
 
 // Public product. Deliberately has NO cost price and NO min/max range —
 // only a single sale price computed on the server.
@@ -102,6 +103,23 @@ export default function ShopClient({
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const curPage = Math.min(page, totalPages);
   const paged = filtered.slice((curPage - 1) * pageSize, curPage * pageSize);
+
+  // สมาชิกช่าง-only ราคาช่าง line, fetched client-side per visible page so
+  // the public product data/select never carries priceMember.
+  const [isMember, setIsMember] = useState(false);
+  const [memberPrices, setMemberPrices] = useState<Record<number, number>>({});
+  const pagedIdsKey = paged.map((p) => p.id).join(",");
+
+  useEffect(() => {
+    fetch("/api/member-auth/me").then((r) => setIsMember(r.ok));
+  }, []);
+
+  useEffect(() => {
+    if (!isMember || !pagedIdsKey) return;
+    fetch(`/api/member-auth/prices?ids=${pagedIdsKey}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => data && setMemberPrices((prev) => ({ ...prev, ...data.prices })));
+  }, [isMember, pagedIdsKey]);
 
   // marker at the top of the list so paging can scroll back up to it
   const listTopRef = useRef<HTMLDivElement>(null);
@@ -218,12 +236,7 @@ export default function ShopClient({
                 </span>
               )}
             </Link>
-            <Link
-              href="/catalog"
-              className="rounded-md border border-slate-600 px-3 py-2 font-medium text-slate-300 hover:bg-slate-800"
-            >
-              👔<span className="hidden sm:inline"> พนักงาน</span>
-            </Link>
+            <MemberAuthControl />
           </div>
         </div>
       </header>
@@ -336,6 +349,11 @@ export default function ShopClient({
               <span className="text-xl font-bold text-emerald-600">
                 ฿{baht(p.price)}
               </span>
+              {memberPrices[p.id] !== undefined && (
+                <span className="text-sm font-medium text-sky-700">
+                  🔧 ราคาช่าง: ฿{baht(memberPrices[p.id])}
+                </span>
+              )}
               <div className="mt-2 flex items-center gap-2">
                 {/* quantity chooser */}
                 <div className="flex items-center rounded-md border border-slate-300">

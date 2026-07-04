@@ -31,7 +31,10 @@ const BITRATE_PRESETS: { mbps: number; label: string; sub: string }[] = [
 ];
 
 const RESOLUTIONS = ["2MP", "4MP", "5MP", "8MP"];
-const CODECS = ["H.264", "H.265", "H.265+"];
+const CODECS = ["H.264", "H.265"];
+// Bitrate presets are calibrated for H.264; H.265 delivers the same
+// quality at a lower bitrate, so scale the effective bitrate accordingly.
+const CODEC_FACTORS: Record<string, number> = { "H.264": 1, "H.265": 0.5 };
 const FPS_PRESETS = ["15", "25"] as const;
 const HOURS_PRESETS = [["24", "ตลอด 24ชม."], ["12", "กลางวัน 12ชม."]] as const;
 
@@ -72,11 +75,17 @@ export default function StorageCalculatorClient({ products }: { products: Produc
   const cameras = Math.max(1, Math.floor(Number(camerasStr) || 1));
   const fps = fpsMode === "custom" ? Math.max(1, customFps) : Number(fpsMode);
   const hours = hoursMode === "custom" ? Math.max(1, Math.min(24, customHours)) : Number(hoursMode);
+  const codecFactor = CODEC_FACTORS[codec] ?? 1;
   const effectiveBitrate: number = (() => {
-    if (bitratePreset !== "custom") return bitratePreset;
-    const v = Number(customBitrateValue);
-    if (!v || v <= 0) return 0;
-    return customBitrateUnit === "Kbps" ? v / 1000 : v;
+    const base =
+      bitratePreset !== "custom"
+        ? bitratePreset
+        : (() => {
+            const v = Number(customBitrateValue);
+            if (!v || v <= 0) return 0;
+            return customBitrateUnit === "Kbps" ? v / 1000 : v;
+          })();
+    return base * codecFactor;
   })();
 
   const totalBandwidth = effectiveBitrate * cameras;
