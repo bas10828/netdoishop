@@ -3071,868 +3071,1870 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ตั้งค่า/จัดการผ่านแอป Tether",
     ],
   },
-  // ───────────────── Dahua สาย LAN ─────────────────
-  "Dahua|CAT6 UTP 305M": {
-    tagline: "สายแลน CAT6 UTP ภายในอาคาร 305 เมตรเต็มม้วน เดินเน็ต/กล้อง IP",
+
+
+  // ───────────────── Dahua — Power / Cable ─────────────────
+  "Dahua|DH-PFM321-US (12V 1A)": {
+    tagline: "adapter จ่ายไฟ 12V 1A สำหรับกล้อง CCTV และอุปกรณ์ network",
     body:
-      "สายแลน Dahua มาตรฐาน CAT6 UTP สำหรับเดินภายในอาคาร ม้วนเต็ม 305 เมตร รองรับความเร็วระดับ Gigabit เหมาะเดินเน็ต กล้องวงจรปิด IP งานติดตั้งทั่วไปในบ้าน/ออฟฟิศ",
+      "DH-PFM321-US adapter จ่ายไฟ DC 12V 1A หัว barrel jack มาตรฐาน เหมาะสำหรับกล้อง CCTV analog/IP ขนาดเล็ก และอุปกรณ์ network ที่ใช้ไฟ 12V สินค้า OEM Dahua รับประกันคุณภาพ",
     specs: [
-      "มาตรฐาน CAT6 รองรับ 10/100/1000Mbps",
-      "ใช้ภายในอาคาร (Indoor)",
-      "ความยาว 305 เมตร / กล่อง (เต็มม้วน)",
-      "เดินเน็ต/กล้อง IP งานติดตั้งทั่วไป",
+      "Output: DC 12V / 1A",
+      "หัวต่อ barrel jack มาตรฐาน",
+      "เหมาะสำหรับกล้อง CCTV analog/IP และอุปกรณ์ network",
+    ],
+  },
+  "Dahua|CAT6 UTP 305M": {
+    tagline: "สายแลน CAT6 UTP indoor กล่อง 305 เมตร คุณภาพ Dahua",
+    body:
+      "สายแลน CAT6 UTP indoor ของ Dahua บรรจุกล่อง 305 เมตร รองรับความเร็ว Gigabit Ethernet (1000Mbps) เหมาะสำหรับงาน LAN ภายในอาคาร ต่อกล้อง IP PoE หรือโครงสร้างเครือข่ายทั่วไป",
+    specs: [
+      "CAT6 UTP indoor, บรรจุกล่อง 305 เมตร",
+      "รองรับ Gigabit Ethernet (1000Mbps)",
+      "เหมาะงาน LAN ภายในอาคาร, ต่อกล้อง IP PoE",
     ],
   },
 
-  // ───────────────── Dahua กล้องระบบสาย (Analog/HDCVI) ─────────────────
+  // ───────────────── Dahua — Analog Cameras 2MP ─────────────────
   "Dahua|DH-HAC-B2A21P-U-IL-A": {
-    tagline: "กล้องระบบสาย บูลเล็ต 2MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
+    tagline: "กล้อง analog bullet 2MP Smart Dual Light สว่างสองแหล่ง ติดนอกอาคาร",
     body:
-      "DH-HAC-B2A21P-U-IL-A กล้องระบบสาย (HDCVI/Analog) ทรงกระบอก 2MP เลนส์ 2.8mm เทคโนโลยี Smart Dual Light — กลางคืนยิง IR ขาวดำปกติ พอมีคนเข้าพื้นที่จะสลับเปิดไฟวอร์มไลท์บันทึกเป็นภาพสีอัตโนมัติ ลดแสงรบกวนเทียบไฟส่องตลอดเวลา ต่อ DVR ได้เลย",
+      "DH-HAC-B2A21P-U-IL-A กล้อง HDCVI ทรงกระบอก (bullet) ความละเอียด 2MP เทคโนโลยี Smart Dual Light มีทั้งไฟ IR (ภาพขาวดำ) และ warm light (ภาพสี) สลับอัตโนมัติตามสภาวะแสง เหมาะติดนอกอาคาร หน้าร้าน ลานจอดรถ ต่อกับ DVR/XVR Dahua ดูผ่านแอป DMSS",
     specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "Smart Dual Light — สลับ IR ขาวดำ ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ลดแสงรบกวนเทียบกับไฟส่องสว่างตลอดเวลา",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HDW1200RHMP-IL-A": {
-    tagline: "กล้องระบบสาย turret 2MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-    body:
-      "DH-HAC-HDW1200RHMP-IL-A กล้องระบบสาย (HDCVI/Analog) ทรงโดมครึ่งวง (turret) 2MP เลนส์ 2.8mm Smart Dual Light สลับ IR ขาวดำเป็นภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ ติดเพดาน/ผนังในอาคารสวย ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HDW1200TLMP-IL-A": {
-    tagline: "กล้องระบบสาย turret 2MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-    body:
-      "DH-HAC-HDW1200TLMP-IL-A กล้องระบบสาย (HDCVI/Analog) ทรงโดมครึ่งวง (turret) 2MP เลนส์ 2.8mm Smart Dual Light สลับ IR ขาวดำเป็นภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ ติดเพดาน/ผนังในอาคาร ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HDW1200TP-IL-A": {
-    tagline: "กล้องระบบสาย turret 2MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-    body:
-      "DH-HAC-HDW1200TP-IL-A กล้องระบบสาย (HDCVI/Analog) ทรงโดมครึ่งวง (turret) 2MP เลนส์ 2.8mm Smart Dual Light สลับ IR ขาวดำเป็นภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ ติดเพดาน/ผนังในอาคาร ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HDW1239TP-A-LED": {
-    tagline: "กล้องระบบสาย turret 2MP Full-Color ภาพสี 24 ชม. ด้วยไฟ LED ในตัว",
-    body:
-      "DH-HAC-HDW1239TP-A-LED กล้องระบบสาย (HDCVI/Analog) ทรงโดมครึ่งวง (turret) 2MP เลนส์ 2.8mm เทคโนโลยี Full-Color — มีไฟ LED ในตัวเปิดตลอดกลางคืน เห็นภาพสีชัด 24 ชม. ไม่สลับเป็นขาวดำ ติดเพดาน/ผนังในอาคาร ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "Full-Color — มีไฟ LED ในตัว เห็นภาพสีตลอด 24 ชม.",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HDW1249XP-A-PRO": {
-    tagline: "กล้องระบบสาย turret 2MP WizColor เลนส์ F1.0 ภาพสีกลางคืนไม่ต้องพึ่งไฟ",
-    body:
-      "DH-HAC-HDW1249XP-A-PRO กล้องระบบสาย (HDCVI/Analog) ทรงโดมครึ่งวง (turret) 2MP เทคโนโลยี WizColor เลนส์รับแสง F1.0 รับแสงได้มากกว่าเลนส์ทั่วไป 2.5 เท่า เห็นภาพสีคมชัดแม้แสงน้อยมากโดยไม่ต้องเปิดไฟส่อง ติดเพดาน/ผนังในอาคาร ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ F1.0 รูรับแสงกว้าง",
-      "WizColor — ภาพสีคมชัดแสงน้อยมาก ไม่ต้องพึ่งไฟส่อง",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HDW1500TQ-IL-T": {
-    tagline: "กล้องระบบสาย turret 5MP Smart Dual Light + เสียงสองทาง คุยโต้ตอบได้",
-    body:
-      "DH-HAC-HDW1500TQ-IL-T กล้องระบบสาย (HDCVI/Analog) ทรงโดมครึ่งวง (turret) ความละเอียดสูง 5MP เลนส์ 2.8mm Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้า พร้อมไมค์+ลำโพงในตัวคุยโต้ตอบผ่านกล้องได้ ติดเพดาน/ผนัง ต่อ DVR ที่รองรับเสียง",
-    specs: [
-      "กล้องระบบสาย 5MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "เสียงสองทาง (two-way audio) คุยโต้ตอบผ่านกล้องได้",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง",
-      "ต่อกับ DVR Dahua ที่รองรับเสียง",
-    ],
-  },
-  "Dahua|DH-HAC-HDW1509TP-A-LED": {
-    tagline: "กล้องระบบสาย turret 5MP Full-Color ภาพสี 24 ชม. ความละเอียดสูง",
-    body:
-      "DH-HAC-HDW1509TP-A-LED กล้องระบบสาย (HDCVI/Analog) ทรงโดมครึ่งวง (turret) ความละเอียดสูง 5MP เลนส์ 2.8mm Full-Color มีไฟ LED ในตัว เห็นภาพสีชัด 24 ชม. ไม่สลับขาวดำ ติดเพดาน/ผนังในอาคาร ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 5MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "Full-Color — มีไฟ LED ในตัว เห็นภาพสีตลอด 24 ชม.",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HDW1549XP-A-PRO": {
-    tagline: "กล้องระบบสาย turret 5MP WizColor เลนส์ F1.0 ภาพสีกลางคืนความละเอียดสูง",
-    body:
-      "DH-HAC-HDW1549XP-A-PRO กล้องระบบสาย (HDCVI/Analog) ทรงโดมครึ่งวง (turret) ความละเอียดสูง 5MP เทคโนโลยี WizColor เลนส์ F1.0 รับแสงมาก เห็นภาพสีคมชัดแสงน้อยโดยไม่ต้องพึ่งไฟส่อง ติดเพดาน/ผนังในอาคาร ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 5MP (HDCVI/Analog), เลนส์ F1.0 รูรับแสงกว้าง",
-      "WizColor — ภาพสีคมชัดแสงน้อยมาก ไม่ต้องพึ่งไฟส่อง",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HFW1200CMP-IL-A": {
-    tagline: "กล้องระบบสาย บูลเล็ต 2MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-    body:
-      "DH-HAC-HFW1200CMP-IL-A กล้องระบบสาย (HDCVI/Analog) ทรงกระบอก 2MP เลนส์ 2.8mm Smart Dual Light สลับ IR ขาวดำเป็นภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ เหมาะงานภายนอก ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HFW1200RMP-IL-T": {
-    tagline: "กล้องระบบสาย บูลเล็ต 2MP Smart Dual Light + เสียงสองทาง คุยโต้ตอบได้",
-    body:
-      "DH-HAC-HFW1200RMP-IL-T กล้องระบบสาย (HDCVI/Analog) ทรงกระบอก 2MP เลนส์ 2.8mm Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้า พร้อมไมค์+ลำโพงในตัวคุยโต้ตอบผ่านกล้องได้ เหมาะหน้าร้าน/ประตูภายนอก ต่อ DVR ที่รองรับเสียง",
-    specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "เสียงสองทาง (two-way audio) คุยโต้ตอบผ่านกล้องได้",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "ต่อกับ DVR Dahua ที่รองรับเสียง",
+      "ความละเอียด 2MP (1920×1080), เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี) สลับอัตโนมัติ",
+      "ทรงกระบอก (bullet) สำหรับนอกอาคาร",
+      "รองรับ HDCVI/CVBS ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-HAC-HFW1209TLMP-IL-A": {
-    tagline: "กล้องระบบสาย บูลเล็ต 2MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
+    tagline: "กล้อง analog bullet 2MP Smart Dual Light ติดนอกอาคาร",
     body:
-      "DH-HAC-HFW1209TLMP-IL-A กล้องระบบสาย (HDCVI/Analog) ทรงกระบอก 2MP เลนส์ 2.8mm Smart Dual Light สลับ IR ขาวดำเป็นภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ เหมาะงานภายนอก ต่อ DVR ได้เลย",
+      "DH-HAC-HFW1209TLMP-IL-A กล้อง HDCVI ทรงกระบอก (bullet) 2MP Smart Dual Light มีไฟ IR + warm light สว่างสลับอัตโนมัติ เหมาะหน้าร้าน ลานจอด ทางเดิน ต่อ DVR/XVR ดูผ่านแอป DMSS",
     specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
     ],
   },
-  "Dahua|DH-HAC-HFW1249XP-A-PRO": {
-    tagline: "กล้องระบบสาย บูลเล็ต 2MP WizColor เลนส์ F1.0 ภาพสีกลางคืนไม่ต้องพึ่งไฟ",
+  "Dahua|DH-HAC-HFW1200CMP-IL-A": {
+    tagline: "กล้อง analog bullet 2MP Smart Dual Light ติดนอกอาคาร",
     body:
-      "DH-HAC-HFW1249XP-A-PRO กล้องระบบสาย (HDCVI/Analog) ทรงกระบอก 2MP เทคโนโลยี WizColor เลนส์ F1.0 รับแสงมากกว่าเลนส์ทั่วไป 2.5 เท่า เห็นภาพสีคมชัดแสงน้อยมากโดยไม่ต้องเปิดไฟส่อง เหมาะงานภายนอก ต่อ DVR ได้เลย",
+      "DH-HAC-HFW1200CMP-IL-A กล้อง HDCVI ทรงกระบอก (bullet) 2MP Smart Dual Light มีไฟ IR + warm light สว่างสลับอัตโนมัติ เหมาะติดนอกอาคาร หน้าบ้าน ร้านค้า ลานจอดรถ ต่อ DVR/XVR ดูผ่านแอป DMSS",
     specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ F1.0 รูรับแสงกว้าง",
-      "WizColor — ภาพสีคมชัดแสงน้อยมาก ไม่ต้องพึ่งไฟส่อง",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HFW1500CMP-IL-A": {
-    tagline: "กล้องระบบสาย บูลเล็ต 5MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-    body:
-      "DH-HAC-HFW1500CMP-IL-A กล้องระบบสาย (HDCVI/Analog) ทรงกระบอก ความละเอียดสูง 5MP เลนส์ 2.8mm Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ เหมาะงานภายนอก ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 5MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HFW1500TLMP-IL-A": {
-    tagline: "กล้องระบบสาย บูลเล็ต 5MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-    body:
-      "DH-HAC-HFW1500TLMP-IL-A กล้องระบบสาย (HDCVI/Analog) ทรงกระบอก ความละเอียดสูง 5MP เลนส์ 2.8mm Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ เหมาะงานภายนอก ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 5MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HFW1500TLMP-IL-T": {
-    tagline: "กล้องระบบสาย บูลเล็ต 5MP Smart Dual Light + เสียงสองทาง คุยโต้ตอบได้",
-    body:
-      "DH-HAC-HFW1500TLMP-IL-T กล้องระบบสาย (HDCVI/Analog) ทรงกระบอก ความละเอียดสูง 5MP เลนส์ 2.8mm Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้า พร้อมไมค์+ลำโพงในตัวคุยโต้ตอบผ่านกล้องได้ เหมาะหน้าร้าน/ประตูภายนอก ต่อ DVR ที่รองรับเสียง",
-    specs: [
-      "กล้องระบบสาย 5MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "เสียงสองทาง (two-way audio) คุยโต้ตอบผ่านกล้องได้",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "ต่อกับ DVR Dahua ที่รองรับเสียง",
-    ],
-  },
-  "Dahua|DH-HAC-HFW1509TLM-A-LED": {
-    tagline: "กล้องระบบสาย บูลเล็ต 5MP Full-Color ภาพสี 24 ชม. ความละเอียดสูง",
-    body:
-      "DH-HAC-HFW1509TLM-A-LED กล้องระบบสาย (HDCVI/Analog) ทรงกระบอก ความละเอียดสูง 5MP เลนส์ 2.8mm Full-Color มีไฟ LED ในตัว เห็นภาพสีชัด 24 ชม. ไม่สลับขาวดำ เหมาะงานภายนอก ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 5MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "Full-Color — มีไฟ LED ในตัว เห็นภาพสีตลอด 24 ชม.",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
-    ],
-  },
-  "Dahua|DH-HAC-HFW1549XP-A-PRO": {
-    tagline: "กล้องระบบสาย บูลเล็ต 5MP WizColor เลนส์ F1.0 ภาพสีกลางคืนความละเอียดสูง",
-    body:
-      "DH-HAC-HFW1549XP-A-PRO กล้องระบบสาย (HDCVI/Analog) ทรงกระบอก ความละเอียดสูง 5MP เทคโนโลยี WizColor เลนส์ F1.0 รับแสงมาก เห็นภาพสีคมชัดแสงน้อยโดยไม่ต้องพึ่งไฟส่อง เหมาะงานภายนอก ต่อ DVR ได้เลย",
-    specs: [
-      "กล้องระบบสาย 5MP (HDCVI/Analog), เลนส์ F1.0 รูรับแสงกว้าง",
-      "WizColor — ภาพสีคมชัดแสงน้อยมาก ไม่ต้องพึ่งไฟส่อง",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-HAC-T2A21P-U-IL-A": {
-    tagline: "กล้องระบบสาย turret 2MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
+    tagline: "กล้อง analog turret 2MP Smart Dual Light ติดในอาคาร",
     body:
-      "DH-HAC-T2A21P-U-IL-A กล้องระบบสาย (HDCVI/Analog) ทรงโดมครึ่งวง (turret) 2MP เลนส์ 2.8mm Smart Dual Light สลับ IR ขาวดำเป็นภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ ติดเพดาน/ผนังในอาคาร ต่อ DVR ได้เลย",
+      "DH-HAC-T2A21P-U-IL-A กล้อง HDCVI ทรงโดมครึ่งวง (turret) 2MP Smart Dual Light มีไฟ IR + warm light สว่างสลับอัตโนมัติ เหมาะติดเพดานในอาคาร ร้านค้า ออฟฟิศ ต่อ DVR/XVR ดูผ่านแอป DMSS",
     specs: [
-      "กล้องระบบสาย 2MP (HDCVI/Analog), เลนส์ 2.8mm",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ต่อกับ DVR Dahua / ระบบสายเดิมได้",
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-HAC-HDW1200TLMP-IL-A": {
+    tagline: "กล้อง analog turret 2MP Smart Dual Light ภายในอาคาร",
+    body:
+      "DH-HAC-HDW1200TLMP-IL-A กล้อง HDCVI ทรง turret 2MP Smart Dual Light มีไฟ IR + warm light สลับอัตโนมัติ เหมาะติดเพดานในร้าน ออฟฟิศ คอนโด ต่อ DVR/XVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-HAC-HDW1200TP-IL-A": {
+    tagline: "กล้อง analog turret 2MP Smart Dual Light ภายในอาคาร",
+    body:
+      "DH-HAC-HDW1200TP-IL-A กล้อง HDCVI ทรง turret 2MP Smart Dual Light ไฟ IR + warm light สลับอัตโนมัติ เหมาะติดเพดานในอาคาร ออฟฟิศ ห้างร้าน ต่อ DVR/XVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-HAC-HDW1200RHMP-IL-A": {
+    tagline: "กล้อง analog turret 2MP Smart Dual Light ภายในอาคาร",
+    body:
+      "DH-HAC-HDW1200RHMP-IL-A กล้อง HDCVI ทรง turret 2MP Smart Dual Light ไฟ IR + warm light สว่างสลับอัตโนมัติ ตัวกล้องขนาดเล็ก กระทัดรัด เหมาะติดเพดานในอาคาร ต่อ DVR/XVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "ทรง turret กะทัดรัด ติดเพดาน ภายในอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-HAC-HDW1239TP-A-LED": {
+    tagline: "กล้อง analog turret 2MP Full-Color ภาพสีตลอดคืน ภายในอาคาร",
+    body:
+      "DH-HAC-HDW1239TP-A-LED กล้อง HDCVI ทรง turret 2MP Full-Color มี LED warm light เปิดตลอด เห็นภาพสีคมชัดตลอดคืน แม้แสงน้อย เหมาะติดเพดานในร้านค้า ออฟฟิศ ที่ต้องการภาพสีชัดทั้งวันทั้งคืน ต่อ DVR/XVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "Full-Color: LED warm light เปิดตลอด ภาพสีทั้งคืน",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-HAC-HFW1249XP-A-PRO": {
+    tagline: "กล้อง analog bullet 2MP WizColor ภาพสีกลางคืน + AI detection นอกอาคาร",
+    body:
+      "DH-HAC-HFW1249XP-A-PRO กล้อง HDCVI ทรงกระบอก (bullet) 2MP WizColor เห็นภาพสีชัดกลางคืน พร้อม AI แยกแยะคน/รถ ลดแจ้งเตือนหลอก เหมาะหน้าร้าน ลานจอด ทางเข้าออก ต่อ DVR/XVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "WizColor: ภาพสีกลางคืน + AI แยกแยะคน/รถ",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-HAC-HDW1249XP-A-PRO": {
+    tagline: "กล้อง analog turret 2MP WizColor ภาพสีกลางคืน + AI detection ในอาคาร",
+    body:
+      "DH-HAC-HDW1249XP-A-PRO กล้อง HDCVI ทรง turret 2MP WizColor เห็นภาพสีชัดกลางคืน พร้อม AI แยกแยะคน/รถ เหมาะติดเพดานในอาคาร ร้านค้า ออฟฟิศ ที่ต้องการภาพสีและ AI ต่อ DVR/XVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "WizColor: ภาพสีกลางคืน + AI แยกแยะคน/รถ",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-HAC-HFW1200RMP-IL-T": {
+    tagline: "กล้อง analog bullet 2MP Smart Dual Light พูดคุยสองทาง นอกอาคาร",
+    body:
+      "DH-HAC-HFW1200RMP-IL-T กล้อง HDCVI ทรงกระบอก (bullet) 2MP Smart Dual Light มีไมค์+ลำโพงในตัว พูดคุยสองทางได้ (Two-Way Talk) เหมาะหน้าบ้าน ประตูทางเข้า ที่ต้องการสื่อสารผ่านกล้อง ต่อ DVR/XVR (รองรับ Two-Way) ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "Two-Way Talk: ไมค์ + ลำโพงในตัว",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
     ],
   },
 
-  // ───────────────── Dahua กล้อง IP / PoE ─────────────────
-  "Dahua|DH-IPC-HDW1239V-A-IL": {
-    tagline: "กล้อง IP turret 2MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า จ่ายไฟ PoE",
+  // ───────────────── Dahua — Analog Cameras 5MP ─────────────────
+  "Dahua|DH-HAC-HFW1549XP-A-PRO": {
+    tagline: "กล้อง analog bullet 5MP WizColor ภาพสีชัดกลางคืน + AI นอกอาคาร",
     body:
-      "DH-IPC-HDW1239V-A-IL กล้อง IP ทรงโดมครึ่งวง (turret) 2MP เลนส์ 2.8mm Smart Dual Light สลับ IR ขาวดำเป็นภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ ติดเพดาน/ผนังในอาคาร จ่ายไฟ PoE สายเดียว ต่อ NVR ได้เลย",
+      "DH-HAC-HFW1549XP-A-PRO กล้อง HDCVI ทรงกระบอก (bullet) 5MP WizColor ความละเอียดสูงเห็นภาพสีชัดกลางคืน AI แยกแยะคน/รถ เหมาะติดหน้าร้าน ลานจอด ทางเข้าออก ที่ต้องการรายละเอียดสูง ต่อ DVR/XVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 2MP, เลนส์ 2.8mm",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 5MP (2592×1944), เลนส์ 2.8mm",
+      "WizColor: ภาพสีกลางคืน + AI แยกแยะคน/รถ",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua (5M-N series)",
+      "ดูผ่านแอป DMSS",
     ],
   },
-  "Dahua|DH-IPC-HDW1431V-A-IL": {
-    tagline: "กล้อง IP turret 4MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า จ่ายไฟ PoE",
+  "Dahua|DH-HAC-HDW1549XP-A-PRO": {
+    tagline: "กล้อง analog turret 5MP WizColor ภาพสีชัดกลางคืน + AI ในอาคาร",
     body:
-      "DH-IPC-HDW1431V-A-IL กล้อง IP ทรงโดมครึ่งวง (turret) ความละเอียด 4MP เลนส์ 2.8mm Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ ติดเพดาน/ผนังในอาคาร จ่ายไฟ PoE สายเดียว ต่อ NVR ได้เลย",
+      "DH-HAC-HDW1549XP-A-PRO กล้อง HDCVI ทรง turret 5MP WizColor ความละเอียดสูง เห็นภาพสีชัดกลางคืน AI แยกแยะคน/รถ เหมาะติดเพดานในอาคาร ออฟฟิศ ห้างร้านที่ต้องการรายละเอียดสูง ต่อ DVR/XVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 4MP, เลนส์ 2.8mm",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 5MP, เลนส์ 2.8mm",
+      "WizColor: ภาพสีกลางคืน + AI แยกแยะคน/รถ",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua (5M-N series)",
+      "ดูผ่านแอป DMSS",
     ],
   },
-  "Dahua|DH-IPC-HDW1439V-A-IL": {
-    tagline: "กล้อง IP turret 4MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า จ่ายไฟ PoE",
+  "Dahua|DH-HAC-HDW1509TP-A-LED": {
+    tagline: "กล้อง analog turret 5MP Full-Color ภาพสีตลอดคืน ในอาคาร",
     body:
-      "DH-IPC-HDW1439V-A-IL กล้อง IP ทรงโดมครึ่งวง (turret) ความละเอียด 4MP เลนส์ 2.8mm Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ ติดเพดาน/ผนังในอาคาร จ่ายไฟ PoE สายเดียว ต่อ NVR ได้เลย",
+      "DH-HAC-HDW1509TP-A-LED กล้อง HDCVI ทรง turret 5MP Full-Color LED warm light เปิดตลอด เห็นภาพสีคมชัดทุกคืน ความละเอียด 5MP เหมาะติดเพดานในอาคาร ร้านค้า ที่ต้องการภาพสีและรายละเอียดสูง ต่อ DVR/XVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 4MP, เลนส์ 2.8mm",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 5MP, เลนส์ 2.8mm",
+      "Full-Color: LED warm light เปิดตลอด ภาพสีทั้งคืน",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua (5M-N series)",
+      "ดูผ่านแอป DMSS",
     ],
   },
-  "Dahua|DH-IPC-HDW2249TL-S-PRO": {
-    tagline: "กล้อง IP turret 2MP WizColor เลนส์ F1.0 ภาพสีกลางคืนไม่ต้องพึ่งไฟ",
+  "Dahua|DH-HAC-HFW1509TLM-A-LED": {
+    tagline: "กล้อง analog bullet 5MP Full-Color ภาพสีตลอดคืน นอกอาคาร",
     body:
-      "DH-IPC-HDW2249TL-S-PRO กล้อง IP ทรงโดมครึ่งวง (turret) 2MP เทคโนโลยี WizColor เลนส์ F1.0 รับแสงมากกว่าเลนส์ทั่วไป 2.5 เท่า เห็นภาพสีคมชัดแสงน้อยมากโดยไม่ต้องเปิดไฟส่อง ติดเพดาน/ผนังในอาคาร จ่ายไฟ PoE",
+      "DH-HAC-HFW1509TLM-A-LED กล้อง HDCVI ทรงกระบอก (bullet) 5MP Full-Color LED warm light เปิดตลอด ภาพสีคมชัดทั้งวันทั้งคืน ความละเอียดสูง 5MP เหมาะติดนอกอาคาร หน้าร้าน ทางเข้า ต่อ DVR/XVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 2MP, เลนส์ F1.0 รูรับแสงกว้าง",
-      "WizColor — ภาพสีคมชัดแสงน้อยมาก ไม่ต้องพึ่งไฟส่อง",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 5MP, เลนส์ 2.8mm",
+      "Full-Color: LED warm light เปิดตลอด ภาพสีทั้งคืน",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua (5M-N series)",
+      "ดูผ่านแอป DMSS",
     ],
   },
-  "Dahua|DH-IPC-HDW2249T-S-IL": {
-    tagline: "กล้อง IP turret 2MP WizSense AI แยกคน/รถ + Smart Dual Light ภาพสี",
+  "Dahua|DH-HAC-HFW1500TLMP-IL-T": {
+    tagline: "กล้อง analog bullet 5MP Smart Dual Light พูดคุยสองทาง นอกอาคาร",
     body:
-      "DH-IPC-HDW2249T-S-IL กล้อง IP ทรงโดมครึ่งวง (turret) 2MP เทคโนโลยี WizSense — AI แยกคน/รถแม่นยำ ลดการแจ้งเตือนเท็จจากสัตว์/ใบไม้/แสงไฟ พร้อม Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้า ติดเพดาน/ผนังในอาคาร จ่ายไฟ PoE",
+      "DH-HAC-HFW1500TLMP-IL-T กล้อง HDCVI ทรงกระบอก (bullet) 5MP Smart Dual Light มีไมค์+ลำโพงในตัว พูดคุยสองทาง (Two-Way Talk) ความละเอียดสูง เหมาะหน้าบ้าน ประตูทางเข้า ที่ต้องการสื่อสารผ่านกล้องและภาพชัด ต่อ DVR/XVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 2MP, เลนส์ 2.8mm",
-      "WizSense — AI แยกคน/รถ ลดแจ้งเตือนเท็จจากสัตว์/ใบไม้",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในอาคาร",
-      "บีบอัด H.265, จ่ายไฟ PoE",
+      "ความละเอียด 5MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "Two-Way Talk: ไมค์ + ลำโพงในตัว",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
     ],
   },
+  "Dahua|DH-HAC-HDW1500TQ-IL-T": {
+    tagline: "กล้อง analog turret 5MP Smart Dual Light พูดคุยสองทาง ในอาคาร",
+    body:
+      "DH-HAC-HDW1500TQ-IL-T กล้อง HDCVI ทรง turret 5MP Smart Dual Light มีไมค์+ลำโพงในตัว พูดคุยสองทาง (Two-Way Talk) ความละเอียดสูง เหมาะติดเพดานในอาคาร ร้านค้า ออฟฟิศ ต่อ DVR/XVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 5MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "Two-Way Talk: ไมค์ + ลำโพงในตัว",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-HAC-HFW1500CMP-IL-A": {
+    tagline: "กล้อง analog bullet 5MP Smart Dual Light ติดนอกอาคาร",
+    body:
+      "DH-HAC-HFW1500CMP-IL-A กล้อง HDCVI ทรงกระบอก (bullet) 5MP Smart Dual Light ไฟ IR + warm light สลับอัตโนมัติ ความละเอียดสูง เหมาะติดนอกอาคาร ทางเข้า หน้าร้าน ที่ต้องการภาพชัดและยืดหยุ่นเรื่องแสง ต่อ DVR/XVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 5MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี) สลับอัตโนมัติ",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-HAC-HFW1500TLMP-IL-A": {
+    tagline: "กล้อง analog bullet 5MP Smart Dual Light ติดนอกอาคาร",
+    body:
+      "DH-HAC-HFW1500TLMP-IL-A กล้อง HDCVI ทรงกระบอก (bullet) 5MP Smart Dual Light ไฟ IR + warm light สลับอัตโนมัติ ความละเอียดสูง เหมาะหน้าร้าน ลานจอด ทางเดิน นอกอาคาร ต่อ DVR/XVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 5MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี) สลับอัตโนมัติ",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "รองรับ HDCVI/CVBS, ต่อ DVR/XVR Dahua",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+
+  // ───────────────── Dahua — IP Cameras ─────────────────
   "Dahua|DH-IPC-HFW1230C-A": {
-    tagline: "กล้อง IP บูลเล็ต 2MP มาตรฐาน IR กลางคืนขาวดำ จ่ายไฟ PoE คุ้ม",
+    tagline: "กล้อง IP PoE bullet 2MP ราคาคุ้ม ติดนอกอาคาร",
     body:
-      "DH-IPC-HFW1230C-A กล้อง IP ทรงกระบอก (bullet) 2MP เลนส์ 2.8mm กลางคืนยิง IR เห็นภาพขาวดำชัด รุ่นมาตรฐานราคาประหยัด เหมาะงานทั่วไปที่ไม่จำเป็นต้องใช้ภาพสีกลางคืน จ่ายไฟ PoE สายเดียว ต่อ NVR ได้เลย",
+      "DH-IPC-HFW1230C-A กล้อง IP PoE ทรงกระบอก (bullet) 2MP IR กลางคืนเห็นภาพขาวดำชัด จ่ายไฟผ่าน PoE สายเดียว เหมาะติดนอกอาคาร หน้าบ้าน ร้านค้า ทางเข้าออก ต่อ NVR Dahua ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 2MP, เลนส์ 2.8mm",
-      "IR กลางคืน เห็นภาพขาวดำชัด",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 2MP (1920×1080), เลนส์ 2.8mm",
+      "IR กลางคืนภาพขาวดำชัด",
+      "จ่ายไฟ PoE (IEEE 802.3af), บีบอัด H.265+",
+      "ทรงกระบอก (bullet) สำหรับนอกอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-IPC-HFW1239TL1-A-IL (2.8mm)": {
-    tagline: "กล้อง IP บูลเล็ต 2MP เลนส์ 2.8mm Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
+    tagline: "กล้อง IP PoE bullet 2MP Smart Dual Light เลนส์ 2.8mm นอกอาคาร",
     body:
-      "DH-IPC-HFW1239TL1-A-IL กล้อง IP ทรงกระบอก (bullet) 2MP เลนส์มุมกว้าง 2.8mm Smart Dual Light สลับ IR ขาวดำเป็นภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ เหมาะงานภายนอก จ่ายไฟ PoE สายเดียว ต่อ NVR ได้เลย",
+      "DH-IPC-HFW1239TL1-A-IL กล้อง IP PoE ทรงกระบอก (bullet) 2MP Smart Dual Light เลนส์ 2.8mm มุมกว้าง มีไฟ IR + warm light สว่างสลับอัตโนมัติ จ่ายไฟ PoE เหมาะหน้าร้าน ลานจอด ทางเดิน ต่อ NVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 2MP, เลนส์ 2.8mm มุมกว้าง",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 2MP, เลนส์ 2.8mm (มุมกว้าง)",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-IPC-HFW1239TL1-A-IL (3.6mm)": {
-    tagline: "กล้อง IP บูลเล็ต 2MP เลนส์ 3.6mm ซูมไกลกว่า Smart Dual Light ภาพสีอัตโนมัติ",
+    tagline: "กล้อง IP PoE bullet 2MP Smart Dual Light เลนส์ 3.6mm นอกอาคาร",
     body:
-      "DH-IPC-HFW1239TL1-A-IL กล้อง IP ทรงกระบอก (bullet) 2MP เลนส์ 3.6mm มุมแคบกว่าเห็นรายละเอียดไกลกว่ารุ่น 2.8mm Smart Dual Light สลับ IR ขาวดำเป็นภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ จ่ายไฟ PoE สายเดียว ต่อ NVR ได้เลย",
+      "DH-IPC-HFW1239TL1-A-IL กล้อง IP PoE ทรงกระบอก (bullet) 2MP Smart Dual Light เลนส์ 3.6mm มุมแคบกว่า เหมาะระยะไกลขึ้น มีไฟ IR + warm light สลับอัตโนมัติ จ่ายไฟ PoE ต่อ NVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 2MP, เลนส์ 3.6mm เห็นรายละเอียดไกลกว่า",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 2MP, เลนส์ 3.6mm (ระยะไกลกว่า 2.8mm)",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
     ],
   },
-  "Dahua|DH-IPC-HFW1431TL-A-IL": {
-    tagline: "กล้อง IP บูลเล็ต 4MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
+  "Dahua|DH-IPC-HDW1239V-A-IL": {
+    tagline: "กล้อง IP PoE turret 2MP Smart Dual Light ในอาคาร",
     body:
-      "DH-IPC-HFW1431TL-A-IL กล้อง IP ทรงกระบอก (bullet) ความละเอียด 4MP เลนส์ 2.8mm Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ เหมาะงานภายนอก จ่ายไฟ PoE สายเดียว ต่อ NVR ได้เลย",
+      "DH-IPC-HDW1239V-A-IL กล้อง IP PoE ทรง turret 2MP Smart Dual Light ไฟ IR + warm light สลับอัตโนมัติ จ่ายไฟ PoE สายเดียว เหมาะติดเพดานในอาคาร ออฟฟิศ ร้านค้า ต่อ NVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 4MP, เลนส์ 2.8mm",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
     ],
   },
-  "Dahua|DH-IPC-HFW1439TL1-A-IL": {
-    tagline: "กล้อง IP บูลเล็ต 4MP Smart Dual Light ภาพสีอัตโนมัติเมื่อมีคนเข้า",
+  "Dahua|DH-IPC-HDW2249T-S-IL": {
+    tagline: "กล้อง IP PoE turret 2MP WizSense AI แยกแยะคน/รถ Smart Dual Light ในอาคาร",
     body:
-      "DH-IPC-HFW1439TL1-A-IL กล้อง IP ทรงกระบอก (bullet) ความละเอียด 4MP เลนส์ 2.8mm Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ เหมาะงานภายนอก จ่ายไฟ PoE สายเดียว ต่อ NVR ได้เลย",
+      "DH-IPC-HDW2249T-S-IL กล้อง IP PoE ทรง turret 2MP WizSense Smart Dual Light มี AI แยกแยะคน/รถ ลดแจ้งเตือนหลอก ไฟ IR + warm light สลับอัตโนมัติ เหมาะออฟฟิศ ร้านค้า ที่ต้องการ AI ต่อ NVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 4MP, เลนส์ 2.8mm",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "WizSense: AI แยกแยะคน/รถ ลดแจ้งเตือนหลอก",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-IPC-HFW2249TL-S-PRO": {
-    tagline: "กล้อง IP บูลเล็ต 2MP WizColor เลนส์ F1.0 ภาพสีกลางคืนไม่ต้องพึ่งไฟ",
+    tagline: "กล้อง IP PoE bullet 2MP WizColor ภาพสีกลางคืน + AI นอกอาคาร",
     body:
-      "DH-IPC-HFW2249TL-S-PRO กล้อง IP ทรงกระบอก (bullet) 2MP เทคโนโลยี WizColor เลนส์ F1.0 รับแสงมากกว่าเลนส์ทั่วไป 2.5 เท่า เห็นภาพสีคมชัดแสงน้อยมากโดยไม่ต้องเปิดไฟส่อง เหมาะงานภายนอก จ่ายไฟ PoE",
+      "DH-IPC-HFW2249TL-S-PRO กล้อง IP PoE ทรงกระบอก (bullet) 2MP WizColor เห็นภาพสีชัดกลางคืน AI แยกแยะคน/รถ จ่ายไฟ PoE เหมาะหน้าร้าน ลานจอด ทางเข้าออก ที่ต้องการภาพสีและ AI ต่อ NVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 2MP, เลนส์ F1.0 รูรับแสงกว้าง",
-      "WizColor — ภาพสีคมชัดแสงน้อยมาก ไม่ต้องพึ่งไฟส่อง",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "WizColor: ภาพสีกลางคืน + AI แยกแยะคน/รถ",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-IPC-HDW2249TL-S-PRO": {
+    tagline: "กล้อง IP PoE turret 2MP WizColor ภาพสีกลางคืน + AI ในอาคาร",
+    body:
+      "DH-IPC-HDW2249TL-S-PRO กล้อง IP PoE ทรง turret 2MP WizColor เห็นภาพสีชัดกลางคืน AI แยกแยะคน/รถ จ่ายไฟ PoE เหมาะติดเพดานในอาคาร ออฟฟิศ ร้านค้า ที่ต้องการภาพสีและ AI ต่อ NVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 2MP, เลนส์ 2.8mm",
+      "WizColor: ภาพสีกลางคืน + AI แยกแยะคน/รถ",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-IPC-HFW1431TL-A-IL": {
+    tagline: "กล้อง IP PoE bullet 4MP Smart Dual Light ติดนอกอาคาร",
+    body:
+      "DH-IPC-HFW1431TL-A-IL กล้อง IP PoE ทรงกระบอก (bullet) 4MP Smart Dual Light ไฟ IR + warm light สลับอัตโนมัติ ความละเอียดสูง จ่ายไฟ PoE เหมาะหน้าร้าน ลานจอด ทางเข้าออก ต่อ NVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 4MP (2560×1440), เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-IPC-HFW1439TL1-A-IL": {
+    tagline: "กล้อง IP PoE bullet 4MP Smart Dual Light ติดนอกอาคาร",
+    body:
+      "DH-IPC-HFW1439TL1-A-IL กล้อง IP PoE ทรงกระบอก (bullet) 4MP Smart Dual Light ไฟ IR + warm light สลับอัตโนมัติ ความละเอียด 4MP ภาพชัด เหมาะหน้าร้าน ลานจอด ทางเดิน นอกอาคาร ต่อ NVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 4MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-IPC-HFW2449TL-S-PRO": {
-    tagline: "กล้อง IP บูลเล็ต 4MP WizColor เลนส์ F1.0 ภาพสีกลางคืนความละเอียดสูง",
+    tagline: "กล้อง IP PoE bullet 4MP WizColor ภาพสีกลางคืน + AI นอกอาคาร",
     body:
-      "DH-IPC-HFW2449TL-S-PRO กล้อง IP ทรงกระบอก (bullet) ความละเอียด 4MP เทคโนโลยี WizColor เลนส์ F1.0 รับแสงมาก เห็นภาพสีคมชัดแสงน้อยโดยไม่ต้องพึ่งไฟส่อง เหมาะงานภายนอก จ่ายไฟ PoE",
+      "DH-IPC-HFW2449TL-S-PRO กล้อง IP PoE ทรงกระบอก (bullet) 4MP WizColor เห็นภาพสีชัดกลางคืน AI แยกแยะคน/รถ ความละเอียดสูง จ่ายไฟ PoE เหมาะหน้าร้าน ลานจอด ทางเข้าออก ต่อ NVR ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 4MP, เลนส์ F1.0 รูรับแสงกว้าง",
-      "WizColor — ภาพสีคมชัดแสงน้อยมาก ไม่ต้องพึ่งไฟส่อง",
-      "ทรงกระบอก (bullet) งานภายนอก",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 4MP, เลนส์ 2.8mm",
+      "WizColor: ภาพสีกลางคืน + AI แยกแยะคน/รถ",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรงกระบอก (bullet) นอกอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-IPC-HDW1431V-A-IL": {
+    tagline: "กล้อง IP PoE turret 4MP Smart Dual Light ในอาคาร",
+    body:
+      "DH-IPC-HDW1431V-A-IL กล้อง IP PoE ทรง turret 4MP Smart Dual Light ไฟ IR + warm light สลับอัตโนมัติ ความละเอียดสูง จ่ายไฟ PoE เหมาะติดเพดานในอาคาร ออฟฟิศ ร้านค้า ต่อ NVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 4MP (2560×1440), เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-IPC-HDW1439V-A-IL": {
+    tagline: "กล้อง IP PoE turret 4MP Smart Dual Light ในอาคาร",
+    body:
+      "DH-IPC-HDW1439V-A-IL กล้อง IP PoE ทรง turret 4MP Smart Dual Light ไฟ IR + warm light สลับอัตโนมัติ ความละเอียด 4MP ภาพชัด เหมาะติดเพดานในอาคาร ออฟฟิศ ร้านค้า ต่อ NVR ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 4MP, เลนส์ 2.8mm",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "ทรง turret ติดเพดาน ภายในอาคาร",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-SD1A203T-GN-W": {
-    tagline: "กล้อง IP มินิ PTZ 2MP หมุนได้ + ซูมออปติคอล 3X จ่ายไฟ PoE กลางแจ้ง",
+    tagline: "กล้อง IP PoE mini PTZ 2MP หมุนซูม 3X ติดนอกอาคาร",
     body:
-      "DH-SD1A203T-GN-W กล้อง IP ทรงสปีดโดมขนาดเล็ก (mini PTZ) หมุนกวาดได้รอบทิศ พร้อมซูมออปติคอล 3X ดึงภาพใกล้ดูรายละเอียดได้โดยไม่เสียความชัด เหมาะลานกว้าง/ทางเข้าที่ต้องการมุมมองครอบคลุมกว้างกว่ากล้องตัวเดียวทั่วไป ทนแดดทนฝนงานภายนอก จ่ายไฟ PoE",
+      "DH-SD1A203T-GN-W กล้อง IP PoE ทรง mini PTZ หมุนได้ 360° ซูม optical 3X ความละเอียด 2MP เหมาะพื้นที่ที่ต้องการมุมกว้างและปรับทิศทางได้ ลานจอด โกดัง หน้าร้าน จ่ายไฟ PoE ควบคุมผ่าน NVR/แอป DMSS",
     specs: [
-      "ความละเอียด 2MP, มินิ PTZ หมุนกวาดได้รอบทิศ",
-      "ซูมออปติคอล 3X ดึงภาพใกล้ไม่เสียความชัด",
-      "ทนแดดทนฝน เหมาะงานภายนอก/ลานกว้าง",
-      "บีบอัด H.265, จ่ายไฟ PoE",
-      "ต่อกับ NVR Dahua ได้",
+      "ความละเอียด 2MP, Optical Zoom 3X",
+      "PTZ: หมุนได้ 360° (pan) ก้มเงย (tilt)",
+      "จ่ายไฟ PoE, บีบอัด H.265+",
+      "สำหรับนอกอาคาร (outdoor)",
+      "ต่อ NVR Dahua, ดูผ่านแอป DMSS",
     ],
   },
 
-  // ───────────────── Dahua กล้อง WiFi ─────────────────
-  "Dahua|DH-H3AE-B": {
-    tagline: "กล้อง WiFi หมุนได้ (Pan/Tilt) 3MP ในบ้าน เสียงสองทาง คุยโต้ตอบได้",
+  // ───────────────── Dahua — WiFi Cameras ─────────────────
+  "Dahua|DH-IPC-HDW1230DTP-STW": {
+    tagline: "กล้อง WiFi turret 2MP พูดคุยสองทาง ติดในอาคาร",
     body:
-      "DH-H3AE-B กล้อง WiFi หมุนกวาดได้ (Pan/Tilt) ความละเอียด 3MP เลนส์ 3.6mm ใช้ในบ้าน มีไมค์+ลำโพงในตัวคุยโต้ตอบผ่านแอปได้ ตั้งค่าง่ายผ่านแอป Dahua/gDMSS ไม่ต้องเดินสาย LAN",
+      "DH-IPC-HDW1230DTP-STW กล้อง IP WiFi ทรง turret 2MP มีไมค์+ลำโพงในตัว พูดคุยสองทาง (Two-Way Talk) ไม่ต้องเดินสาย เหมาะติดเพดานในอาคาร บ้าน ออฟฟิศ ร้านค้า ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 3MP, เลนส์ 3.6mm",
-      "หมุนกวาดได้ (Pan/Tilt) ใช้ในบ้าน",
-      "เสียงสองทาง (two-way audio) คุยโต้ตอบผ่านแอปได้",
-      "เชื่อมต่อ WiFi ไม่ต้องเดินสาย LAN",
+      "ความละเอียด 2MP (1920×1080), เลนส์ 2.8mm",
+      "WiFi 2.4GHz, ไม่ต้องเดินสาย",
+      "Two-Way Talk: ไมค์ + ลำโพงในตัว",
+      "IR กลางคืนภาพขาวดำชัด",
+      "ดูผ่านแอป DMSS",
     ],
   },
-  "Dahua|DH-IPC-HDW1230DTP-STW": {
-    tagline: "กล้อง WiFi turret 2MP ในบ้าน เสียงสองทาง ไม่ต้องเดินสาย LAN",
+  "Dahua|DH-H3AE-B": {
+    tagline: "กล้อง WiFi PT 3MP หมุนได้ พูดคุยสองทาง ใช้ภายในอาคาร",
     body:
-      "DH-IPC-HDW1230DTP-STW กล้อง WiFi ทรงโดมครึ่งวง (turret) ความละเอียด 2MP เลนส์ 2.8mm ใช้ในบ้าน มีไมค์+ลำโพงในตัวคุยโต้ตอบผ่านแอปได้ เชื่อมต่อ WiFi ไม่ต้องเดินสาย LAN ติดเพดาน/ผนังสวย",
+      "DH-H3AE-B กล้อง WiFi PT 3MP หมุนซ้ายขวา-บนล่างได้ (Pan & Tilt) ไมค์+ลำโพงในตัว พูดคุยสองทาง ไม่ต้องเดินสาย เหมาะดูแลบ้าน สำนักงาน ร้านค้าขนาดเล็ก เห็นครอบคลุมทุกมุม ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 2MP, เลนส์ 2.8mm",
-      "ทรงโดมครึ่งวง (turret) ติดเพดาน/ผนัง ในบ้าน",
-      "เสียงสองทาง (two-way audio) คุยโต้ตอบผ่านแอปได้",
-      "เชื่อมต่อ WiFi ไม่ต้องเดินสาย LAN",
+      "ความละเอียด 3MP, เลนส์ 3.6mm",
+      "Pan & Tilt: หมุนได้ทุกทิศทาง",
+      "WiFi 2.4GHz, ไม่ต้องเดินสาย",
+      "Two-Way Talk: ไมค์ + ลำโพงในตัว",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-IPC-HFW1339DTK1-SAW-IL": {
-    tagline: "กล้อง WiFi6 บูลเล็ต 3MP Smart Dual Light ภาพสีอัตโนมัติ งานภายนอก",
+    tagline: "กล้อง WiFi 6 bullet 3MP Smart Dual Light ติดนอกอาคาร",
     body:
-      "DH-IPC-HFW1339DTK1-SAW-IL กล้อง WiFi6 ทรงกระบอก (bullet) ความละเอียด 3MP เลนส์ 2.8mm Smart Dual Light สลับ IR ขาวดำเป็นภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ WiFi6 เชื่อมต่อเสถียรกว่า WiFi รุ่นก่อน เหมาะงานภายนอก ไม่ต้องเดินสาย LAN",
+      "DH-IPC-HFW1339DTK1-SAW-IL กล้อง IP WiFi 6 ทรงกระบอก (bullet) 3MP Smart Dual Light ไฟ IR + warm light สลับอัตโนมัติ WiFi 6 เสถียรกว่า ติดนอกอาคารได้ ไม่ต้องเดินสาย LAN เหมาะหน้าบ้าน ร้านค้า ที่เดินสายไม่ได้ ดูผ่านแอป DMSS",
     specs: [
       "ความละเอียด 3MP, เลนส์ 2.8mm",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "เชื่อมต่อ WiFi6 เสถียรกว่า WiFi รุ่นก่อน ไม่ต้องเดินสาย LAN",
-      "ทรงกระบอก (bullet) งานภายนอก",
+      "WiFi 6 (802.11ax) 2.4GHz เสถียร ไม่ต้องเดินสาย LAN",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "ทรงกระบอก (bullet) สำหรับนอกอาคาร",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-IPC-HFW1539DTK1-SAW-IL": {
-    tagline: "กล้อง WiFi6 บูลเล็ต 5MP Smart Dual Light ภาพสีอัตโนมัติ ความละเอียดสูง",
+    tagline: "กล้อง WiFi 6 bullet 5MP Smart Dual Light ความละเอียดสูง นอกอาคาร",
     body:
-      "DH-IPC-HFW1539DTK1-SAW-IL กล้อง WiFi6 ทรงกระบอก (bullet) ความละเอียดสูง 5MP เลนส์ 2.8mm Smart Dual Light สลับภาพสีอัตโนมัติเมื่อมีคนเข้าพื้นที่ WiFi6 เชื่อมต่อเสถียรกว่า WiFi รุ่นก่อน เหมาะงานภายนอก ไม่ต้องเดินสาย LAN",
+      "DH-IPC-HFW1539DTK1-SAW-IL กล้อง IP WiFi 6 ทรงกระบอก (bullet) 5MP Smart Dual Light ความละเอียดสูง ไฟ IR + warm light สลับอัตโนมัติ WiFi 6 เสถียร ติดนอกอาคาร ไม่ต้องเดินสาย เหมาะหน้าบ้าน ร้านค้า ลานจอด ดูผ่านแอป DMSS",
     specs: [
       "ความละเอียด 5MP, เลนส์ 2.8mm",
-      "Smart Dual Light — สลับ IR ↔ ภาพสีอัตโนมัติเมื่อมีคนเข้า",
-      "เชื่อมต่อ WiFi6 เสถียรกว่า WiFi รุ่นก่อน ไม่ต้องเดินสาย LAN",
-      "ทรงกระบอก (bullet) งานภายนอก",
+      "WiFi 6 (802.11ax) 2.4GHz เสถียร ไม่ต้องเดินสาย LAN",
+      "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
+      "ทรงกระบอก (bullet) สำหรับนอกอาคาร",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-P3AS-PV": {
-    tagline: "กล้อง WiFi6 หมุนได้ (Pan/Tilt) 3MP เสียงสองทาง งานภายนอก",
+    tagline: "กล้อง WiFi 6 PT 3MP หมุนได้ พูดคุยสองทาย นอกอาคาร",
     body:
-      "DH-P3AS-PV กล้อง WiFi6 หมุนกวาดได้ (Pan/Tilt) ความละเอียด 3MP เลนส์ 4mm มีไมค์+ลำโพงในตัวคุยโต้ตอบผ่านแอปได้ AI แยกคน/รถลดแจ้งเตือนเท็จ เหมาะงานภายนอก ไม่ต้องเดินสาย LAN",
+      "DH-P3AS-PV กล้อง IP WiFi 6 ทรง Pan & Tilt 3MP ใช้ได้นอกอาคาร หมุนมุมมองครอบคลุมกว้าง ไมค์+ลำโพงในตัว พูดคุยสองทาง WiFi 6 เสถียร ไม่ต้องเดินสาย เหมาะสวน ลานจอด หน้าบ้าน ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 3MP, เลนส์ 4mm, หมุนกวาดได้ (Pan/Tilt)",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "เสียงสองทาง (two-way audio) คุยโต้ตอบผ่านแอปได้",
-      "เชื่อมต่อ WiFi6 งานภายนอก ไม่ต้องเดินสาย LAN",
-    ],
-  },
-  "Dahua|DH-P3F-PV": {
-    tagline: "กล้อง WiFi6 หมุนได้ (Pan/Tilt) 3MP WizColor ภาพสีกลางคืน + เสียงสองทาง",
-    body:
-      "DH-P3F-PV กล้อง WiFi6 หมุนกวาดได้ (Pan/Tilt) ความละเอียด 3MP เลนส์ 4mm เทคโนโลยี WizColor เห็นภาพสีคมชัดแสงน้อยมากโดยไม่ต้องพึ่งไฟส่อง มีไมค์+ลำโพงในตัวคุยโต้ตอบผ่านแอปได้ เหมาะงานภายนอก ไม่ต้องเดินสาย LAN",
-    specs: [
-      "ความละเอียด 3MP, เลนส์ 4mm, หมุนกวาดได้ (Pan/Tilt)",
-      "WizColor — ภาพสีคมชัดแสงน้อยมาก ไม่ต้องพึ่งไฟส่อง",
-      "เสียงสองทาง (two-way audio) คุยโต้ตอบผ่านแอปได้",
-      "เชื่อมต่อ WiFi6 งานภายนอก ไม่ต้องเดินสาย LAN",
+      "ความละเอียด 3MP, เลนส์ 4mm",
+      "Pan & Tilt: หมุนได้ทุกทิศทาง (outdoor)",
+      "WiFi 6 (802.11ax), ไม่ต้องเดินสาย LAN",
+      "Two-Way Talk: ไมค์ + ลำโพงในตัว",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-P5AS-PV": {
-    tagline: "กล้อง WiFi6 หมุนได้ (Pan/Tilt) 5MP เสียงสองทาง ความละเอียดสูง",
+    tagline: "กล้อง WiFi 6 PT 5MP หมุนได้ พูดคุยสองทาง นอกอาคาร ความละเอียดสูง",
     body:
-      "DH-P5AS-PV กล้อง WiFi6 หมุนกวาดได้ (Pan/Tilt) ความละเอียดสูง 5MP เลนส์ 4mm มีไมค์+ลำโพงในตัวคุยโต้ตอบผ่านแอปได้ AI แยกคน/รถลดแจ้งเตือนเท็จ เหมาะงานภายนอก ไม่ต้องเดินสาย LAN",
+      "DH-P5AS-PV กล้อง IP WiFi 6 ทรง Pan & Tilt 5MP ใช้ได้นอกอาคาร ความละเอียดสูง เห็นรายละเอียดชัด หมุนมุมมองครอบคลุม ไมค์+ลำโพงในตัว พูดคุยสองทาง WiFi 6 เสถียร เหมาะสวน ลานจอด หน้าบ้าน ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 5MP, เลนส์ 4mm, หมุนกวาดได้ (Pan/Tilt)",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "เสียงสองทาง (two-way audio) คุยโต้ตอบผ่านแอปได้",
-      "เชื่อมต่อ WiFi6 งานภายนอก ไม่ต้องเดินสาย LAN",
+      "ความละเอียด 5MP, เลนส์ 4mm",
+      "Pan & Tilt: หมุนได้ทุกทิศทาง (outdoor)",
+      "WiFi 6 (802.11ax), ไม่ต้องเดินสาย LAN",
+      "Two-Way Talk: ไมค์ + ลำโพงในตัว",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-P3F-PV": {
+    tagline: "กล้อง WiFi 6 PT 3MP WizColor ภาพสีกลางคืน พูดคุยสองทาง นอกอาคาร",
+    body:
+      "DH-P3F-PV กล้อง IP WiFi 6 ทรง Pan & Tilt 3MP WizColor เห็นภาพสีชัดกลางคืน หมุนได้ทุกทิศทาง ไมค์+ลำโพงในตัว พูดคุยสองทาง WiFi 6 ไม่ต้องเดินสาย ใช้ได้นอกอาคาร เหมาะสวน ลานจอด หน้าบ้าน ดูผ่านแอป DMSS",
+    specs: [
+      "ความละเอียด 3MP, เลนส์ 4mm",
+      "WizColor: ภาพสีกลางคืน + AI แยกแยะคน/รถ",
+      "Pan & Tilt: หมุนได้ทุกทิศทาง (outdoor)",
+      "WiFi 6 (802.11ax), ไม่ต้องเดินสาย LAN",
+      "Two-Way Talk: ไมค์ + ลำโพงในตัว",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-P8F-PV": {
-    tagline: "กล้อง WiFi6 หมุนได้ (Pan/Tilt) 4K/8MP PiCOO F1 WizColor ภาพสีกลางคืนคมชัดสุด",
+    tagline: "กล้อง WiFi 6 PT 4K/8MP PiCOO ภาพคมชัดสุด พูดคุยสองทาง นอกอาคาร",
     body:
-      "DH-P8F-PV กล้อง WiFi6 หมุนกวาดได้ (Pan/Tilt) ความละเอียด 4K 8MP รุ่นท็อปไลน์ PiCOO F1 เลนส์ F1.0 รูรับแสงกว้าง + ชิป AI-ISP ให้ภาพสีคมชัดกลางคืนโดยไม่ต้องพึ่งไฟส่อง มีไมค์+ลำโพงในตัวคุยโต้ตอบผ่านแอปได้ AI แยกคน/รถ ติดตามอัตโนมัติ เหมาะงานภายนอกที่ต้องการความคมชัดสูงสุด",
+      "DH-P8F-PV กล้อง IP WiFi 6 ทรง Pan & Tilt ความละเอียด 4K (8MP) ซีรีส์ PiCOO F1 ภาพคมชัดระดับสูงสุดในไลน์ WiFi เหมาะพื้นที่สำคัญที่ต้องการเห็นรายละเอียดชัดสุด หมุนได้ทุกทิศทาง ไมค์+ลำโพงพูดคุยสองทาง ใช้ได้นอกอาคาร ดูผ่านแอป DMSS",
     specs: [
-      "ความละเอียด 4K 8MP, เลนส์ 3.6mm F1.0 รูรับแสงกว้าง",
-      "PiCOO F1 + WizColor — ภาพสีคมชัดกลางคืน ไม่ต้องพึ่งไฟส่อง",
-      "AI แยกคน/รถ + Auto Tracking ติดตามอัตโนมัติ",
-      "เสียงสองทาง (two-way audio) คุยโต้ตอบผ่านแอปได้",
-      "เชื่อมต่อ WiFi6 งานภายนอก ไม่ต้องเดินสาย LAN",
+      "ความละเอียด 4K (8MP), เลนส์ 3.6mm",
+      "PiCOO F1: ภาพคมชัดระดับสูงสุดในไลน์ WiFi",
+      "Pan & Tilt: หมุนได้ทุกทิศทาง (outdoor)",
+      "WiFi 6 (802.11ax), ไม่ต้องเดินสาย LAN",
+      "Two-Way Talk: ไมค์ + ลำโพงในตัว",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-WNK-04B08-2MP": {
-    tagline: "ชุดกล้อง WiFi สำเร็จรูป 4 ตัว 2MP + เครื่องบันทึก NVR WiFi 8CH ในชุดเดียว",
+    tagline: "ชุด WiFi Kit กล้อง 1080P 4 ตัว + NVR 8CH ครบพร้อมใช้",
     body:
-      "DH-WNK-04B08-2MP ชุดกล้อง WiFi สำเร็จรูป ประกอบด้วยกล้อง turret 2MP จำนวน 4 ตัว + เครื่องบันทึก WiFi NVR1108HS-W-S2 8 ช่อง กล้องเชื่อมต่อไร้สายตรงกับตัวบันทึกไม่ต้องเดินสาย LAN ระหว่างกล้อง-เครื่องบันทึกเลย เหมาะติดตั้งเร็วในจุดที่เดินสายลำบาก",
+      "DH-WNK-04B08-2MP ชุดกล้องวงจรปิด WiFi ครบชุด ประกอบด้วยกล้อง IPC-HFW1230DT-STW 1080P จำนวน 4 ตัว + เครื่องบันทึก NVR1108HS-W-S2 รองรับ 8CH บันทึกได้ถึง 6MP เชื่อมต่อ WiFi ไม่ต้องเดินสาย LAN จาก NVR ไปกล้อง เหมาะร้านค้า บ้านพัก ออฟฟิศขนาดเล็ก ดูผ่านแอป DMSS",
     specs: [
-      "กล้อง turret WiFi 2MP × 4 ตัว ในชุด",
-      "เครื่องบันทึก WiFi NVR 8 ช่อง รวมในชุด",
-      "กล้องเชื่อมต่อไร้สายตรงกับเครื่องบันทึก ไม่ต้องเดินสาย LAN",
-      "ติดตั้งเร็ว เหมาะจุดที่เดินสายลำบาก",
+      "กล้อง IPC-HFW1230DT-STW 1080P (WiFi) จำนวน 4 ตัว",
+      "NVR1108HS-W-S2 รองรับ 8CH, บันทึกได้ถึง 6MP",
+      "WiFi เชื่อมต่อจากกล้องไปหา NVR ไม่ต้องเดินสาย LAN",
+      "รองรับ HDD 1 ลูก (ไม่รวม HDD)",
+      "ดูผ่านแอป DMSS",
     ],
   },
 
-  // ───────────────── Dahua เครื่องบันทึก DVR (กล้องระบบสาย) ─────────────────
+  // ───────────────── Dahua — DVR (XVR) ─────────────────
   "Dahua|DH-XVR4104HS-I": {
-    tagline: "เครื่องบันทึก DVR 4 กล้อง ระบบสาย รองรับ 2MP คุ้ม งานเล็ก",
+    tagline: "DVR 4CH Dahua XVR รองรับกล้อง analog/HDCVI/IP ราคาคุ้ม",
     body:
-      "DH-XVR4104HS-I เครื่องบันทึก DVR 4 ช่อง สำหรับกล้องระบบสาย (HDCVI/Analog) รองรับกล้องสูงสุด 2MP บันทึกที่ 1MP เหมาะบ้าน/ร้านเล็กงบประหยัด ต่อสายกล้องเดิมได้ ดูผ่านมือถือแอป DMSS",
+      "DH-XVR4104HS-I เครื่องบันทึก XVR 4 ช่อง รองรับกล้อง HDCVI / TVI / AHD / Analog / IP (Penta-brid) รองรับกล้องสูงสุด 2MP บันทึก 1MP AI motion detection เหมาะระบบบ้าน ร้านค้าเล็กๆ จัดการผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้องระบบสาย 4 ช่อง (HDCVI/Analog)",
-      "รองรับกล้องสูงสุด 2MP (บันทึก 1MP)",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ต่อใช้สายกล้องเดิมได้",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
-    ],
-  },
-  "Dahua|DH-XVR4104HS-I/T": {
-    tagline: "เครื่องบันทึก DVR 4 กล้อง ระบบสาย รองรับ 2MP เสียงสองทาง",
-    body:
-      "DH-XVR4104HS-I/T เครื่องบันทึก DVR 4 ช่อง สำหรับกล้องระบบสาย (HDCVI/Analog) รองรับกล้องสูงสุด 2MP บันทึกที่ 1MP รองรับเสียงสองทางคู่กับกล้องที่มีไมค์+ลำโพง เหมาะบ้าน/ร้านเล็ก ต่อสายกล้องเดิมได้ ดูผ่านแอป DMSS",
-    specs: [
-      "บันทึกกล้องระบบสาย 4 ช่อง (HDCVI/Analog)",
-      "รองรับกล้องสูงสุด 2MP (บันทึก 1MP)",
-      "รองรับเสียงสองทาง (two-way audio)",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "4 ช่องบันทึก, รองรับกล้อง HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับกล้องสูงสุด 2MP บันทึก 1080N (1MP)",
+      "AI motion detection, H.265+",
+      "รองรับ HDD 1 ลูก (ไม่รวม HDD)",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-XVR4108HS-I": {
-    tagline: "เครื่องบันทึก DVR 8 กล้อง ระบบสาย รองรับ 2MP คุ้ม",
+    tagline: "DVR 8CH Dahua XVR รองรับกล้อง analog/HDCVI/IP",
     body:
-      "DH-XVR4108HS-I เครื่องบันทึก DVR 8 ช่อง สำหรับกล้องระบบสาย (HDCVI/Analog) รองรับกล้องสูงสุด 2MP บันทึกที่ 1MP เหมาะบ้าน/ร้านงบประหยัด ต่อสายกล้องเดิมได้ ดูผ่านมือถือแอป DMSS",
+      "DH-XVR4108HS-I เครื่องบันทึก XVR 8 ช่อง Penta-brid รองรับกล้อง HDCVI / TVI / AHD / Analog / IP AI motion detection รองรับกล้องสูงสุด 2MP บันทึก 1MP เหมาะร้านค้า ออฟฟิศขนาดกลาง ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้องระบบสาย 8 ช่อง (HDCVI/Analog)",
-      "รองรับกล้องสูงสุด 2MP (บันทึก 1MP)",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ต่อใช้สายกล้องเดิมได้",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
-    ],
-  },
-  "Dahua|DH-XVR4108HS-I/T": {
-    tagline: "เครื่องบันทึก DVR 8 กล้อง ระบบสาย รองรับ 2MP เสียงสองทาง",
-    body:
-      "DH-XVR4108HS-I/T เครื่องบันทึก DVR 8 ช่อง สำหรับกล้องระบบสาย (HDCVI/Analog) รองรับกล้องสูงสุด 2MP บันทึกที่ 1MP รองรับเสียงสองทางคู่กับกล้องที่มีไมค์+ลำโพง ต่อสายกล้องเดิมได้ ดูผ่านแอป DMSS",
-    specs: [
-      "บันทึกกล้องระบบสาย 8 ช่อง (HDCVI/Analog)",
-      "รองรับกล้องสูงสุด 2MP (บันทึก 1MP)",
-      "รองรับเสียงสองทาง (two-way audio)",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "8 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับกล้องสูงสุด 2MP บันทึก 1080N (1MP)",
+      "AI motion detection, H.265+",
+      "รองรับ HDD 1 ลูก (ไม่รวม HDD)",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-XVR4116HS-I": {
-    tagline: "เครื่องบันทึก DVR 16 กล้อง ระบบสาย รองรับ 2MP งานหลายกล้อง",
+    tagline: "DVR 16CH Dahua XVR รองรับกล้อง analog/HDCVI/IP",
     body:
-      "DH-XVR4116HS-I เครื่องบันทึก DVR 16 ช่อง สำหรับกล้องระบบสาย (HDCVI/Analog) รองรับกล้องสูงสุด 2MP เหมาะงานที่มีกล้องหลายตัวงบประหยัด ต่อสายกล้องเดิมได้ ดูผ่านมือถือแอป DMSS",
+      "DH-XVR4116HS-I เครื่องบันทึก XVR 16 ช่อง Penta-brid รองรับกล้อง HDCVI / TVI / AHD / Analog / IP AI motion detection รองรับกล้องสูงสุด 2MP บันทึก 1MP เหมาะร้านค้า โกดัง ออฟฟิศขนาดกลาง ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้องระบบสาย 16 ช่อง (HDCVI/Analog)",
-      "รองรับกล้องสูงสุด 2MP",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ต่อใช้สายกล้องเดิมได้",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "16 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับกล้องสูงสุด 2MP บันทึก 1080N (1MP)",
+      "AI motion detection, H.265+",
+      "รองรับ HDD 1 ลูก (ไม่รวม HDD)",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-XVR4104HS-I/T": {
+    tagline: "DVR 4CH Dahua XVR รองรับ Two-Way Talk พูดคุยผ่านกล้อง",
+    body:
+      "DH-XVR4104HS-I/T เครื่องบันทึก XVR 4 ช่อง Penta-brid รองรับ Two-Way Talk พูดคุยสองทางผ่านกล้องที่มีไมค์+ลำโพง (เช่น HAC-HFW1200RMP-IL-T) AI motion detection เหมาะร้านค้า บ้านที่ต้องการสื่อสารผ่านกล้อง ดูผ่านแอป DMSS",
+    specs: [
+      "4 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับ Two-Way Talk (พูดคุยผ่านกล้อง Two-Way)",
+      "รองรับกล้องสูงสุด 2MP บันทึก 1080N (1MP)",
+      "AI motion detection, H.265+",
+      "รองรับ HDD 1 ลูก, ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-XVR4108HS-I/T": {
+    tagline: "DVR 8CH Dahua XVR รองรับ Two-Way Talk พูดคุยผ่านกล้อง",
+    body:
+      "DH-XVR4108HS-I/T เครื่องบันทึก XVR 8 ช่อง Penta-brid รองรับ Two-Way Talk พูดคุยสองทางผ่านกล้องที่มีไมค์+ลำโพง AI motion detection เหมาะร้านค้า ออฟฟิศ ที่ต้องการสื่อสารผ่านกล้อง ดูผ่านแอป DMSS",
+    specs: [
+      "8 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับ Two-Way Talk",
+      "รองรับกล้องสูงสุด 2MP บันทึก 1080N (1MP)",
+      "AI motion detection, H.265+",
+      "รองรับ HDD 1 ลูก, ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-XVR4116HS-I/T": {
-    tagline: "เครื่องบันทึก DVR 16 กล้อง ระบบสาย รองรับ 2MP เสียงสองทาง",
+    tagline: "DVR 16CH Dahua XVR รองรับ Two-Way Talk พูดคุยผ่านกล้อง",
     body:
-      "DH-XVR4116HS-I/T เครื่องบันทึก DVR 16 ช่อง สำหรับกล้องระบบสาย (HDCVI/Analog) รองรับกล้องสูงสุด 2MP รองรับเสียงสองทางคู่กับกล้องที่มีไมค์+ลำโพง เหมาะงานหลายกล้อง ต่อสายกล้องเดิมได้ ดูผ่านแอป DMSS",
+      "DH-XVR4116HS-I/T เครื่องบันทึก XVR 16 ช่อง Penta-brid รองรับ Two-Way Talk พูดคุยสองทางผ่านกล้องที่มีไมค์+ลำโพง AI motion detection เหมาะสำนักงาน โกดัง ที่ต้องการสื่อสารผ่านกล้องหลายจุด ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้องระบบสาย 16 ช่อง (HDCVI/Analog)",
-      "รองรับกล้องสูงสุด 2MP",
-      "รองรับเสียงสองทาง (two-way audio)",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
-    ],
-  },
-  "Dahua|DH-XVR5104HS-5M-3I/T": {
-    tagline: "เครื่องบันทึก DVR 4 กล้อง รองรับ 5MP เสียงสองทาง + AI แยกคน/รถ",
-    body:
-      "DH-XVR5104HS-5M-3I/T เครื่องบันทึก DVR 4 ช่อง สำหรับกล้องระบบสาย รองรับกล้องสูงสุด 5MP บันทึกที่ 2MP มี AI แยกคน/รถลดแจ้งเตือนเท็จ รองรับเสียงสองทาง เหมาะอัปเกรดความคมชัดบนสายเดิม ดูผ่านแอป DMSS",
-    specs: [
-      "บันทึกกล้องระบบสาย 4 ช่อง (HDCVI/AHD/CVI/Analog)",
-      "รองรับกล้องสูงสุด 5MP (บันทึก 2MP)",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "รองรับเสียงสองทาง (two-way audio)",
-      "ต่อใช้สายเดิมได้ / ดูผ่านแอป DMSS",
+      "16 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับ Two-Way Talk",
+      "รองรับกล้องสูงสุด 2MP บันทึก 1080N (1MP)",
+      "AI motion detection, H.265+",
+      "รองรับ HDD 1 ลูก, ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-XVR5104HS-5M-I3": {
-    tagline: "เครื่องบันทึก DVR 4 กล้อง รองรับ 5MP + AI แยกคน/รถ",
+    tagline: "DVR 4CH Dahua XVR รองรับกล้อง 5MP AI WizSense",
     body:
-      "DH-XVR5104HS-5M-I3 เครื่องบันทึก DVR 4 ช่อง สำหรับกล้องระบบสาย รองรับกล้องสูงสุด 5MP บันทึกที่ 2MP มี AI แยกคน/รถลดแจ้งเตือนเท็จ เหมาะอัปเกรดความคมชัดบนสายเดิม ดูผ่านแอป DMSS",
+      "DH-XVR5104HS-5M-I3 เครื่องบันทึก XVR 4 ช่อง รองรับกล้องสูงสุด 5MP รองรับ WizSense AI แยกแยะคน/รถ แจ้งเตือนแม่นยำ บันทึก 2MP เหมาะธุรกิจที่ต้องการ AI ในระบบ analog ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้องระบบสาย 4 ช่อง (HDCVI/AHD/CVI/Analog)",
-      "รองรับกล้องสูงสุด 5MP (บันทึก 2MP)",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ต่อใช้สายเดิมได้ / ดูผ่านแอป DMSS",
-    ],
-  },
-  "Dahua|DH-XVR5108HS-5M-3I/T": {
-    tagline: "เครื่องบันทึก DVR 8 กล้อง รองรับ 5MP เสียงสองทาง + AI แยกคน/รถ",
-    body:
-      "DH-XVR5108HS-5M-3I/T เครื่องบันทึก DVR 8 ช่อง สำหรับกล้องระบบสาย รองรับกล้องสูงสุด 5MP บันทึกที่ 2MP มี AI แยกคน/รถลดแจ้งเตือนเท็จ รองรับเสียงสองทาง เหมาะงานหลายกล้องที่ต้องการความคมชัดสูง ดูผ่านแอป DMSS",
-    specs: [
-      "บันทึกกล้องระบบสาย 8 ช่อง (HDCVI/AHD/CVI/Analog)",
-      "รองรับกล้องสูงสุด 5MP (บันทึก 2MP)",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "รองรับเสียงสองทาง (two-way audio)",
-      "ต่อใช้สายเดิมได้ / ดูผ่านแอป DMSS",
+      "4 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับกล้องสูงสุด 5MP-N บันทึก 2MP",
+      "WizSense AI: แยกแยะคน/รถ แจ้งเตือนแม่นยำ, H.265+",
+      "รองรับ HDD 1 ลูก (ไม่รวม HDD)",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-XVR5108HS-5M-I3": {
-    tagline: "เครื่องบันทึก DVR 8 กล้อง รองรับ 5MP + AI แยกคน/รถ",
+    tagline: "DVR 8CH Dahua XVR รองรับกล้อง 5MP AI WizSense",
     body:
-      "DH-XVR5108HS-5M-I3 เครื่องบันทึก DVR 8 ช่อง สำหรับกล้องระบบสาย รองรับกล้องสูงสุด 5MP บันทึกที่ 2MP มี AI แยกคน/รถลดแจ้งเตือนเท็จ เหมาะงานหลายกล้องที่ต้องการความคมชัดสูง ดูผ่านแอป DMSS",
+      "DH-XVR5108HS-5M-I3 เครื่องบันทึก XVR 8 ช่อง รองรับกล้องสูงสุด 5MP WizSense AI แยกแยะคน/รถ แจ้งเตือนแม่นยำ บันทึก 2MP เหมาะธุรกิจที่ต้องการ AI ในระบบ analog ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้องระบบสาย 8 ช่อง (HDCVI/AHD/CVI/Analog)",
-      "รองรับกล้องสูงสุด 5MP (บันทึก 2MP)",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ต่อใช้สายเดิมได้ / ดูผ่านแอป DMSS",
-    ],
-  },
-  "Dahua|DH-XVR5116HS-5M-3I/T": {
-    tagline: "เครื่องบันทึก DVR 16 กล้อง รองรับ 5MP เสียงสองทาง + AI แยกคน/รถ",
-    body:
-      "DH-XVR5116HS-5M-3I/T เครื่องบันทึก DVR 16 ช่อง สำหรับกล้องระบบสาย รองรับกล้องสูงสุด 5MP บันทึกที่ 2MP มี AI แยกคน/รถลดแจ้งเตือนเท็จ รองรับเสียงสองทาง เหมาะงานหลายกล้องที่ต้องการความคมชัดสูง ดูผ่านแอป DMSS",
-    specs: [
-      "บันทึกกล้องระบบสาย 16 ช่อง (HDCVI/AHD/CVI/Analog)",
-      "รองรับกล้องสูงสุด 5MP (บันทึก 2MP)",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "รองรับเสียงสองทาง (two-way audio)",
-      "ต่อใช้สายเดิมได้ / ดูผ่านแอป DMSS",
+      "8 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับกล้องสูงสุด 5MP-N บันทึก 2MP",
+      "WizSense AI: แยกแยะคน/รถ แจ้งเตือนแม่นยำ, H.265+",
+      "รองรับ HDD 1 ลูก (ไม่รวม HDD)",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-XVR5116HS-5M-I3": {
-    tagline: "เครื่องบันทึก DVR 16 กล้อง รองรับ 5MP + AI แยกคน/รถ",
+    tagline: "DVR 16CH Dahua XVR รองรับกล้อง 5MP AI WizSense",
     body:
-      "DH-XVR5116HS-5M-I3 เครื่องบันทึก DVR 16 ช่อง สำหรับกล้องระบบสาย รองรับกล้องสูงสุด 5MP บันทึกที่ 2MP มี AI แยกคน/รถลดแจ้งเตือนเท็จ เหมาะงานหลายกล้องที่ต้องการความคมชัดสูง ดูผ่านแอป DMSS",
+      "DH-XVR5116HS-5M-I3 เครื่องบันทึก XVR 16 ช่อง รองรับกล้องสูงสุด 5MP WizSense AI แยกแยะคน/รถ บันทึก 2MP เหมาะสำนักงาน โกดัง ร้านค้า ที่ต้องการ AI ในระบบ analog ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้องระบบสาย 16 ช่อง (HDCVI/AHD/CVI/Analog)",
-      "รองรับกล้องสูงสุด 5MP (บันทึก 2MP)",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ต่อใช้สายเดิมได้ / ดูผ่านแอป DMSS",
+      "16 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับกล้องสูงสุด 5MP-N บันทึก 2MP",
+      "WizSense AI: แยกแยะคน/รถ แจ้งเตือนแม่นยำ, H.265+",
+      "รองรับ HDD 1 ลูก (ไม่รวม HDD)",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-XVR5104HS-5M-3I/T": {
+    tagline: "DVR 4CH Dahua XVR 5MP AI WizSense รองรับ Two-Way Talk",
+    body:
+      "DH-XVR5104HS-5M-3I/T เครื่องบันทึก XVR 4 ช่อง รองรับกล้อง 5MP WizSense AI รองรับ Two-Way Talk พูดคุยสองทางผ่านกล้อง เหมาะร้านค้า บ้านที่ต้องการทั้ง AI และสื่อสารผ่านกล้อง ดูผ่านแอป DMSS",
+    specs: [
+      "4 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับกล้องสูงสุด 5MP-N บันทึก 2MP",
+      "WizSense AI + รองรับ Two-Way Talk, H.265+",
+      "รองรับ HDD 1 ลูก, ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-XVR5108HS-5M-3I/T": {
+    tagline: "DVR 8CH Dahua XVR 5MP AI WizSense รองรับ Two-Way Talk",
+    body:
+      "DH-XVR5108HS-5M-3I/T เครื่องบันทึก XVR 8 ช่อง รองรับกล้อง 5MP WizSense AI รองรับ Two-Way Talk พูดคุยสองทางผ่านกล้อง เหมาะร้านค้า ออฟฟิศ ที่ต้องการทั้ง AI และสื่อสารผ่านกล้อง ดูผ่านแอป DMSS",
+    specs: [
+      "8 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับกล้องสูงสุด 5MP-N บันทึก 2MP",
+      "WizSense AI + รองรับ Two-Way Talk, H.265+",
+      "รองรับ HDD 1 ลูก, ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DH-XVR5116HS-5M-3I/T": {
+    tagline: "DVR 16CH Dahua XVR 5MP AI WizSense รองรับ Two-Way Talk",
+    body:
+      "DH-XVR5116HS-5M-3I/T เครื่องบันทึก XVR 16 ช่อง รองรับกล้อง 5MP WizSense AI รองรับ Two-Way Talk เหมาะสำนักงาน โกดัง ร้านค้า ที่ต้องการ AI และสื่อสารผ่านกล้องหลายจุด ดูผ่านแอป DMSS",
+    specs: [
+      "16 ช่องบันทึก, รองรับ HDCVI/TVI/AHD/Analog + IP (Penta-brid)",
+      "รองรับกล้องสูงสุด 5MP-N บันทึก 2MP",
+      "WizSense AI + รองรับ Two-Way Talk, H.265+",
+      "รองรับ HDD 1 ลูก, ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-XVR5208A-4KL-I3": {
-    tagline: "เครื่องบันทึก DVR 8 กล้อง รองรับ 4K ใส่ HDD ได้ 2 ลูก เก็บภาพยาวขึ้น",
+    tagline: "DVR 8CH Dahua XVR 4K 2HDD WizSense AI ระดับกลาง-สูง",
     body:
-      "DH-XVR5208A-4KL-I3 เครื่องบันทึก DVR 8 ช่อง รองรับกล้องความละเอียดสูงสุดถึง 4K ใส่ HDD ได้ 2 ลูก เก็บภาพย้อนหลังได้นานขึ้น มี AI แยกคน/รถลดแจ้งเตือนเท็จ เหมาะงานที่ต้องการความคมชัดสูงและเก็บภาพนาน ดูผ่านแอป DMSS",
+      "DH-XVR5208A-4KL-I3 เครื่องบันทึก XVR 8 ช่อง รองรับกล้องสูงสุด 4K WizSense AI แยกแยะคน/รถ ใส่ HDD ได้ 2 ลูก เหมาะระบบที่ต้องการความละเอียดสูง เก็บข้อมูลได้นาน สำนักงาน ห้างร้าน ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้องระบบสาย 8 ช่อง รองรับสูงสุด 4K",
-      "ใส่ HDD ได้ 2 ลูก เก็บภาพย้อนหลังได้นานขึ้น",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "8 ช่องบันทึก, รองรับกล้องสูงสุด 4K (Penta-brid)",
+      "WizSense AI: แยกแยะคน/รถ แจ้งเตือนแม่นยำ, H.265+",
+      "รองรับ HDD 2 ลูก เก็บข้อมูลได้นาน",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-XVR5216AN-5M-I3/T": {
-    tagline: "เครื่องบันทึก DVR 16 กล้อง รองรับ 5MP ใส่ HDD 2 ลูก เสียงสองทาง",
+    tagline: "DVR 16CH Dahua XVR 5MP 2HDD AI WizSense รองรับ Two-Way Talk",
     body:
-      "DH-XVR5216AN-5M-I3/T เครื่องบันทึก DVR 16 ช่อง รองรับกล้องสูงสุด 5MP ใส่ HDD ได้ 2 ลูก เก็บภาพย้อนหลังได้นานขึ้น มี AI แยกคน/รถ รองรับเสียงสองทาง เหมาะงานหลายกล้องที่ต้องเก็บภาพนาน ดูผ่านแอป DMSS",
+      "DH-XVR5216AN-5M-I3/T เครื่องบันทึก XVR 16 ช่อง รองรับกล้อง 5MP WizSense AI รองรับ Two-Way Talk ใส่ HDD ได้ 2 ลูก เหมาะสำนักงานขนาดใหญ่ โกดัง ห้างร้าน ที่ต้องการ AI เก็บข้อมูลนาน ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้องระบบสาย 16 ช่อง รองรับสูงสุด 5MP",
-      "ใส่ HDD ได้ 2 ลูก เก็บภาพย้อนหลังได้นานขึ้น",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "รองรับเสียงสองทาง (two-way audio)",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "16 ช่องบันทึก, รองรับกล้องสูงสุด 5MP (Penta-brid)",
+      "WizSense AI + รองรับ Two-Way Talk, H.265+",
+      "รองรับ HDD 2 ลูก เก็บข้อมูลได้นาน",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DH-XVR5232AN-5M-I3": {
-    tagline: "เครื่องบันทึก DVR 32 กล้อง รองรับ 5MP งานระบบใหญ่",
+    tagline: "DVR 32CH Dahua XVR 5MP WizSense AI ระบบขนาดใหญ่",
     body:
-      "DH-XVR5232AN-5M-I3 เครื่องบันทึก DVR 32 ช่อง รองรับกล้องสูงสุด 5MP เหมาะงานระบบใหญ่ที่มีกล้องจำนวนมาก เช่น โรงงาน หมู่บ้าน อาคารสำนักงาน มี AI แยกคน/รถลดแจ้งเตือนเท็จ ดูผ่านแอป DMSS",
+      "DH-XVR5232AN-5M-I3 เครื่องบันทึก XVR 32 ช่อง รองรับกล้อง 5MP WizSense AI แยกแยะคน/รถ เหมาะระบบขนาดใหญ่ โรงงาน โกดัง ห้างสรรพสินค้า ที่ต้องการกล้องจำนวนมากพร้อม AI ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้องระบบสาย 32 ช่อง รองรับสูงสุด 5MP",
-      "AI แยกคน/รถ ลดแจ้งเตือนเท็จ",
-      "เหมาะงานระบบใหญ่ กล้องจำนวนมาก",
-      "บีบอัด H.265+ ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "32 ช่องบันทึก, รองรับกล้องสูงสุด 5MP (Penta-brid)",
+      "WizSense AI: แยกแยะคน/รถ แจ้งเตือนแม่นยำ, H.265+",
+      "เหมาะระบบขนาดใหญ่ โรงงาน ห้างสรรพสินค้า",
+      "ดูผ่านแอป DMSS",
     ],
   },
 
-  // ───────────────── Dahua จอมอนิเตอร์ ─────────────────
-  "Dahua|DHI-LM22-B200S": {
-    tagline: "จอมอนิเตอร์ 22 นิ้ว Full HD 100Hz ลำโพงในตัว ดูกล้องวงจรปิดโดยเฉพาะ",
-    body:
-      "DHI-LM22-B200S จอมอนิเตอร์ 22 นิ้ว ความละเอียด Full HD (1920×1080) รีเฟรช 100Hz ภาพลื่นไหล มีลำโพงในตัว ออกแบบสำหรับงานกล้องวงจรปิดโดยเฉพาะ ทนเปิดต่อเนื่อง 24 ชม. ต่อกับ DVR/NVR ผ่าน HDMI/VGA",
-    specs: [
-      "ขนาด 22 นิ้ว, ความละเอียด Full HD 1920×1080",
-      "รีเฟรช 100Hz ภาพลื่นไหล, มีลำโพงในตัว",
-      "ออกแบบสำหรับดูกล้องวงจรปิด ทนเปิด 24 ชม.",
-      "ช่องต่อ HDMI / VGA, ต่อ DVR/NVR Dahua ได้",
-    ],
-  },
-  "Dahua|DHI-LM24-B200S": {
-    tagline: "จอมอนิเตอร์ 24 นิ้ว Full HD 100Hz ลำโพงในตัว ดูกล้องวงจรปิดโดยเฉพาะ",
-    body:
-      "DHI-LM24-B200S จอมอนิเตอร์ 24 นิ้ว ความละเอียด Full HD (1920×1080) รีเฟรช 100Hz ภาพลื่นไหล มีลำโพงในตัว ออกแบบสำหรับงานกล้องวงจรปิดโดยเฉพาะ ทนเปิดต่อเนื่อง 24 ชม. ต่อกับ DVR/NVR ผ่าน HDMI/VGA",
-    specs: [
-      "ขนาด 24 นิ้ว, ความละเอียด Full HD 1920×1080",
-      "รีเฟรช 100Hz ภาพลื่นไหล, มีลำโพงในตัว",
-      "ออกแบบสำหรับดูกล้องวงจรปิด ทนเปิด 24 ชม.",
-      "ช่องต่อ HDMI / VGA, ต่อ DVR/NVR Dahua ได้",
-    ],
-  },
-
-  // ───────────────── Dahua เครื่องบันทึก NVR (กล้อง IP) ─────────────────
+  // ───────────────── Dahua — NVR ─────────────────
   "Dahua|DHI-NVR1108HS-W-S2-FCC": {
-    tagline: "เครื่องบันทึก WiFi NVR 8 กล้อง รองรับสูงสุด 6MP ไม่ต้องเดินสาย LAN",
+    tagline: "NVR WiFi 8CH Dahua H.265 บันทึกกล้อง IP/WiFi สูงสุด 6MP",
     body:
-      "DHI-NVR1108HS-W-S2-FCC เครื่องบันทึก NVR แบบ WiFi 8 ช่อง เชื่อมต่อกล้อง WiFi ตรงไม่ต้องเดินสาย LAN ระหว่างกล้อง-เครื่องบันทึก รองรับกล้องความละเอียดสูงสุด 6MP ใส่ HDD ได้สูงสุด 16TB เหมาะติดตั้งเร็วในจุดที่เดินสายลำบาก",
+      "DHI-NVR1108HS-W-S2 เครื่องบันทึก NVR WiFi 8 ช่อง H.265 รองรับกล้อง IP/WiFi ความละเอียดสูงสุด 6MP ใส่ HDD 1 ลูก เหมาะระบบ WiFi ไม่ต้องเดินสาย LAN จากกล้องถึง NVR เหมาะบ้าน ร้านค้าขนาดเล็ก ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้อง WiFi 8 ช่อง ไม่ต้องเดินสาย LAN",
-      "รองรับกล้องความละเอียดสูงสุด 6MP",
-      "ใส่ HDD ได้สูงสุด 16TB (1 ลูก)",
-      "บีบอัด H.265 ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS",
+      "8 ช่องบันทึก, รองรับกล้อง IP/WiFi สูงสุด 6MP",
+      "NVR WiFi: รับสัญญาณ WiFi จากกล้อง ไม่ต้องเดินสาย LAN",
+      "บีบอัด H.265, รองรับ HDD 1 ลูก (สูงสุด 16TB)",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DHI-NVR4104HS-4KS2/L": {
-    tagline: "เครื่องบันทึก NVR 4 กล้อง IP รองรับ 4K ใส่ HDD 1 ลูก",
+    tagline: "NVR 4CH Dahua 4K H.265+ WizSense AI รองรับกล้อง IP",
     body:
-      "DHI-NVR4104HS-4KS2/L เครื่องบันทึก NVR 4 ช่อง สำหรับกล้อง IP รองรับความละเอียดสูงสุด 4K ใส่ HDD ได้ 1 ลูก เหมาะบ้าน/ร้านเล็กที่ใช้กล้อง IP ความละเอียดสูง ดูผ่านมือถือแอป DMSS",
+      "DHI-NVR4104HS-4KS2/L เครื่องบันทึก NVR 4 ช่อง รองรับกล้อง IP ความละเอียดสูงสุด 4K WizSense AI แยกแยะคน/รถ H.265+ ประหยัดพื้นที่บันทึก ใส่ HDD 1 ลูก เหมาะบ้าน ร้านค้าขนาดเล็ก ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้อง IP 4 ช่อง รองรับสูงสุด 4K",
-      "ใส่ HDD ได้ 1 ลูก",
-      "บีบอัด H.265 ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
-    ],
-  },
-  "Dahua|DHI-NVR4104HS-P-4KS3": {
-    tagline: "เครื่องบันทึก NVR 4 กล้อง มี PoE 4 ช่อง เสียบกล้องจ่ายไฟสายเดียว",
-    body:
-      "DHI-NVR4104HS-P-4KS3 เครื่องบันทึก NVR 4 ช่อง มีพอร์ต PoE ในตัว 4 ช่อง เสียบกล้อง IP จ่ายไฟผ่านสาย LAN เส้นเดียวไม่ต้องมีปลั๊กแยกที่กล้อง รองรับความละเอียดสูงสุด 4K ใส่ HDD ได้ 1 ลูก เหมาะติดตั้งง่ายไม่ต้องเดินไฟเพิ่ม",
-    specs: [
-      "บันทึกกล้อง IP 4 ช่อง รองรับสูงสุด 4K",
-      "มีพอร์ต PoE ในตัว 4 ช่อง จ่ายไฟกล้องผ่านสาย LAN",
-      "ใส่ HDD ได้ 1 ลูก",
-      "บีบอัด H.265 ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "4 ช่องบันทึก, รองรับกล้อง IP สูงสุด 8MP (4K)",
+      "WizSense AI: แยกแยะคน/รถ แจ้งเตือนแม่นยำ",
+      "บีบอัด H.265+, รองรับ HDD 1 ลูก",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DHI-NVR4108HS-4KS3": {
-    tagline: "เครื่องบันทึก NVR 8 กล้อง IP รองรับ 4K ใส่ HDD 1 ลูก",
+    tagline: "NVR 8CH Dahua 4K H.265+ WizSense AI รองรับกล้อง IP",
     body:
-      "DHI-NVR4108HS-4KS3 เครื่องบันทึก NVR 8 ช่อง สำหรับกล้อง IP รองรับความละเอียดสูงสุด 4K ใส่ HDD ได้ 1 ลูก เหมาะงานกล้อง IP ความละเอียดสูงขนาดกลาง ดูผ่านมือถือแอป DMSS",
+      "DHI-NVR4108HS-4KS3 เครื่องบันทึก NVR 8 ช่อง รองรับกล้อง IP 4K WizSense AI แยกแยะคน/รถ H.265+ ใส่ HDD 1 ลูก เหมาะร้านค้า ออฟฟิศขนาดกลาง ที่ต้องการ AI และความละเอียดสูง ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้อง IP 8 ช่อง รองรับสูงสุด 4K",
-      "ใส่ HDD ได้ 1 ลูก",
-      "บีบอัด H.265 ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
-    ],
-  },
-  "Dahua|DHI-NVR4108HS-8P-4KS3": {
-    tagline: "เครื่องบันทึก NVR 8 กล้อง มี PoE 8 ช่อง เสียบกล้องจ่ายไฟสายเดียว",
-    body:
-      "DHI-NVR4108HS-8P-4KS3 เครื่องบันทึก NVR 8 ช่อง มีพอร์ต PoE ในตัว 8 ช่อง เสียบกล้อง IP จ่ายไฟผ่านสาย LAN เส้นเดียวครบทุกช่อง รองรับความละเอียดสูงสุด 4K ใส่ HDD ได้ 1 ลูก เหมาะติดตั้งง่ายไม่ต้องเดินไฟเพิ่ม",
-    specs: [
-      "บันทึกกล้อง IP 8 ช่อง รองรับสูงสุด 4K",
-      "มีพอร์ต PoE ในตัว 8 ช่อง จ่ายไฟกล้องผ่านสาย LAN",
-      "ใส่ HDD ได้ 1 ลูก",
-      "บีบอัด H.265 ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "8 ช่องบันทึก, รองรับกล้อง IP สูงสุด 12MP",
+      "WizSense AI: แยกแยะคน/รถ แจ้งเตือนแม่นยำ",
+      "บีบอัด H.265+, รองรับ HDD 1 ลูก",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DHI-NVR4116HS-4KS3": {
-    tagline: "เครื่องบันทึก NVR 16 กล้อง IP รองรับ 4K ใส่ HDD 1 ลูก",
+    tagline: "NVR 16CH Dahua 4K H.265+ WizSense AI รองรับกล้อง IP",
     body:
-      "DHI-NVR4116HS-4KS3 เครื่องบันทึก NVR 16 ช่อง สำหรับกล้อง IP รองรับความละเอียดสูงสุด 4K ใส่ HDD ได้ 1 ลูก เหมาะงานกล้อง IP จำนวนมากความละเอียดสูง ดูผ่านมือถือแอป DMSS",
+      "DHI-NVR4116HS-4KS3 เครื่องบันทึก NVR 16 ช่อง รองรับกล้อง IP 4K WizSense AI แยกแยะคน/รถ H.265+ ใส่ HDD 1 ลูก เหมาะสำนักงาน โกดัง ห้างร้าน ที่ต้องการ AI ครอบคลุมหลายกล้อง ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้อง IP 16 ช่อง รองรับสูงสุด 4K",
-      "ใส่ HDD ได้ 1 ลูก",
-      "บีบอัด H.265 ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "16 ช่องบันทึก, รองรับกล้อง IP สูงสุด 12MP",
+      "WizSense AI: แยกแยะคน/รถ แจ้งเตือนแม่นยำ",
+      "บีบอัด H.265+, รองรับ HDD 1 ลูก",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DHI-NVR4116HS-EI": {
-    tagline: "เครื่องบันทึก NVR 16 กล้อง IP AI แยกคน/รถในตัว ไม่ต้องใช้กล้อง AI",
+    tagline: "NVR 16CH Dahua AI 4K Deep Learning แจ้งเตือนขั้นสูง",
     body:
-      "DHI-NVR4116HS-EI เครื่องบันทึก NVR 16 ช่อง มี AI แยกคน/รถในตัวเครื่องบันทึกเอง (Easy AI) ใช้ได้กับกล้อง IP ทั่วไปโดยไม่ต้องซื้อกล้องรุ่น AI เฉพาะ ลดแจ้งเตือนเท็จจากสัตว์/ใบไม้/แสงไฟ ใส่ HDD ได้ 1 ลูก ดูผ่านมือถือแอป DMSS",
+      "DHI-NVR4116HS-EI เครื่องบันทึก NVR 16 ช่อง รองรับ 4K มี AI Deep Learning ขั้นสูง แยกแยะคน/รถ Face Detection รุ่น EI เหมาะระบบที่ต้องการ AI เชิงลึก สำนักงานขนาดใหญ่ โรงงาน ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้อง IP 16 ช่อง",
-      "AI แยกคน/รถในตัวเครื่อง (Easy AI) ไม่ต้องใช้กล้อง AI",
-      "ลดแจ้งเตือนเท็จจากสัตว์/ใบไม้/แสงไฟ",
-      "ใส่ HDD ได้ 1 ลูก, บีบอัด H.265",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
-    ],
-  },
-  "Dahua|DHI-NVR4216-16P-4KS3": {
-    tagline: "เครื่องบันทึก NVR 16 กล้อง มี PoE ครบ 16 ช่อง ใส่ HDD 2 ลูก",
-    body:
-      "DHI-NVR4216-16P-4KS3 เครื่องบันทึก NVR 16 ช่อง มีพอร์ต PoE ในตัวครบทั้ง 16 ช่อง เสียบกล้อง IP จ่ายไฟผ่านสาย LAN เส้นเดียวทุกตัว รองรับความละเอียดสูงสุด 4K ใส่ HDD ได้ 2 ลูก เก็บภาพย้อนหลังได้นานขึ้น เหมาะงานกล้องชุดใหญ่",
-    specs: [
-      "บันทึกกล้อง IP 16 ช่อง รองรับสูงสุด 4K",
-      "มีพอร์ต PoE ในตัวครบ 16 ช่อง จ่ายไฟกล้องผ่านสาย LAN",
-      "ใส่ HDD ได้ 2 ลูก เก็บภาพย้อนหลังได้นานขึ้น",
-      "บีบอัด H.265 ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "16 ช่องบันทึก, รองรับกล้อง IP สูงสุด 12MP",
+      "AI Deep Learning: แยกแยะคน/รถ, Face Detection",
+      "บีบอัด H.265+, รองรับ HDD 1 ลูก",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DHI-NVR4216-4KS3": {
-    tagline: "เครื่องบันทึก NVR 16 กล้อง IP รองรับ 4K ใส่ HDD 2 ลูก เก็บภาพยาวขึ้น",
+    tagline: "NVR 16CH Dahua 4K 2HDD WizSense AI เก็บข้อมูลได้นาน",
     body:
-      "DHI-NVR4216-4KS3 เครื่องบันทึก NVR 16 ช่อง สำหรับกล้อง IP รองรับความละเอียดสูงสุด 4K ใส่ HDD ได้ 2 ลูก เก็บภาพย้อนหลังได้นานขึ้น เหมาะงานกล้องชุดใหญ่ที่ต้องเก็บภาพนาน ดูผ่านมือถือแอป DMSS",
+      "DHI-NVR4216-4KS3 เครื่องบันทึก NVR 16 ช่อง รองรับ 4K WizSense AI ใส่ HDD ได้ 2 ลูก เก็บข้อมูลได้นานกว่า เหมาะสำนักงาน ห้างร้าน โกดัง ที่ต้องการเก็บ footage นาน ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้อง IP 16 ช่อง รองรับสูงสุด 4K",
-      "ใส่ HDD ได้ 2 ลูก เก็บภาพย้อนหลังได้นานขึ้น",
-      "บีบอัด H.265 ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "16 ช่องบันทึก, รองรับกล้อง IP สูงสุด 12MP",
+      "WizSense AI: แยกแยะคน/รถ แจ้งเตือนแม่นยำ",
+      "บีบอัด H.265+, รองรับ HDD 2 ลูก เก็บข้อมูลนาน",
+      "ดูผ่านแอป DMSS",
     ],
   },
   "Dahua|DHI-NVR4232-4KS3": {
-    tagline: "เครื่องบันทึก NVR 32 กล้อง IP รองรับ 4K ใส่ HDD 2 ลูก งานระบบใหญ่",
+    tagline: "NVR 32CH Dahua 4K 2HDD WizSense AI ระบบขนาดใหญ่",
     body:
-      "DHI-NVR4232-4KS3 เครื่องบันทึก NVR 32 ช่อง สำหรับกล้อง IP รองรับความละเอียดสูงสุด 4K ใส่ HDD ได้ 2 ลูก เหมาะงานระบบใหญ่ที่มีกล้องจำนวนมาก เช่น โรงงาน หมู่บ้าน อาคารสำนักงาน ดูผ่านมือถือแอป DMSS",
+      "DHI-NVR4232-4KS3 เครื่องบันทึก NVR 32 ช่อง รองรับ 4K WizSense AI ใส่ HDD ได้ 2 ลูก เหมาะระบบขนาดใหญ่ โรงงาน ห้างสรรพสินค้า อาคารสำนักงาน ที่ต้องการกล้องจำนวนมากพร้อม AI ดูผ่านแอป DMSS",
     specs: [
-      "บันทึกกล้อง IP 32 ช่อง รองรับสูงสุด 4K",
-      "ใส่ HDD ได้ 2 ลูก",
-      "เหมาะงานระบบใหญ่ กล้องจำนวนมาก",
-      "บีบอัด H.265 ประหยัดพื้นที่",
-      "ดูผ่านมือถือแอป DMSS / ออก HDMI",
+      "32 ช่องบันทึก, รองรับกล้อง IP สูงสุด 12MP",
+      "WizSense AI: แยกแยะคน/รถ แจ้งเตือนแม่นยำ",
+      "บีบอัด H.265+, รองรับ HDD 2 ลูก",
+      "เหมาะระบบขนาดใหญ่ โรงงาน ห้างสรรพสินค้า",
+      "ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DHI-NVR4104HS-P-4KS3": {
+    tagline: "NVR 4CH Dahua 4K มี 4-PoE จ่ายไฟกล้องผ่านสายเดียว",
+    body:
+      "DHI-NVR4104HS-P-4KS3 เครื่องบันทึก NVR 4 ช่อง รองรับ 4K มีพอร์ต PoE 4 พอร์ต จ่ายไฟกล้อง IP ผ่านสาย LAN สายเดียว ไม่ต้องเดินสายไฟแยก WizSense AI H.265+ เหมาะบ้าน ร้านค้าขนาดเล็ก ดูผ่านแอป DMSS",
+    specs: [
+      "4 ช่องบันทึก, รองรับกล้อง IP สูงสุด 12MP",
+      "4-Port PoE: จ่ายไฟกล้อง IP ผ่าน LAN สายเดียว",
+      "WizSense AI: แยกแยะคน/รถ, H.265+",
+      "รองรับ HDD 1 ลูก, ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DHI-NVR4108HS-8P-4KS3": {
+    tagline: "NVR 8CH Dahua 4K มี 8-PoE จ่ายไฟกล้อง IP สายเดียว",
+    body:
+      "DHI-NVR4108HS-8P-4KS3 เครื่องบันทึก NVR 8 ช่อง รองรับ 4K มีพอร์ต PoE 8 พอร์ต จ่ายไฟกล้อง IP ผ่าน LAN สายเดียวทุกช่อง WizSense AI H.265+ เหมาะร้านค้า ออฟฟิศ ที่ต้องการความสะดวกติดตั้ง ดูผ่านแอป DMSS",
+    specs: [
+      "8 ช่องบันทึก, รองรับกล้อง IP สูงสุด 12MP",
+      "8-Port PoE: จ่ายไฟกล้อง IP ผ่าน LAN สายเดียวทุกช่อง",
+      "WizSense AI: แยกแยะคน/รถ, H.265+",
+      "รองรับ HDD 1 ลูก, ดูผ่านแอป DMSS",
+    ],
+  },
+  "Dahua|DHI-NVR4216-16P-4KS3": {
+    tagline: "NVR 16CH Dahua 4K มี 16-PoE 2HDD WizSense AI ระบบกลาง-ใหญ่",
+    body:
+      "DHI-NVR4216-16P-4KS3 เครื่องบันทึก NVR 16 ช่อง รองรับ 4K มีพอร์ต PoE 16 พอร์ต ใส่ HDD ได้ 2 ลูก WizSense AI เหมาะสำนักงาน โกดัง ห้างร้าน ที่ต้องการ NVR all-in-one ไม่ต้องใช้ switch PoE แยก ดูผ่านแอป DMSS",
+    specs: [
+      "16 ช่องบันทึก, รองรับกล้อง IP สูงสุด 12MP",
+      "16-Port PoE: จ่ายไฟกล้อง IP ครบทุกช่อง ไม่ต้องใช้ switch PoE แยก",
+      "WizSense AI: แยกแยะคน/รถ, H.265+",
+      "รองรับ HDD 2 ลูก เก็บข้อมูลนาน",
+      "ดูผ่านแอป DMSS",
     ],
   },
 
-  // ───────────────── Dahua จ่ายไฟ ─────────────────
-  "Dahua|DH-PFM321-US (12V 1A)": {
-    tagline: "อะแดปเตอร์ไฟ 12V 1A หัวกลม สำรอง/เปลี่ยนแทนของกล้อง Dahua",
-    body:
-      "DH-PFM321-US อะแดปเตอร์แปลงไฟ 12V 1A หัวกลม (barrel jack) ใช้สำรองหรือเปลี่ยนแทนของเดิมที่ชำรุดสำหรับกล้องวงจรปิด Dahua รุ่นที่ใช้ไฟ 12V เสียบใช้งานได้เลย",
-    specs: [
-      "เอาต์พุต 12V 1A, หัวกลม (barrel jack)",
-      "ใช้สำรอง/เปลี่ยนแทนอะแดปเตอร์กล้อง Dahua ที่ใช้ไฟ 12V",
-      "เสียบใช้งานได้เลย",
-    ],
-  },
-
-  // ───────────────── Dahua สวิตช์ ─────────────────
+  // ───────────────── Dahua — Switches ─────────────────
   "Dahua|CS4010-8ET-110": {
-    tagline: "สวิตช์ PoE 8 พอร์ต (10/100) + 2 Gigabit จ่ายไฟแรง 110W ใส่กล่องเดสก์ท็อป",
+    tagline: "Managed switch Dahua 8-Port 100M PoE + 2 Gigabit 110W สำหรับกล้อง CCTV",
     body:
-      "CS4010-8ET-110 สวิตช์ PoE 8 พอร์ต (10/100) + 2 พอร์ต Gigabit uplink งบจ่ายไฟ PoE รวม 110W จ่ายไฟกล้อง IP/AP ผ่านสาย LAN เส้นเดียว มี PoE Watchdog ตรวจจับและรีสตาร์ทพอร์ตที่ค้างอัตโนมัติ ตัวถังโลหะระบายความร้อนดี",
+      "CS4010-8ET-110 managed switch Dahua 8 พอร์ต 10/100Mbps PoE + 2 พอร์ต Gigabit uplink กำลังไฟ PoE รวม 110W เหมาะจ่ายไฟกล้อง IP PoE 8 ตัว ออกแบบมาสำหรับระบบ CCTV Dahua โดยเฉพาะ",
     specs: [
-      "8 พอร์ต PoE (10/100) + 2 พอร์ต Gigabit uplink",
-      "งบจ่ายไฟ PoE รวม 110W",
-      "PoE Watchdog ตรวจจับ/รีสตาร์ทพอร์ตค้างอัตโนมัติ",
-      "ป้องกันลูปสัญญาณ (Loop Protection)",
-      "ตัวถังโลหะ ระบายความร้อนดี ใช้งาน -10°C ถึง 55°C",
+      "8-Port 10/100Mbps PoE + 2-Port Gigabit uplink",
+      "กำลังไฟ PoE รวม 110W (รองรับกล้อง PoE 8 ตัว)",
+      "Managed switch, รองรับ IEEE 802.3af/at",
+      "ออกแบบสำหรับระบบ CCTV Dahua",
     ],
   },
   "Dahua|CS4010-8GT-110": {
-    tagline: "สวิตช์ PoE Gigabit ครบ 10 พอร์ต (8 PoE 110W) ความเร็วเต็มทุกพอร์ต",
+    tagline: "Managed switch Dahua 10-Port Gigabit PoE 110W สำหรับกล้อง CCTV",
     body:
-      "CS4010-8GT-110 สวิตช์ Gigabit ครบทั้ง 10 พอร์ต โดย 8 พอร์ตจ่ายไฟ PoE งบรวม 110W จ่ายไฟกล้อง IP/AP ความเร็วเต็ม 1000Mbps มี PoE Watchdog ตรวจจับและรีสตาร์ทพอร์ตที่ค้างอัตโนมัติ เหมาะกล้องความละเอียดสูงที่ต้องการแบนด์วิดท์มาก",
+      "CS4010-8GT-110 managed switch Dahua 10 พอร์ต Gigabit โดย 8 พอร์ตรองรับ PoE กำลังไฟรวม 110W รองรับกล้อง IP PoE Gigabit เหมาะระบบ CCTV ที่ต้องการ bandwidth สูงและจ่ายไฟกล้องครบชุด",
     specs: [
-      "10 พอร์ต Gigabit ทั้งหมด, 8 พอร์ตจ่ายไฟ PoE",
-      "งบจ่ายไฟ PoE รวม 110W",
-      "PoE Watchdog ตรวจจับ/รีสตาร์ทพอร์ตค้างอัตโนมัติ",
-      "เหมาะกล้องความละเอียดสูงที่ต้องการแบนด์วิดท์มาก",
-      "ตัวถังโลหะ ระบายความร้อนดี ใช้งาน -10°C ถึง 55°C",
+      "10-Port Gigabit: 8-Port PoE + 2-Port uplink",
+      "กำลังไฟ PoE รวม 110W",
+      "Managed switch, รองรับ IEEE 802.3af/at",
+      "ออกแบบสำหรับระบบ CCTV Dahua",
     ],
   },
   "Dahua|CS4010-8GT-60": {
-    tagline: "สวิตช์ PoE Gigabit ครบ 10 พอร์ต (8 PoE 60W) คุ้มกว่ารุ่น 110W",
+    tagline: "Managed switch Dahua 10-Port Gigabit PoE 60W ราคาคุ้ม",
     body:
-      "CS4010-8GT-60 สวิตช์ Gigabit ครบทั้ง 10 พอร์ต โดย 8 พอร์ตจ่ายไฟ PoE งบรวม 60W เหมาะกล้อง IP ทั่วไปที่กินไฟไม่สูงมาก ราคาคุ้มกว่ารุ่นงบ 110W มี PoE Watchdog ตรวจจับและรีสตาร์ทพอร์ตที่ค้างอัตโนมัติ",
+      "CS4010-8GT-60 managed switch Dahua 10 พอร์ต Gigabit โดย 8 พอร์ตรองรับ PoE กำลังไฟรวม 60W เหมาะระบบกล้อง IP PoE ขนาดเล็ก-กลาง ที่กล้องใช้ไฟไม่สูง ราคาคุ้มกว่ารุ่น 110W",
     specs: [
-      "10 พอร์ต Gigabit ทั้งหมด, 8 พอร์ตจ่ายไฟ PoE",
-      "งบจ่ายไฟ PoE รวม 60W (คุ้มกว่ารุ่น 110W)",
-      "PoE Watchdog ตรวจจับ/รีสตาร์ทพอร์ตค้างอัตโนมัติ",
-      "เหมาะกล้อง IP ทั่วไปที่กินไฟไม่สูงมาก",
-      "ตัวถังโลหะ ระบายความร้อนดี ใช้งาน -10°C ถึง 55°C",
+      "10-Port Gigabit: 8-Port PoE + 2-Port uplink",
+      "กำลังไฟ PoE รวม 60W",
+      "Managed switch, รองรับ IEEE 802.3af/at",
+      "ออกแบบสำหรับระบบ CCTV Dahua",
     ],
   },
 
+  // ───────────────── EZVIZ — Outdoor WiFi PT ─────────────────
+  "EZVIZ|H8c": {
+    tagline: "กล้อง WiFi outdoor PT 1080P ภาพสีกลางคืน Auto Tracking ราคาคุ้ม",
+    body:
+      "H8c กล้อง WiFi outdoor Pan & Tilt 1080P Color Night Vision เห็นภาพสีกลางคืน หมุนได้ 350° Auto Tracking ติดตามคนอัตโนมัติ AI Human detection แจ้งเตือนแม่นยำ Two-Way Talk กันน้ำ IP65 เหมาะหน้าบ้าน สวน ลานจอด ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 1080P, Pan 350° / Tilt 80°",
+      "Color Night Vision: ภาพสีกลางคืน (spotlight + IR)",
+      "Auto Tracking ติดตามคนอัตโนมัติ, AI Human detection",
+      "Two-Way Talk, WiFi 2.4GHz, กันน้ำ IP65",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H8c Pro 2K": {
+    tagline: "กล้อง WiFi outdoor PT 2K ภาพสีกลางคืน Auto Tracking พูดคุยสองทาง",
+    body:
+      "H8c Pro 2K กล้อง WiFi outdoor Pan & Tilt 2K Color Night Vision ภาพสีกลางคืน Auto Tracking ติดตามคนอัตโนมัติ Two-Way Talk AI Human detection หมุน 350° กันน้ำ ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 2K, Pan 350° / Tilt 80°",
+      "Color Night Vision (spotlight + IR), Auto Tracking",
+      "Two-Way Talk, AI Human detection",
+      "WiFi 2.4GHz, กันน้ำ (outdoor), ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H8c Pro 3K": {
+    tagline: "กล้อง WiFi outdoor PT 3K ภาพสีกลางคืน Auto Tracking ความละเอียดสูง",
+    body:
+      "H8c Pro 3K กล้อง WiFi outdoor Pan & Tilt 3K Color Night Vision ความละเอียดสูง Auto Tracking ติดตามคนอัตโนมัติ AI Human detection หมุน 350° กันน้ำ ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 3K, Pan 350° / Tilt 80°",
+      "Color Night Vision (spotlight + IR), Auto Tracking",
+      "AI Human detection, WiFi 2.4GHz, กันน้ำ",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H8c Pro 4K": {
+    tagline: "กล้อง WiFi outdoor PT 4K ภาพสีกลางคืน Auto Tracking ความละเอียดสูงสุด",
+    body:
+      "H8c Pro 4K กล้อง WiFi outdoor Pan & Tilt 4K Color Night Vision ความละเอียดสูงสุดในซีรีส์ H8c Auto Tracking ติดตามคนอัตโนมัติ AI Human detection หมุน 350° กันน้ำ ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 4K, Pan 350° / Tilt 80°",
+      "Color Night Vision (spotlight + IR), Auto Tracking",
+      "AI Human detection, WiFi 2.4GHz, กันน้ำ",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H8c 4G": {
+    tagline: "กล้อง WiFi/4G outdoor PT 2K ใส่ซิม Auto Tracking AI พูดคุยสองทาง",
+    body:
+      "H8c 4G กล้อง outdoor Pan & Tilt 2K รองรับทั้ง WiFi และซิม 4G ส่งภาพผ่านมือถือแม้ไม่มีเน็ตบ้าน Auto Tracking ติดตามการเคลื่อนไหวอัตโนมัติ AI detection Two-Way Talk ทนแดดทนน้ำ เหมาะสวน ไซต์งาน ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 2K, Pan & Tilt 360°",
+      "WiFi + 4G SIM: ส่งภาพแม้ไม่มีเน็ตบ้าน",
+      "Auto Tracking: ติดตามอัตโนมัติ",
+      "AI detection, Two-Way Talk",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+
+  // ───────────────── EZVIZ — Outdoor Multi/Dual Lens ─────────────────
+  "EZVIZ|H9c Dual 2K": {
+    tagline: "กล้อง WiFi outdoor dual-lens 2K+2K เห็นสองมุมพร้อมกัน",
+    body:
+      "H9c Dual 2K กล้อง WiFi outdoor เลนส์คู่ ทั้งสองเลนส์ความละเอียด 2K เห็นภาพสองมุมพร้อมกัน ครอบคลุมพื้นที่กว้างกว่ากล้องเลนส์เดี่ยว ทนแดดทนน้ำ AI detection ดูผ่านแอป EZVIZ",
+    specs: [
+      "Dual Lens 2K+2K เห็นสองมุมพร้อมกัน",
+      "AI detection, WiFi 2.4GHz",
+      "ทนแดดทนน้ำ (outdoor)",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H9c Dual 3K": {
+    tagline: "กล้อง WiFi outdoor dual-lens 3K เห็นสองมุม ความละเอียดสูง",
+    body:
+      "H9c Dual 3K กล้อง WiFi outdoor เลนส์คู่ความละเอียด 3K เห็นภาพสองมุมพร้อมกัน รายละเอียดชัดขึ้น ครอบคลุมพื้นที่กว้าง ทนแดดทนน้ำ ดูผ่านแอป EZVIZ",
+    specs: [
+      "Dual Lens 3K เห็นสองมุมพร้อมกัน",
+      "ความละเอียดสูงกว่ารุ่น 2K Dual",
+      "AI detection, WiFi 2.4GHz, ทนแดดทนน้ำ",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H80f Multi": {
+    tagline: "กล้อง WiFi outdoor 2K+ triple-lens ซูม 12x ครอบคลุม 3 มุม",
+    body:
+      "H80f Multi กล้อง WiFi outdoor เลนส์สาม (Triple Lens) 2K+ ซูม optical/digital รวมถึง 12x เห็นภาพสามมุมพร้อมกัน ครอบคลุมพื้นที่กว้างสุดในไลน์ EZVIZ outdoor ทนแดดทนน้ำ ดูผ่านแอป EZVIZ",
+    specs: [
+      "Triple Lens 2K+ เห็นสามมุมพร้อมกัน",
+      "ซูม 12x (optical + digital)",
+      "WiFi 2.4GHz, ทนแดดทนน้ำ",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H80x Dual": {
+    tagline: "กล้อง WiFi outdoor 4K dual-lens ColorFULL ภาพสีเต็มทั้งคืน",
+    body:
+      "H80x Dual กล้อง WiFi outdoor เลนส์คู่ 4K ColorFULL เห็นภาพสีคมชัดตลอดคืนทั้งสองเลนส์ ความละเอียดสูงสุด 4K ครอบคลุมสองมุม ทนแดดทนน้ำ ดูผ่านแอป EZVIZ",
+    specs: [
+      "Dual Lens 4K ColorFULL: ภาพสีเต็มทั้งคืน",
+      "เห็นสองมุมพร้อมกัน ความละเอียดสูงสุด",
+      "WiFi, ทนแดดทนน้ำ (outdoor)",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+
+  // ───────────────── EZVIZ — Outdoor Bullet ─────────────────
+  "EZVIZ|LC1C": {
+    tagline: "กล้อง WiFi outdoor 1080P Two-in-One มีไฟ spotlight ในตัว",
+    body:
+      "LC1C กล้อง WiFi outdoor 1080P Two-in-One มีไฟ spotlight ในตัว เมื่อตรวจจับ motion จะเปิดไฟส่องสว่างและแจ้งเตือนพร้อมกัน AI Human detection ทนแดดทนน้ำ เหมาะทางเดิน ลานจอด ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 1080P, มีไฟ spotlight ในตัว",
+      "AI Human detection: เปิดไฟ+แจ้งเตือนอัตโนมัติ",
+      "WiFi 2.4GHz, ทนแดดทนน้ำ IP67",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|C3TN": {
+    tagline: "กล้อง WiFi outdoor bullet 1080P H.265 IP67 ราคาคุ้ม",
+    body:
+      "C3TN กล้อง WiFi outdoor ทรงกระบอก 1080P H.265 ประหยัดพื้นที่บันทึก IR กลางคืนภาพขาวดำชัด กันน้ำ IP67 ราคาคุ้มต่อเมตรที่สุดในไลน์ outdoor EZVIZ เหมาะหน้าบ้าน ร้านค้า ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 1080P, H.265 ประหยัดพื้นที่",
+      "IR กลางคืนภาพขาวดำชัด",
+      "WiFi 2.4GHz, กันน้ำ IP67",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|C3TN 2K": {
+    tagline: "กล้อง WiFi outdoor bullet 2K OutPro AI ความละเอียดสูงขึ้น",
+    body:
+      "C3TN 2K (OutPro) กล้อง WiFi outdoor ทรงกระบอก 2K AI Human detection IR กลางคืน กันน้ำ ความละเอียดสูงกว่ารุ่น 1080P เห็นรายละเอียดชัดขึ้น เหมาะหน้าบ้าน ร้านค้า ลานจอด ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 2K, AI Human detection",
+      "IR กลางคืนภาพขาวดำชัด",
+      "WiFi 2.4GHz, กันน้ำ (outdoor)",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H3C Color 2K": {
+    tagline: "กล้อง WiFi outdoor bullet 2K ColorVu ภาพสีตลอดคืน IP67",
+    body:
+      "H3C Color 2K กล้อง WiFi outdoor ทรงกระบอก 2K ColorVu เห็นภาพสีคมชัดตลอดคืน H.265 กันน้ำ IP67 เหมาะหน้าบ้าน ร้านค้า ที่ต้องการภาพสีกลางคืนในรูปแบบ bullet ติดตั้งง่าย ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 2K, ColorVu: ภาพสีตลอดคืน",
+      "H.265, กันน้ำ IP67",
+      "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+    ],
+  },
+
+  // ───────────────── EZVIZ — Indoor WiFi ─────────────────
+  "EZVIZ|C6N": {
+    tagline: "กล้อง WiFi indoor PT 1080P ราคาเริ่มต้น ดูแลบ้าน",
+    body:
+      "C6N กล้อง WiFi indoor Pan & Tilt 1080P ราคาเข้าถึงง่าย หมุนได้ 360° AI Human detection มีไมค์+ลำโพงพูดคุยสองทาง เหมาะดูแลบ้าน ห้องนอน ห้องเด็ก สัตว์เลี้ยง ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 1080P, Pan & Tilt 360°",
+      "AI Human detection, Two-Way Talk",
+      "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H6c Pro 2K": {
+    tagline: "กล้อง WiFi indoor PT 2K Smart Color Night Vision ภาพสีกลางคืน",
+    body:
+      "H6c Pro 2K กล้อง WiFi indoor Pan & Tilt 2K Smart Color Night Vision เห็นภาพสีชัดแม้แสงน้อย หมุน 360° AI Human detection มีไมค์+ลำโพง เหมาะดูแลบ้าน ออฟฟิศ ร้านค้า ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 2K, Pan & Tilt 360°",
+      "Smart Color Night Vision: ภาพสีแสงน้อย",
+      "AI Human detection, Two-Way Talk",
+      "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H6c Pro 3K": {
+    tagline: "กล้อง WiFi indoor PT 3K ภาพสีกลางคืน ความละเอียดสูง",
+    body:
+      "H6c Pro 3K กล้อง WiFi indoor Pan & Tilt 3K Smart Color Night Vision ความละเอียดสูงขึ้น เห็นรายละเอียดชัด AI Human detection มีไมค์+ลำโพง เหมาะดูแลบ้าน ออฟฟิศ ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 3K, Pan & Tilt 360°",
+      "Smart Color Night Vision, AI detection",
+      "Two-Way Talk, WiFi 2.4GHz",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H6c Pro 4K": {
+    tagline: "กล้อง WiFi indoor PT 4K ภาพสีกลางคืน ความละเอียดสูงสุด",
+    body:
+      "H6c Pro 4K กล้อง WiFi indoor Pan & Tilt 4K Smart Color Night Vision ความละเอียดสูงสุดในซีรีส์ H6c Pro เห็นรายละเอียดชัดสุด AI detection มีไมค์+ลำโพง ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 4K, Pan & Tilt 360°",
+      "Smart Color Night Vision, AI detection",
+      "Two-Way Talk, WiFi 2.4GHz",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|C6N G1": {
+    tagline: "กล้อง WiFi indoor PT 4K/8MP มุมมอง 360° ครอบคลุมทุกมุม",
+    body:
+      "C6N G1 กล้อง WiFi indoor Pan & Tilt 4K/8MP มุมมอง 360° ความละเอียดสูงสุด 8MP เห็นทั่วห้อง AI Human detection มีไมค์+ลำโพง เหมาะห้องนั่งเล่น ออฟฟิศ ร้านค้า ที่ต้องการเห็นทั่วถึง ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 4K/8MP, Pan & Tilt 360°",
+      "มุมมองครอบคลุมทุกมุมห้อง",
+      "AI Human detection, Two-Way Talk",
+      "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H7c Dual": {
+    tagline: "กล้อง WiFi indoor dual-lens 2K+ เห็นสองมุมพร้อมกัน",
+    body:
+      "H7c Dual กล้อง WiFi indoor เลนส์คู่ 2K+ เห็นภาพสองมุมพร้อมกันโดยไม่ต้องหมุน ครอบคลุมพื้นที่กว้างในห้องเดียว AI Human detection มีไมค์+ลำโพง ดูผ่านแอป EZVIZ",
+    specs: [
+      "Dual Lens 2K+ เห็นสองมุมพร้อมกัน",
+      "AI Human detection, Two-Way Talk",
+      "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|H1c": {
+    tagline: "กล้อง WiFi indoor 1080P ราคาเริ่มต้น human shape detect",
+    body:
+      "H1c กล้อง WiFi indoor 1080P ราคาคุ้ม AI Human Shape Detection แยกแยะคนจาก motion ทั่วไป มีไมค์บันทึกเสียง เหมาะดูแลห้องนอน ห้องเด็ก ออฟฟิศ เป็น entry-level ที่สุดของไลน์ indoor EZVIZ ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 1080P, fixed lens",
+      "AI Human Shape Detection",
+      "WiFi 2.4GHz, ไมค์บันทึกเสียง",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+
+  // ───────────────── EZVIZ — Special ─────────────────
+  "EZVIZ|CB2": {
+    tagline: "กล้อง WiFi แบตเตอรี่ 1080P ชาร์จ Type-C ไม่ต้องเสียบไฟ",
+    body:
+      "CB2 กล้อง WiFi 1080P มีแบตเตอรี่ในตัว ชาร์จผ่าน Type-C ไม่ต้องเดินสายไฟ ติดตั้งได้ทุกที่ AI Human detection IR กลางคืน เหมาะหน้าประตู ทางเดิน มุมที่เดินสายไฟไม่ได้ ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 1080P, แบตเตอรี่ในตัว",
+      "ชาร์จ Type-C, ไม่ต้องเดินสายไฟ",
+      "AI Human detection, IR กลางคืน",
+      "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|E4p": {
+    tagline: "กล้อง WiFi fisheye 3K+ มุมกว้าง 360° IR กลางคืน เห็นทั่วห้อง",
+    body:
+      "E4p กล้อง WiFi fisheye 3K+ เลนส์ตาปลา มุมมอง 360° ติดเพดานเห็นทั่วห้องในกล้องเดียว IR กลางคืนภาพขาวดำชัด เหมาะห้องเดียวที่ต้องการมุมกว้างสูงสุด ไม่ต้องใช้กล้องหลายตัว ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 3K+, เลนส์ fisheye มุมมอง 360°",
+      "ติดเพดานเห็นทั่วห้องในกล้องเดียว",
+      "IR กลางคืน, WiFi 2.4GHz",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+  "EZVIZ|HB8 Lite": {
+    tagline: "กล้อง WiFi แบตเตอรี่ PT 2K+ + แผงโซล่าร์ 5W AOV 24/7 ไม่ต้องเสียบไฟ",
+    body:
+      "HB8 Lite กล้อง WiFi outdoor Pan & Tilt 2K+ มีแบตเตอรี่ในตัว + แผงโซล่าร์ 5W ชาร์จอัตโนมัติตลอดวัน AOV (Always-On Vision) บันทึกได้ 24/7 ไม่ต้องเสียบไฟ ไม่ต้องเดินสาย AI detection ดูผ่านแอป EZVIZ",
+    specs: [
+      "ความละเอียด 2K+, Pan & Tilt (outdoor)",
+      "แบตเตอรี่ในตัว + แผงโซล่าร์ 5W AOV 24/7",
+      "ไม่ต้องเสียบไฟ ไม่ต้องเดินสาย",
+      "AI detection, WiFi 2.4GHz",
+      "ดูผ่านแอป EZVIZ",
+    ],
+  },
+
+  // ───────────────── Imou — Indoor WiFi Cameras ─────────────────
+  "Imou|IPC-A32EP-L": {
+    tagline: "กล้อง WiFi indoor PT 2K/3MP Ranger 2 AI แยกแยะคน หมุนได้",
+    body:
+      "IPC-A32EP-L Imou Ranger 2 กล้อง WiFi indoor ความละเอียด 2K/3MP หมุนได้ 360° (Pan & Tilt) AI ตรวจจับคน แจ้งเตือนแม่นยำ ลด false alarm จากสัตว์เลี้ยง มีไมค์+ลำโพงพูดคุยสองทาง ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 2K/3MP, หมุน Pan & Tilt 360°",
+      "AI Human detection แจ้งเตือนแม่นยำ",
+      "Two-Way Talk: ไมค์+ลำโพงในตัว",
+      "WiFi 2.4GHz, ไม่ต้องเดินสาย",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-A52P-V1": {
+    tagline: "กล้อง WiFi indoor PT 3K/5MP A1 ความละเอียดสูง หมุนได้",
+    body:
+      "IPC-A52P-V1 Imou A1 กล้อง WiFi indoor ความละเอียด 3K/5MP หมุนได้ 360° (Pan & Tilt) ภาพคมชัดรายละเอียดสูง มีไมค์+ลำโพงพูดคุยสองทาง เหมาะดูแลบ้าน ออฟฟิศ ร้านค้า ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 3K/5MP, หมุน Pan & Tilt 360°",
+      "ภาพคมชัด รายละเอียดสูงกว่า 2K",
+      "Two-Way Talk: ไมค์+ลำโพงในตัว",
+      "WiFi 2.4GHz, ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-S2XP-6MOWED": {
+    tagline: "กล้อง WiFi indoor Ranger Dual 6MP เลนส์คู่ 3MP+3MP เห็นสองทิศพร้อมกัน",
+    body:
+      "IPC-S2XP-6MOWED Imou Ranger Dual กล้อง WiFi indoor เลนส์คู่ (Dual Lens) รวม 6MP (3MP+3MP) เห็นภาพสองมุมพร้อมกัน ครอบคลุมพื้นที่กว้างกว่ากล้องเลนส์เดี่ยว หมุนได้ เหมาะร้านค้า ออฟฟิศ ดูผ่านแอป Imou Life",
+    specs: [
+      "Dual Lens 6MP รวม (3MP + 3MP) เห็นสองมุมพร้อมกัน",
+      "Pan & Tilt ในตัว",
+      "WiFi 2.4GHz, Two-Way Talk",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-K2MP-3H1WE": {
+    tagline: "กล้อง WiFi indoor PT 2K/3MP Ranger Mini Smart Tracking ติดตามอัตโนมัติ",
+    body:
+      "IPC-K2MP-3H1WE Imou Ranger Mini กล้อง WiFi indoor ขนาดเล็กกระทัดรัด 2K/3MP Smart Tracking ติดตามการเคลื่อนไหวอัตโนมัติ หมุน Pan & Tilt ตาม AI Human detection มีไมค์+ลำโพง ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 2K/3MP, หมุน Pan & Tilt",
+      "Smart Tracking: ติดตามการเคลื่อนไหวอัตโนมัติ",
+      "AI Human detection",
+      "WiFi 2.4GHz, Two-Way Talk",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-K2MP-5H1WE": {
+    tagline: "กล้อง WiFi indoor PT 3K/5MP Ranger Mini ความละเอียดสูง ขนาดเล็ก",
+    body:
+      "IPC-K2MP-5H1WE Imou Ranger Mini กล้อง WiFi indoor ขนาดเล็กกะทัดรัด ความละเอียด 3K/5MP Pan & Tilt ภาพคมชัด AI Human detection มีไมค์+ลำโพง เหมาะห้องนอน ห้องทำงาน มุมเล็ก ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 3K/5MP, หมุน Pan & Tilt",
+      "AI Human detection",
+      "ขนาดเล็ก กะทัดรัด",
+      "WiFi 2.4GHz, Two-Way Talk",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|REX VT PRO": {
+    tagline: "กล้อง WiFi indoor 3K/5MP Video Intercom พูดคุยวิดีโอ ป้องกันบ้าน",
+    body:
+      "REX VT PRO กล้อง WiFi indoor 3K/5MP พร้อมฟีเจอร์ Video Intercom โทรวิดีโอสื่อสารภายในบ้านได้ AI Human detection แจ้งเตือนแม่นยำ มีไมค์+ลำโพง เหมาะใช้ทั้งดูแลบ้านและสื่อสารระหว่างห้อง ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 3K/5MP",
+      "Video Intercom: โทรวิดีโอสื่อสารภายในบ้าน",
+      "AI Human detection, Two-Way Talk",
+      "WiFi 2.4GHz, ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-DK2": {
+    tagline: "กล้อง WiFi indoor 1080P/2MP PT ราคาคุ้ม AI แยกแยะคน",
+    body:
+      "IPC-DK2 กล้อง WiFi indoor 1080P/2MP Pan & Tilt ราคาคุ้ม AI Human detection แจ้งเตือนเมื่อเห็นคน มีไมค์+ลำโพงพูดคุยสองทาง เหมาะดูแลบ้าน ห้องนอน ห้องเด็ก ราคาเริ่มต้น ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 1080P/2MP, หมุน Pan & Tilt",
+      "AI Human detection",
+      "Two-Way Talk: ไมค์+ลำโพงในตัว",
+      "WiFi 2.4GHz, ดูผ่านแอป Imou Life",
+    ],
+  },
+
+  // ───────────────── Imou — Outdoor WiFi Cameras (Bullet) ─────────────────
+  "Imou|IPC-F32FP": {
+    tagline: "กล้อง WiFi 6 outdoor bullet 2K/3MP Bullet 2E ภาพสีทั้งคืน IP67",
+    body:
+      "IPC-F32FP Imou Bullet 2E กล้อง WiFi 6 outdoor ทรงกระบอก 2K/3MP Full-Color Night เห็นภาพสีคมชัดทั้งคืน มีไมค์บันทึกเสียงในตัว กันน้ำ IP67 ไม่ต้องเดินสาย เหมาะหน้าบ้าน ลานจอด ร้านค้า ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 2K/3MP, Full-Color Night ภาพสีทั้งคืน",
+      "WiFi 6 (802.11ax), กันน้ำ IP67",
+      "ไมค์บันทึกเสียงในตัว",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-F32P": {
+    tagline: "กล้อง WiFi outdoor bullet 2K/3MP Bullet 2C ราคาคุ้ม มีไมค์",
+    body:
+      "IPC-F32P Imou Bullet 2C กล้อง WiFi outdoor ทรงกระบอก 2K/3MP IR กลางคืน ภาพขาวดำชัด มีไมค์บันทึกเสียง ไม่ต้องเดินสาย ราคาคุ้ม เหมาะหน้าบ้าน ร้านค้า ลานจอด ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 2K/3MP, IR กลางคืนภาพขาวดำชัด",
+      "ไมค์บันทึกเสียงในตัว",
+      "WiFi 2.4GHz, ทนแดดทนน้ำ (outdoor)",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-F42P": {
+    tagline: "กล้อง WiFi outdoor bullet 2K+/4MP Bullet 2C ความละเอียดสูงขึ้น มีไมค์",
+    body:
+      "IPC-F42P Imou Bullet 2C กล้อง WiFi outdoor ทรงกระบอก 2K+/4MP IR กลางคืน ความละเอียดสูงกว่า 3MP เห็นรายละเอียดชัดขึ้น มีไมค์บันทึกเสียง เหมาะหน้าบ้าน ลานจอด ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 2K+/4MP, IR กลางคืนภาพขาวดำชัด",
+      "ไมค์บันทึกเสียงในตัว",
+      "WiFi 2.4GHz, ทนแดดทนน้ำ (outdoor)",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-F52FP": {
+    tagline: "กล้อง WiFi outdoor bullet 3K/5MP Bullet 2E ภาพสีทั้งคืน ความละเอียดสูงสุด",
+    body:
+      "IPC-F52FP Imou Bullet 2E กล้อง WiFi outdoor ทรงกระบอก 3K/5MP Full-Color Night ภาพสีคมชัดทั้งคืน ความละเอียดสูงสุดในไลน์ bullet เห็นรายละเอียดชัดขึ้น เหมาะหน้าบ้าน ลานจอด ร้านค้า ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 3K/5MP, Full-Color Night ภาพสีทั้งคืน",
+      "WiFi 2.4GHz, ทนแดดทนน้ำ (outdoor)",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+
+  // ───────────────── Imou — Outdoor WiFi Cameras (PT) ─────────────────
+  "Imou|IPC-DK7": {
+    tagline: "กล้อง WiFi outdoor PT 2K/3MP Smart Color กลางคืน พูดคุยสองทาง IP66",
+    body:
+      "IPC-DK7 กล้อง WiFi outdoor Pan & Tilt 2K/3MP Smart Color เห็นภาพสีชัดกลางคืน กันน้ำ IP66 มีไมค์+ลำโพงพูดคุยสองทาง หมุนได้ 360° เหมาะสวน ลานจอด หน้าบ้าน ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 2K/3MP, Smart Color กลางคืน",
+      "Pan & Tilt 360°, กันน้ำ IP66",
+      "Two-Way Talk: ไมค์+ลำโพงในตัว",
+      "WiFi 2.4GHz, ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-GS7EP-5M0WE": {
+    tagline: "กล้อง WiFi 6 outdoor PT 3K/5MP Cruiser 2 Full-Color Night สัญญาณเตือน",
+    body:
+      "IPC-GS7EP-5M0WE Imou Cruiser 2 กล้อง WiFi 6 outdoor Pan & Tilt 3K/5MP Full-Color Night ภาพสีคมชัดทั้งคืน หมุนได้ 340° มี siren 110dB สัญญาณเตือนเสียงดัง Two-Way Talk กันน้ำ IP66 เหมาะสวน ลานจอด หน้าบ้าน ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 3K/5MP, Pan 340°, Full-Color Night",
+      "WiFi 6 (802.11ax), กันน้ำ IP66",
+      "Siren 110dB สัญญาณเตือนเสียงดัง",
+      "Two-Way Talk (ไมค์+ลำโพง), ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-S31FEP": {
+    tagline: "กล้อง WiFi outdoor PT 2K/3MP Cruiser SE+ หมุนได้ นอกอาคาร",
+    body:
+      "IPC-S31FEP Imou Cruiser SE+ กล้อง WiFi outdoor Pan & Tilt 2K/3MP IR กลางคืน หมุน 360° กันน้ำ AI Human detection มีไมค์+ลำโพง เหมาะสวน ลานจอด หน้าบ้าน ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 2K/3MP, Pan & Tilt 360°",
+      "AI Human detection, IR กลางคืน",
+      "กันน้ำ (outdoor), WiFi 2.4GHz",
+      "Two-Way Talk, ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-S51FEP": {
+    tagline: "กล้อง WiFi outdoor PT 3K/5MP Cruiser SE+ ความละเอียดสูง หมุนได้",
+    body:
+      "IPC-S51FEP Imou Cruiser SE+ กล้อง WiFi outdoor Pan & Tilt 3K/5MP ความละเอียดสูง IR กลางคืน หมุน 360° กันน้ำ AI Human detection มีไมค์+ลำโพง เหมาะสวน ลานจอด หน้าบ้าน ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 3K/5MP, Pan & Tilt 360°",
+      "AI Human detection, IR กลางคืน",
+      "กันน้ำ (outdoor), WiFi 2.4GHz",
+      "Two-Way Talk, ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-K7FP-5H0TE": {
+    tagline: "กล้อง WiFi outdoor PT 3K/5MP Cruiser SC ใส่ซิม 4G ไม่ต้องมี WiFi",
+    body:
+      "IPC-K7FP-5H0TE Imou Cruiser SC กล้อง outdoor Pan & Tilt 3K/5MP ใส่ซิม 4G ส่งภาพผ่านมือถือ ไม่ต้องมี WiFi หรือเน็ตบ้าน AI Human detection หมุน 360° กันน้ำ เหมาะสวน ไร่ ไซต์งาน ที่เน็ตเข้าไม่ถึง ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 3K/5MP, Pan & Tilt 360°",
+      "4G SIM: ส่งภาพผ่านมือถือ ไม่ต้องมี WiFi/เน็ตบ้าน",
+      "AI Human detection, กันน้ำ (outdoor)",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-B7ED-5M0TEA-EU/FSP14": {
+    tagline: "กล้อง 4G แบตเตอรี่ PT outdoor 3K/5MP AOV พร้อมแผงโซล่าร์ 5W ไม่ต้องเสียบไฟ",
+    body:
+      "IPC-B7ED-5M0TEA-EU/FSP14 Imou AOV กล้อง outdoor Pan & Tilt 3K/5MP ใส่ซิม 4G มีแบตเตอรี่ในตัว + แผงโซล่าร์ 5W ชาร์จอัตโนมัติ บันทึกตลอด 24 ชม. ไม่ต้องเสียบไฟ ไม่ต้องมี WiFi เหมาะสวน ไร่ ไซต์งานห่างไกล ดูผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 3K/5MP, Pan & Tilt 360°",
+      "4G SIM + แบตเตอรี่ในตัว + แผงโซล่าร์ 5W ชาร์จอัตโนมัติ",
+      "บันทึกตลอด 24/7 ไม่ต้องเสียบไฟ ไม่ต้องมี WiFi",
+      "เหมาะสวน ไร่ ไซต์งานห่างไกล",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-S7XP-10MOWED": {
+    tagline: "กล้อง WiFi outdoor Cruiser Dual 10MP เลนส์คู่ 5MP+5MP ครอบคลุมสองมุม",
+    body:
+      "IPC-S7XP-10MOWED Imou Cruiser Dual กล้อง WiFi outdoor เลนส์คู่ 10MP รวม (5MP+5MP) หมุน Pan & Tilt เห็นภาพสองมุมพร้อมกัน ครอบคลุมพื้นที่กว้างกว่ากล้องเลนส์เดี่ยว กันน้ำ เหมาะลานจอด ร้านค้า ดูผ่านแอป Imou Life",
+    specs: [
+      "Dual Lens 10MP รวม (5MP + 5MP) เห็นสองมุมพร้อมกัน",
+      "Pan & Tilt, กันน้ำ (outdoor)",
+      "WiFi 2.4GHz, Two-Way Talk",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|IPC-S7XP-6M0WED": {
+    tagline: "กล้อง WiFi outdoor Cruiser Dual 6MP เลนส์คู่ 3MP+3MP PT ครอบคลุมสองมุม",
+    body:
+      "IPC-S7XP-6M0WED Imou Cruiser Dual กล้อง WiFi outdoor เลนส์คู่ 6MP รวม (3MP+3MP) Pan & Tilt เห็นสองมุมพร้อมกัน กันน้ำ เหมาะลานจอด ร้านค้า ทางเข้า ที่ต้องการครอบคลุมพื้นที่กว้าง ดูผ่านแอป Imou Life",
+    specs: [
+      "Dual Lens 6MP รวม (3MP + 3MP) เห็นสองมุมพร้อมกัน",
+      "Pan & Tilt, กันน้ำ (outdoor)",
+      "WiFi 2.4GHz, Two-Way Talk",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|PF1-4L": {
+    tagline: "กล้อง WiFi Pet Feeder 2.5K 360° ดูแลสัตว์เลี้ยงพร้อมให้อาหารอัตโนมัติ",
+    body:
+      "PF1-4L Imou Pet Feeder Camera กล้อง WiFi 2.5K มุมมอง 360° พร้อมที่ให้อาหารอัตโนมัติในตัว กำหนดตารางให้อาหารสัตว์เลี้ยงผ่านแอปได้ จ่ายไฟได้ทั้ง adapter และแบตเตอรี่ ดูสดและพูดคุยกับสัตว์เลี้ยงผ่านแอป Imou Life",
+    specs: [
+      "ความละเอียด 2.5K, มุมมอง 360°",
+      "Pet Feeder: ให้อาหารอัตโนมัติตามตาราง",
+      "Dual Power: adapter + แบตเตอรี่",
+      "Two-Way Talk, WiFi",
+      "ดูผ่านแอป Imou Life",
+    ],
+  },
+
+  // ───────────────── Imou — IP PoE Cameras ─────────────────
+  "Imou|IPC-PS3EP-3M0": {
+    tagline: "กล้อง IP PoE outdoor 2K/3MP Full-Color Night ONVIF ต่อได้ทุก NVR",
+    body:
+      "IPC-PS3EP-3M0 กล้อง IP PoE outdoor 2K/3MP Full-Color Night เห็นภาพสีคมชัดทั้งคืน รองรับ ONVIF ต่อได้กับ NVR หลายแบรนด์ จ่ายไฟ PoE สายเดียว กันน้ำ เหมาะระบบ CCTV IP ที่ต้องการภาพสีกลางคืน",
+    specs: [
+      "ความละเอียด 2K/3MP, Full-Color Night",
+      "PoE (IEEE 802.3af), กันน้ำ (outdoor)",
+      "ONVIF: ต่อได้กับ NVR หลายแบรนด์",
+      "H.265 บีบอัดประหยัดพื้นที่",
+    ],
+  },
+  "Imou|IPC-PS3EP-5M0": {
+    tagline: "กล้อง IP PoE outdoor 3K/5MP Full-Color Night ONVIF ความละเอียดสูง",
+    body:
+      "IPC-PS3EP-5M0 กล้อง IP PoE outdoor 3K/5MP Full-Color Night ภาพสีคมชัดทั้งคืน ความละเอียดสูง รองรับ ONVIF จ่ายไฟ PoE กันน้ำ เหมาะระบบ CCTV IP ที่ต้องการทั้งภาพสีและรายละเอียดสูง",
+    specs: [
+      "ความละเอียด 3K/5MP, Full-Color Night",
+      "PoE (IEEE 802.3af), กันน้ำ (outdoor)",
+      "ONVIF: ต่อได้กับ NVR หลายแบรนด์",
+      "H.265 บีบอัดประหยัดพื้นที่",
+    ],
+  },
+  "Imou|IPC-PS7FP-3M0": {
+    tagline: "กล้อง IP PoE outdoor PT 2K/3MP ONVIF หมุนได้ จ่ายไฟ PoE",
+    body:
+      "IPC-PS7FP-3M0 กล้อง IP PoE outdoor Pan & Tilt 2K/3MP หมุนได้ 360° รองรับ ONVIF ต่อได้กับ NVR หลายแบรนด์ จ่ายไฟ PoE กันน้ำ เหมาะระบบ CCTV IP ที่ต้องการกล้อง PTZ ขนาดเล็ก",
+    specs: [
+      "ความละเอียด 2K/3MP, Pan & Tilt 360°",
+      "PoE (IEEE 802.3af), กันน้ำ (outdoor)",
+      "ONVIF: ต่อได้กับ NVR หลายแบรนด์",
+    ],
+  },
+  "Imou|IPC-PS7FP-5M0": {
+    tagline: "กล้อง IP PoE outdoor PT 3K/5MP ONVIF ความละเอียดสูง หมุนได้",
+    body:
+      "IPC-PS7FP-5M0 กล้อง IP PoE outdoor Pan & Tilt 3K/5MP ความละเอียดสูง หมุน 360° รองรับ ONVIF จ่ายไฟ PoE กันน้ำ เหมาะระบบ CCTV IP ที่ต้องการ PTZ ความละเอียดสูง",
+    specs: [
+      "ความละเอียด 3K/5MP, Pan & Tilt 360°",
+      "PoE (IEEE 802.3af), กันน้ำ (outdoor)",
+      "ONVIF: ต่อได้กับ NVR หลายแบรนด์",
+    ],
+  },
+  "Imou|IPC-PS70FP-6M0": {
+    tagline: "กล้อง IP PoE outdoor PT Dual Lens 6MP (3MP+3MP) ONVIF เห็นสองมุม",
+    body:
+      "IPC-PS70FP-6M0 กล้อง IP PoE outdoor Pan & Tilt เลนส์คู่ 6MP รวม (3MP+3MP) เห็นสองมุมพร้อมกัน รองรับ ONVIF จ่ายไฟ PoE กันน้ำ เหมาะระบบ CCTV IP ที่ต้องการครอบคลุมพื้นที่กว้าง",
+    specs: [
+      "Dual Lens 6MP (3MP+3MP), Pan & Tilt",
+      "PoE (IEEE 802.3af), กันน้ำ (outdoor)",
+      "ONVIF: ต่อได้กับ NVR หลายแบรนด์",
+    ],
+  },
+  "Imou|IPC-PS70FP-10M0": {
+    tagline: "กล้อง IP PoE outdoor PT Dual Lens 10MP (5MP+5MP) ONVIF เห็นสองมุม",
+    body:
+      "IPC-PS70FP-10M0 กล้อง IP PoE outdoor Pan & Tilt เลนส์คู่ 10MP รวม (5MP+5MP) ความละเอียดสูงสุดในไลน์ PoE ครอบคลุมสองมุมพร้อมกัน รองรับ ONVIF จ่ายไฟ PoE กันน้ำ",
+    specs: [
+      "Dual Lens 10MP (5MP+5MP) ความละเอียดสูงสุด, Pan & Tilt",
+      "PoE (IEEE 802.3af), กันน้ำ (outdoor)",
+      "ONVIF: ต่อได้กับ NVR หลายแบรนด์",
+    ],
+  },
+
+  // ───────────────── Imou — NVR ─────────────────
+  "Imou|N118": {
+    tagline: "Smart NVR Imou 18CH H.265 มีไมค์+ลำโพงในตัว",
+    body:
+      "N118 Imou Smart NVR 18 ช่อง H.265 มีไมค์+ลำโพงในตัว สั่งงานด้วยเสียง แจ้งเตือนผ่านเสียง AI motion detection เหมาะระบบกล้อง IP Imou ขนาดกลาง-ใหญ่ จัดการผ่านแอป Imou Life",
+    specs: [
+      "18 ช่องบันทึก, H.265, รองรับ ONVIF",
+      "ไมค์+ลำโพงในตัว สั่งงานด้วยเสียง",
+      "AI motion detection",
+      "จัดการผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|N110": {
+    tagline: "Smart NVR Imou 10CH H.265 มีไมค์+ลำโพงในตัว",
+    body:
+      "N110 Imou Smart NVR 10 ช่อง H.265 มีไมค์+ลำโพงในตัว สั่งงานด้วยเสียง AI motion detection เหมาะระบบกล้อง IP Imou ขนาดกลาง จัดการผ่านแอป Imou Life",
+    specs: [
+      "10 ช่องบันทึก, H.265, รองรับ ONVIF",
+      "ไมค์+ลำโพงในตัว สั่งงานด้วยเสียง",
+      "AI motion detection",
+      "จัดการผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|N110W": {
+    tagline: "Smart WiFi NVR Imou 10CH H.265 WiFi 6 Dual-Band รับสัญญาณกล้อง WiFi",
+    body:
+      "N110W Imou Smart WiFi NVR 10 ช่อง H.265 รองรับ WiFi 6 Dual-Band (2.4/5GHz) รับสัญญาณกล้อง WiFi Imou โดยตรง ไม่ต้องเดินสาย LAN ระหว่างกล้องกับ NVR AI motion detection จัดการผ่านแอป Imou Life",
+    specs: [
+      "10 ช่องบันทึก, H.265, WiFi 6 Dual-Band (2.4/5GHz)",
+      "รับสัญญาณกล้อง WiFi Imou โดยตรง ไม่ต้องเดินสาย LAN",
+      "AI motion detection",
+      "จัดการผ่านแอป Imou Life",
+    ],
+  },
+  "Imou|N118W": {
+    tagline: "Smart WiFi NVR Imou 18CH H.265 WiFi 6 Dual-Band รับสัญญาณกล้อง WiFi",
+    body:
+      "N118W Imou Smart WiFi NVR 18 ช่อง H.265 รองรับ WiFi 6 Dual-Band รับสัญญาณกล้อง WiFi Imou ได้ถึง 18 จุด ไม่ต้องเดินสาย LAN ระหว่างกล้องกับ NVR AI motion detection จัดการผ่านแอป Imou Life",
+    specs: [
+      "18 ช่องบันทึก, H.265, WiFi 6 Dual-Band (2.4/5GHz)",
+      "รับสัญญาณกล้อง WiFi Imou โดยตรง ไม่ต้องเดินสาย LAN",
+      "AI motion detection",
+      "จัดการผ่านแอป Imou Life",
+    ],
+  },
+
+  // ───────────────── Imou — Storage ─────────────────
+  "Imou|microSD S1 32GB": {
+    tagline: "microSDHC Imou S1 32GB Class 10 สำหรับกล้อง Imou",
+    body:
+      "microSD S1 32GB การ์ดความจำ Imou สำหรับบันทึกวีดีโอลงการ์ดโดยตรงในตัวกล้อง ความจุ 32GB Class 10 ความเร็วเขียนเพียงพอสำหรับวีดีโอ HD เหมาะใช้กับกล้อง Imou ทุกรุ่นที่มีช่อง microSD",
+    specs: [
+      "microSDHC 32GB Class 10",
+      "เหมาะสำหรับบันทึกวีดีโอในกล้อง Imou",
+      "ความเร็วเขียนรองรับวีดีโอ HD",
+    ],
+  },
+
+  // ───────────────── Link — UTP CAT5E Cables ─────────────────
+  "Link|US-9015ZH-1": {
+    tagline: "สายแลน UTP CAT5E 350MHz indoor 100m ต่อม้วน",
+    body: "US-9015ZH-1 สายแลน UTP CAT5E 350MHz ใช้ภายในอาคาร ยาว 100 เมตร/ม้วน รองรับ Fast Ethernet (100Mbps) และ Gigabit Ethernet เหมาะงาน LAN ออฟฟิศ บ้าน ห้องเช่า",
+    specs: ["UTP CAT5E 350MHz, ยาว 100m", "ใช้ภายในอาคาร (indoor)", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-9015ZH": {
+    tagline: "สายแลน UTP CAT5E 350MHz indoor 305m ต่อกล่อง",
+    body: "US-9015ZH สายแลน UTP CAT5E 350MHz ใช้ภายในอาคาร ยาว 305 เมตร/กล่อง ประหยัดต้นทุนต่อเมตรสำหรับงานติดตั้งขนาดใหญ่ รองรับ Gigabit Ethernet",
+    specs: ["UTP CAT5E 350MHz, ยาว 305m/กล่อง", "ใช้ภายในอาคาร (indoor)", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-9045-1": {
+    tagline: "สายแลน UTP CAT5E 350MHz outdoor 100m ทนแดดทนน้ำ",
+    body: "US-9045-1 สายแลน UTP CAT5E 350MHz สำหรับภายนอกอาคาร ยาว 100 เมตร/ม้วน เปลือกสาย PE ทนแดดทนน้ำ เหมาะดึงสายระหว่างตึก ลานจอด หรือพื้นที่เปิดโล่ง",
+    specs: ["UTP CAT5E 350MHz, ยาว 100m", "ภายนอกอาคาร (outdoor), เปลือก PE ทนแดดทนน้ำ", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-9045": {
+    tagline: "สายแลน UTP CAT5E 350MHz outdoor 305m ทนแดดทนน้ำ",
+    body: "US-9045 สายแลน UTP CAT5E 350MHz ภายนอกอาคาร ยาว 305 เมตร/กล่อง เปลือก PE ทนแดดทนน้ำ เหมาะงานโครงการดึงสายภายนอกอาคารปริมาณมาก",
+    specs: ["UTP CAT5E 350MHz, ยาว 305m/กล่อง", "ภายนอกอาคาร (outdoor), เปลือก PE ทนแดดทนน้ำ", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-9015M-1": {
+    tagline: "สายแลน UTP CAT5E outdoor 100m + messenger wire สำหรับดึงในอากาศ",
+    body: "US-9015M-1 สายแลน UTP CAT5E outdoor ยาว 100m มีลวด messenger wire พ่วงมาด้วย ช่วยรับแรงดึงเมื่อดึงสายระหว่างเสาหรืออาคาร ไม่ต้องซื้อลวดสลิงแยก",
+    specs: ["UTP CAT5E outdoor, ยาว 100m", "มี messenger wire รับแรงดึงระหว่างอาคาร/เสา", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-9015M": {
+    tagline: "สายแลน UTP CAT5E outdoor 305m + messenger wire สำหรับดึงในอากาศ",
+    body: "US-9015M สายแลน UTP CAT5E outdoor ยาว 305m มีลวด messenger wire ในตัว รับแรงดึงระหว่างเสาหรืออาคาร เหมาะโครงการดึงสายอากาศ (overhead) ปริมาณมาก",
+    specs: ["UTP CAT5E outdoor, ยาว 305m/กล่อง", "มี messenger wire รับแรงดึงระหว่างอาคาร/เสา", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-9015PW-1": {
+    tagline: "สายแลน UTP CAT5E outdoor 100m + สายไฟ ส่งสัญญาณและไฟในสายเดียว",
+    body: "US-9015PW-1 สายแลน UTP CAT5E outdoor ยาว 100m มีสายไฟ DC ฝังมาด้วย ส่งทั้งสัญญาณ LAN และไฟ DC ในสายเดียวกัน เหมาะจ่ายไฟกล้อง CCTV ไกลๆ โดยไม่ต้องเดินสายไฟแยก",
+    specs: ["UTP CAT5E outdoor, ยาว 100m", "มีสายไฟ DC ฝังในสาย (ส่ง LAN + ไฟ DC ในเส้นเดียว)", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-9015PW": {
+    tagline: "สายแลน UTP CAT5E outdoor 305m + สายไฟ ส่งสัญญาณและไฟในสายเดียว",
+    body: "US-9015PW สายแลน UTP CAT5E outdoor ยาว 305m มีสายไฟ DC ฝังมาด้วย เหมาะงานโครงการกล้อง CCTV ที่ต้องการส่งสัญญาณ LAN และไฟ DC ระยะไกลในสายเดียว",
+    specs: ["UTP CAT5E outdoor, ยาว 305m/กล่อง", "มีสายไฟ DC ฝังในสาย", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-9015MW-1": {
+    tagline: "สายแลน UTP CAT5E outdoor 100m + สายไฟ + messenger wire ครบในเส้นเดียว",
+    body: "US-9015MW-1 สายแลน UTP CAT5E outdoor ยาว 100m มีทั้งสายไฟ DC และ messenger wire ในเส้นเดียวกัน ดึงสายอากาศระหว่างเสา/อาคาร ส่ง LAN+ไฟ DC ได้เลยโดยไม่ต้องเพิ่มสายอื่น",
+    specs: ["UTP CAT5E outdoor, ยาว 100m", "มีสายไฟ DC + messenger wire ในเส้นเดียว", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-9015MW": {
+    tagline: "สายแลน UTP CAT5E outdoor 305m + สายไฟ + messenger wire ครบในเส้นเดียว",
+    body: "US-9015MW สายแลน UTP CAT5E outdoor ยาว 305m มีทั้งสายไฟ DC และ messenger wire ในเส้นเดียวกัน เหมาะโครงการดึงสายอากาศปริมาณมาก ครบในเส้นเดียว",
+    specs: ["UTP CAT5E outdoor, ยาว 305m/กล่อง", "มีสายไฟ DC + messenger wire ในเส้นเดียว", "รองรับ 10/100/1000Mbps"],
+  },
+
+  // ───────────────── Link — UTP CAT6 Cables ─────────────────
+  "Link|US-9106A-1": {
+    tagline: "สายแลน UTP CAT6 indoor 100m รองรับ Gigabit",
+    body: "US-9106A-1 สายแลน UTP CAT6 ใช้ภายในอาคาร ยาว 100 เมตร/ม้วน รองรับ Gigabit Ethernet (1000Mbps) ได้เต็มประสิทธิภาพ เหมาะงาน LAN ออฟฟิศ ห้องเซิร์ฟเวอร์ บ้าน",
+    specs: ["UTP CAT6 indoor, ยาว 100m", "รองรับ Gigabit Ethernet (1000Mbps)", "ใช้ภายในอาคาร"],
+  },
+  "Link|US-9106A": {
+    tagline: "สายแลน UTP CAT6 indoor 305m รองรับ Gigabit",
+    body: "US-9106A สายแลน UTP CAT6 ใช้ภายในอาคาร ยาว 305 เมตร/กล่อง รองรับ Gigabit Ethernet เหมาะงานติดตั้งระบบ LAN ขนาดกลาง-ใหญ่ ประหยัดต้นทุนต่อเมตร",
+    specs: ["UTP CAT6 indoor, ยาว 305m/กล่อง", "รองรับ Gigabit Ethernet (1000Mbps)", "ใช้ภายในอาคาร"],
+  },
+  "Link|US-9106LSZH-1": {
+    tagline: "สายแลน UTP CAT6 indoor LSZH 100m ไม่ปล่อยควันพิษ",
+    body: "US-9106LSZH-1 สายแลน UTP CAT6 LSZH (Low Smoke Zero Halogen) ยาว 100m เมื่อเกิดไฟไหม้ไม่ปล่อยควันพิษ เหมาะอาคารที่มีข้อกำหนดความปลอดภัย โรงพยาบาล โรงเรียน ศูนย์ข้อมูล",
+    specs: ["UTP CAT6 indoor LSZH, ยาว 100m", "ไม่ปล่อยควันพิษเมื่อเกิดไฟ (Low Smoke Zero Halogen)", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|US-9106BLSZH-1": {
+    tagline: "สายแลน UTP CAT6 indoor LSZH 100m ไม่ปล่อยควันพิษ (รุ่น B)",
+    body: "US-9106BLSZH-1 สายแลน UTP CAT6 LSZH ยาว 100m รุ่น B เมื่อเกิดไฟไหม้ไม่ปล่อยควันพิษ เหมาะอาคารสาธารณะ โรงพยาบาล ศูนย์ข้อมูล ที่มีข้อกำหนดความปลอดภัยด้านอัคคีภัย",
+    specs: ["UTP CAT6 indoor LSZH, ยาว 100m", "ไม่ปล่อยควันพิษเมื่อเกิดไฟ (Low Smoke Zero Halogen)", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|US-9106LSZH": {
+    tagline: "สายแลน UTP CAT6 indoor LSZH 305m ไม่ปล่อยควันพิษ",
+    body: "US-9106LSZH สายแลน UTP CAT6 LSZH ยาว 305 เมตร/กล่อง ไม่ปล่อยควันพิษเมื่อเกิดไฟ เหมาะโครงการอาคารสาธารณะ โรงพยาบาล ศูนย์ข้อมูลที่ต้องใช้สาย LSZH ปริมาณมาก",
+    specs: ["UTP CAT6 indoor LSZH, ยาว 305m/กล่อง", "ไม่ปล่อยควันพิษเมื่อเกิดไฟ", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|US-9116LSZH": {
+    tagline: "สายแลน UTP CAT6 indoor LSZH 305m ไม่ปล่อยควันพิษ",
+    body: "US-9116LSZH สายแลน UTP CAT6 LSZH ยาว 305 เมตร/กล่อง ไม่ปล่อยควันพิษเมื่อเกิดไฟ เหมาะโครงการที่ต้องการสาย LSZH CAT6 ปริมาณมาก",
+    specs: ["UTP CAT6 indoor LSZH, ยาว 305m/กล่อง", "ไม่ปล่อยควันพิษเมื่อเกิดไฟ", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|US-9106BLSZH": {
+    tagline: "สายแลน UTP CAT6 indoor LSZH 305m ไม่ปล่อยควันพิษ (รุ่น B)",
+    body: "US-9106BLSZH สายแลน UTP CAT6 LSZH รุ่น B ยาว 305 เมตร/กล่อง ไม่ปล่อยควันพิษเมื่อเกิดไฟ เหมาะโครงการอาคารสาธารณะที่ต้องการ LSZH ปริมาณมาก",
+    specs: ["UTP CAT6 indoor LSZH, ยาว 305m/กล่อง", "ไม่ปล่อยควันพิษเมื่อเกิดไฟ", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|US-9106OUT-1": {
+    tagline: "สายแลน UTP CAT6 outdoor 100m ทนแดดทนน้ำ",
+    body: "US-9106OUT-1 สายแลน UTP CAT6 สำหรับภายนอกอาคาร ยาว 100m เปลือก PE ทนแดดทนน้ำ รองรับ Gigabit Ethernet เหมาะดึงสายระหว่างอาคาร ลานจอด หรือพื้นที่เปิดโล่ง",
+    specs: ["UTP CAT6 outdoor, ยาว 100m", "เปลือก PE ทนแดดทนน้ำ", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|US-9106OUT": {
+    tagline: "สายแลน UTP CAT6 outdoor 305m ทนแดดทนน้ำ",
+    body: "US-9106OUT สายแลน UTP CAT6 ภายนอกอาคาร ยาว 305 เมตร/กล่อง เปลือก PE ทนแดดทนน้ำ เหมาะงานโครงการดึงสาย CAT6 ภายนอกอาคารปริมาณมาก",
+    specs: ["UTP CAT6 outdoor, ยาว 305m/กล่อง", "เปลือก PE ทนแดดทนน้ำ", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|US-9106MD-1": {
+    tagline: "สายแลน UTP CAT6 outdoor 100m + messenger wire ดึงในอากาศ",
+    body: "US-9106MD-1 สายแลน UTP CAT6 outdoor ยาว 100m มีลวด messenger wire รับแรงดึงระหว่างเสาหรืออาคาร เหมาะดึงสาย CAT6 Gigabit ในอากาศ (overhead)",
+    specs: ["UTP CAT6 outdoor, ยาว 100m", "มี messenger wire รับแรงดึงระหว่างอาคาร/เสา", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|US-9106MD": {
+    tagline: "สายแลน UTP CAT6 outdoor 305m + messenger wire ดึงในอากาศ",
+    body: "US-9106MD สายแลน UTP CAT6 outdoor ยาว 305m มีลวด messenger wire รับแรงดึง เหมาะโครงการดึงสาย CAT6 ในอากาศปริมาณมาก",
+    specs: ["UTP CAT6 outdoor, ยาว 305m/กล่อง", "มี messenger wire รับแรงดึงระหว่างอาคาร/เสา", "รองรับ Gigabit Ethernet"],
+  },
+
+  // ───────────────── Link — Patch Cables ─────────────────
+  "Link|Patch CAT6E 1m": {
+    tagline: "สายแลนสำเร็จ CAT6E 1 เมตร สีฟ้า ต่อใช้ได้ทันที",
+    body: "สายแลน patch cord CAT6E สำเร็จรูป ยาว 1 เมตร สีฟ้า หัว RJ45 ทั้งสองด้าน ต่อใช้งานได้ทันที เหมาะต่อจาก PC ถึง switch หรือจาก port แพทช์แพนล์",
+    specs: ["CAT6E patch cord ยาว 1m, สีฟ้า", "หัว RJ45 สำเร็จทั้งสองด้าน", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|Patch CAT6E 3m": {
+    tagline: "สายแลนสำเร็จ CAT6E 3 เมตร หลายสี ต่อใช้ได้ทันที",
+    body: "สายแลน patch cord CAT6E สำเร็จรูป ยาว 3 เมตร มีให้เลือกหลายสี (ฟ้า/เหลือง/เขียว/แดง) หัว RJ45 ทั้งสองด้าน เหมาะต่อ PC, NAS, IP camera ถึง switch หรือพอร์ตแพทช์แพนล์",
+    specs: ["CAT6E patch cord ยาว 3m, มีหลายสี", "หัว RJ45 สำเร็จทั้งสองด้าน", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|Patch CAT6E 5m": {
+    tagline: "สายแลนสำเร็จ CAT6E 5 เมตร สีฟ้า ต่อใช้ได้ทันที",
+    body: "สายแลน patch cord CAT6E สำเร็จรูป ยาว 5 เมตร สีฟ้า หัว RJ45 ทั้งสองด้าน เหมาะเชื่อมต่ออุปกรณ์ระยะกลาง เช่น PC ถึง switch ในห้องหรือระหว่างโต๊ะ",
+    specs: ["CAT6E patch cord ยาว 5m, สีฟ้า", "หัว RJ45 สำเร็จทั้งสองด้าน", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|Patch CAT6E 10m": {
+    tagline: "สายแลนสำเร็จ CAT6E 10 เมตร สีฟ้า ต่อใช้ได้ทันที",
+    body: "สายแลน patch cord CAT6E สำเร็จรูป ยาว 10 เมตร สีฟ้า หัว RJ45 ทั้งสองด้าน เหมาะเชื่อมต่ออุปกรณ์ระยะไกลขึ้น เช่น ระหว่างห้อง หรือต่อจาก switch ถึงอุปกรณ์ที่อยู่ไกล",
+    specs: ["CAT6E patch cord ยาว 10m, สีฟ้า", "หัว RJ45 สำเร็จทั้งสองด้าน", "รองรับ Gigabit Ethernet"],
+  },
+
+  // ───────────────── Link — CAT6A ─────────────────
+  "Link|US-1070SG": {
+    tagline: "หัวแลนตัวผู้ CAT6A RJ45 Shielded Gold สำหรับสาย CAT6A",
+    body: "US-1070SG หัวแลน RJ45 plug CAT6A แบบ Shielded ชุบทองที่ขา (Gold) รองรับสาย CAT6A ความเร็วสูงสุด 10 Gigabit Ethernet เหมาะงานที่ต้องการ shielding ป้องกัน interference",
+    specs: ["RJ45 plug CAT6A Shielded, ชุบ Gold", "รองรับ 10 Gigabit Ethernet", "เหมาะสาย CAT6A shielded"],
+  },
+  "Link|US-1026A": {
+    tagline: "เต้ารับแลนตัวเมีย CAT6A RJ45 keystone jack สำหรับสาย CAT6A",
+    body: "US-1026A keystone jack CAT6A ตัวเมีย ใส่ได้กับหน้ากากแลน face plate มาตรฐาน รองรับ 10 Gigabit Ethernet เหมาะงานโครงการที่ต้องการ CAT6A ทั้งระบบ",
+    specs: ["RJ45 keystone jack CAT6A", "รองรับ 10 Gigabit Ethernet", "ใส่ได้กับ face plate มาตรฐาน"],
+  },
+
+  // ───────────────── Link — RJ45 Plugs ─────────────────
+  "Link|US-1062-5": {
+    tagline: "หัวแลน CAT6 RJ45 plug สีเหลือง แพ็ค 10 หัว",
+    body: "US-1062-5 หัวแลน RJ45 plug สำหรับสาย CAT6 สีเหลือง บรรจุ 10 หัว/แพ็ค ใช้ย้ำปลายสาย LAN เพื่อต่อกับอุปกรณ์ network เหมาะช่างติดตั้งและงาน DIY",
+    specs: ["RJ45 plug CAT6 สีเหลือง, 10 หัว/แพ็ค", "สำหรับสาย CAT6"],
+  },
+  "Link|US-1062-2": {
+    tagline: "หัวแลน CAT6 RJ45 plug สีแดง แพ็ค 10 หัว",
+    body: "US-1062-2 หัวแลน RJ45 plug สำหรับสาย CAT6 สีแดง บรรจุ 10 หัว/แพ็ค ใช้ย้ำปลายสาย LAN เหมาะช่างติดตั้งที่ต้องการแยกสีสายเพื่อจัดการสาย",
+    specs: ["RJ45 plug CAT6 สีแดง, 10 หัว/แพ็ค", "สำหรับสาย CAT6"],
+  },
+  "Link|US-1002": {
+    tagline: "หัวแลน CAT6 RJ45 plug สีใส แพ็ค 10 หัว",
+    body: "US-1002 หัวแลน RJ45 plug สำหรับสาย CAT6 สีใส (transparent) บรรจุ 10 หัว/แพ็ค มองเห็นการเรียงสีสายในหัวแลนได้ง่าย เหมาะช่างและงาน DIY",
+    specs: ["RJ45 plug CAT6 สีใส, 10 หัว/แพ็ค", "สำหรับสาย CAT6"],
+  },
+
+  // ───────────────── Link — Keystone Jacks ─────────────────
+  "Link|US-1005SC1": {
+    tagline: "เต้ารับแลน CAT5E keystone jack ตัวเมีย ใส่หน้ากาก",
+    body: "US-1005SC1 keystone jack CAT5E ตัวเมีย สำหรับเสียบสาย LAN CAT5E และใส่เข้าหน้ากากแลน face plate มาตรฐาน เหมาะงานเดินสาย structured cabling",
+    specs: ["Keystone jack CAT5E (UTP)", "ใส่ได้กับ face plate มาตรฐาน", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-1005STF": {
+    tagline: "เต้ารับแลน CAT5E STP keystone jack ตัวเมีย แบบ Shielded",
+    body: "US-1005STF keystone jack CAT5E แบบ Shielded (STP) ตัวเมีย ป้องกัน interference เหมาะงานที่ต้องการ shielding เช่น โรงงาน ห้องเครื่อง หรือพื้นที่ที่มีสัญญาณรบกวน",
+    specs: ["Keystone jack CAT5E STP (Shielded)", "ใส่ได้กับ face plate มาตรฐาน", "รองรับ 10/100/1000Mbps"],
+  },
+  "Link|US-1006SL": {
+    tagline: "เต้ารับแลน CAT6 keystone jack ตัวเมีย ใส่หน้ากาก",
+    body: "US-1006SL keystone jack CAT6 ตัวเมีย สำหรับเสียบสาย LAN CAT6 ใส่เข้าหน้ากาก face plate มาตรฐาน รองรับ Gigabit Ethernet เหมาะงาน structured cabling ระบบ CAT6",
+    specs: ["Keystone jack CAT6 (UTP)", "ใส่ได้กับ face plate มาตรฐาน", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|US-1006A": {
+    tagline: "เต้ารับแลน CAT6 keystone jack ตัวเมีย ใส่หน้ากาก",
+    body: "US-1006A keystone jack CAT6 ตัวเมีย ใส่เข้าหน้ากาก face plate มาตรฐาน รองรับ Gigabit Ethernet เหมาะงานเดินสาย LAN ออฟฟิศ บ้าน อาคาร",
+    specs: ["Keystone jack CAT6 (UTP)", "ใส่ได้กับ face plate มาตรฐาน", "รองรับ Gigabit Ethernet"],
+  },
+  "Link|US-1006STF": {
+    tagline: "เต้ารับแลน CAT6 STP keystone jack ตัวเมีย แบบ Shielded",
+    body: "US-1006STF keystone jack CAT6 แบบ Shielded (STP) ตัวเมีย ป้องกัน interference เหมาะพื้นที่ที่มีสัญญาณรบกวนสูง โรงงาน ห้องเครื่อง",
+    specs: ["Keystone jack CAT6 STP (Shielded)", "ใส่ได้กับ face plate มาตรฐาน", "รองรับ Gigabit Ethernet"],
+  },
+
+  // ───────────────── Link — RJ45 Boots ─────────────────
+  "Link|US-6510": {
+    tagline: "ปลอก RJ45 boot CAT5E สีใส ป้องกันหัวแลนหัก",
+    body: "US-6510 ปลอก boot สำหรับหัวแลน RJ45 CAT5E สีใส ใส่คลุมตรงจุดต่อระหว่างหัวกับสาย ป้องกันไม่ให้สายงอจนหักที่โคน ยืดอายุการใช้งานหัวแลน",
+    specs: ["RJ45 boot CAT5E สีใส", "ป้องกันสายงอหักที่โคนหัวแลน"],
+  },
+  "Link|US-6512": {
+    tagline: "ปลอก RJ45 boot CAT5E สีแดง ป้องกันหัวแลนหัก",
+    body: "US-6512 ปลอก boot สำหรับหัวแลน RJ45 CAT5E สีแดง ป้องกันสายงอหักที่โคน เหมาะใช้คู่กับหัวแลนสีแดงเพื่อแยกประเภทสาย",
+    specs: ["RJ45 boot CAT5E สีแดง", "ป้องกันสายงอหักที่โคนหัวแลน"],
+  },
+  "Link|US-6513": {
+    tagline: "ปลอก RJ45 boot CAT5E สีเขียว ป้องกันหัวแลนหัก",
+    body: "US-6513 ปลอก boot สำหรับหัวแลน RJ45 CAT5E สีเขียว ป้องกันสายงอหักที่โคน เหมาะใช้แยกสีสายในระบบ LAN",
+    specs: ["RJ45 boot CAT5E สีเขียว", "ป้องกันสายงอหักที่โคนหัวแลน"],
+  },
+  "Link|US-6514": {
+    tagline: "ปลอก RJ45 boot CAT5E สีฟ้า ป้องกันหัวแลนหัก",
+    body: "US-6514 ปลอก boot สำหรับหัวแลน RJ45 CAT5E สีฟ้า ป้องกันสายงอหักที่โคน เหมาะใช้คู่กับสายสีฟ้าทั่วไป",
+    specs: ["RJ45 boot CAT5E สีฟ้า", "ป้องกันสายงอหักที่โคนหัวแลน"],
+  },
+  "Link|US-6622": {
+    tagline: "ปลอก RJ45 boot CAT6 สีแดง ป้องกันหัวแลนหัก",
+    body: "US-6622 ปลอก boot สำหรับหัวแลน RJ45 CAT6 สีแดง ขนาดพอดีกับหัว CAT6 ป้องกันสายงอหักที่โคน",
+    specs: ["RJ45 boot CAT6 สีแดง", "ป้องกันสายงอหักที่โคนหัวแลน"],
+  },
+  "Link|US-6623": {
+    tagline: "ปลอก RJ45 boot CAT6 สีเขียว ป้องกันหัวแลนหัก",
+    body: "US-6623 ปลอก boot สำหรับหัวแลน RJ45 CAT6 สีเขียว ขนาดพอดีกับหัว CAT6 ป้องกันสายงอหักที่โคน",
+    specs: ["RJ45 boot CAT6 สีเขียว", "ป้องกันสายงอหักที่โคนหัวแลน"],
+  },
+  "Link|US-6624": {
+    tagline: "ปลอก RJ45 boot CAT6 สีฟ้า ป้องกันหัวแลนหัก",
+    body: "US-6624 ปลอก boot สำหรับหัวแลน RJ45 CAT6 สีฟ้า ขนาดพอดีกับหัว CAT6 ป้องกันสายงอหักที่โคน",
+    specs: ["RJ45 boot CAT6 สีฟ้า", "ป้องกันสายงอหักที่โคนหัวแลน"],
+  },
+
+  // ───────────────── Link — Face Plates & Boxes ─────────────────
+  "Link|US-2311": {
+    tagline: "หน้ากากบ็อกแลน 1 ช่อง face plate ใส่ keystone jack ได้ 1 พอร์ต",
+    body: "US-2311 หน้ากากแลน (face plate) 1 ช่อง ใส่ keystone jack ได้ 1 พอร์ต ขนาดมาตรฐาน ติดผนังหรือ surface mount box เหมาะงาน structured cabling",
+    specs: ["Face plate 1 ช่อง", "ใส่ keystone jack มาตรฐาน ได้ 1 พอร์ต", "ขนาดมาตรฐาน ติดผนัง"],
+  },
+  "Link|US-2312": {
+    tagline: "หน้ากากบ็อกแลน 2 ช่อง face plate ใส่ keystone jack ได้ 2 พอร์ต",
+    body: "US-2312 หน้ากากแลน (face plate) 2 ช่อง ใส่ keystone jack ได้ 2 พอร์ต เหมาะโต๊ะทำงานที่ต้องการพอร์ตแลน 2 จุด",
+    specs: ["Face plate 2 ช่อง", "ใส่ keystone jack มาตรฐาน ได้ 2 พอร์ต", "ขนาดมาตรฐาน ติดผนัง"],
+  },
+  "Link|US-2313": {
+    tagline: "หน้ากากบ็อกแลน 3 ช่อง face plate ใส่ keystone jack ได้ 3 พอร์ต",
+    body: "US-2313 หน้ากากแลน (face plate) 3 ช่อง ใส่ keystone jack ได้ 3 พอร์ต เหมาะจุดที่ต้องการพอร์ตแลนหลายจุดในตำแหน่งเดียว เช่น ห้องประชุม",
+    specs: ["Face plate 3 ช่อง", "ใส่ keystone jack มาตรฐาน ได้ 3 พอร์ต", "ขนาดมาตรฐาน ติดผนัง"],
+  },
+  "Link|US-2015WH": {
+    tagline: "กล่องพักสาย BOX ลอย สีขาว surface mount box สำหรับติดผนัง",
+    body: "US-2015WH กล่องพักสาย (surface mount box) สีขาว ลักษณะลอย ติดผนังได้โดยไม่ต้องฝังในผนัง ใส่ keystone jack ได้ เหมาะงานเพิ่มพอร์ตแลนในภายหลังโดยไม่ต้องเดินสายในผนัง",
+    specs: ["Surface mount box สีขาว ลักษณะลอย", "ใส่ keystone jack มาตรฐาน", "ติดผนังได้ โดยไม่ต้องฝังในผนัง"],
+  },
+
+  // ───────────────── Link — Couplers & Adapters ─────────────────
+  "Link|US-4005": {
+    tagline: "ตัวต่อสายแลน RJ45 inline coupler ต่อสายให้ยาวขึ้น",
+    body: "US-4005 ตัวต่อสายแลน inline coupler RJ45 เสียบหัวแลนสองด้านเพื่อต่อสายให้ยาวขึ้น ช่วยงาน patch อย่างรวดเร็วโดยไม่ต้องย้ำหัวแลนใหม่",
+    specs: ["RJ45 inline coupler (ตัวต่อสายแลนแบบตรง)", "เชื่อมสาย LAN 2 เส้นให้เป็นเส้นเดียว"],
+  },
+  "Link|US-4006": {
+    tagline: "ตัวต่อสายแลน RJ45 inline coupler ต่อสายให้ยาวขึ้น",
+    body: "US-4006 ตัวต่อสายแลน inline coupler RJ45 เสียบหัวแลนสองด้านเพื่อต่อสายให้ยาวขึ้น เหมาะงาน patch อย่างรวดเร็ว",
+    specs: ["RJ45 inline coupler (ตัวต่อสายแลนแบบตรง)", "เชื่อมสาย LAN 2 เส้นให้เป็นเส้นเดียว"],
+  },
+  "Link|US-2006": {
+    tagline: "ตัวแปลงหัวแลน RJ45 ตัวเมีย ใส่หน้ากาก (jack-to-faceplate adapter)",
+    body: "US-2006 adapter แปลง keystone jack ให้ใส่เข้าหน้ากาก face plate มาตรฐาน เหมาะงานที่ต้องการเพิ่มพอร์ตแลนในตำแหน่งที่มีหน้ากากอยู่แล้ว",
+    specs: ["Jack-to-faceplate adapter", "ใส่เข้าหน้ากาก face plate มาตรฐาน"],
+  },
+  "Link|US-6004": {
+    tagline: "ปลั๊กบูธ RJ45 boot plug สวมปลายสายป้องกันหัวแลน",
+    body: "US-6004 ปลั๊กบูธ boot plug RJ45 สวมปลายสายป้องกันหัวแลนหักที่โคน เหมาะใช้ก่อนย้ำหัวเพื่อป้องกันสายงอ",
+    specs: ["RJ45 boot plug ทั่วไป", "ป้องกันสายงอหักที่โคนหัวแลน"],
+  },
+
+  // ───────────────── Link — Solar Cables (Bare) ─────────────────
+  "Link|CB-1040B-5": {
+    tagline: "สายโซล่าร์ 4mm² สีดำ 500m (ม้วน) Solar PV cable",
+    body: "CB-1040B-5 สายโซล่าร์ PV 4mm² สีดำ (ขั้วลบ/negative) ยาว 500 เมตร/ม้วน ทนแดดทนความร้อน รองรับแรงดันสูง เหมาะงานระบบโซล่าเซลล์ rooftop และ ground mount",
+    specs: ["Solar PV cable 4mm² สีดำ, ยาว 500m", "ทนแดดทนความร้อน (TUV/UV resistant)", "ใช้ฝั่งขั้วลบ (negative) ของแผงโซล่าร์"],
+  },
+  "Link|CB-1040R-5": {
+    tagline: "สายโซล่าร์ 4mm² สีแดง 500m (ม้วน) Solar PV cable",
+    body: "CB-1040R-5 สายโซล่าร์ PV 4mm² สีแดง (ขั้วบวก/positive) ยาว 500 เมตร/ม้วน ทนแดดทนความร้อน เหมาะงานระบบโซล่าเซลล์ rooftop และ ground mount",
+    specs: ["Solar PV cable 4mm² สีแดง, ยาว 500m", "ทนแดดทนความร้อน (TUV/UV resistant)", "ใช้ฝั่งขั้วบวก (positive) ของแผงโซล่าร์"],
+  },
+  "Link|CB-1040AB-1": {
+    tagline: "สายโซล่าร์ 4mm² สีดำ 100m Solar PV cable",
+    body: "CB-1040AB-1 สายโซล่าร์ PV 4mm² สีดำ ยาว 100 เมตร/ม้วน ทนแดดทนความร้อน เหมาะงานโซล่าเซลล์ขนาดเล็ก-กลาง",
+    specs: ["Solar PV cable 4mm² สีดำ, ยาว 100m", "ทนแดดทนความร้อน", "ใช้ฝั่งขั้วลบ (negative)"],
+  },
+  "Link|CB-1040AR-1": {
+    tagline: "สายโซล่าร์ 4mm² สีแดง 100m Solar PV cable",
+    body: "CB-1040AR-1 สายโซล่าร์ PV 4mm² สีแดง ยาว 100 เมตร/ม้วน ทนแดดทนความร้อน เหมาะงานโซล่าเซลล์ขนาดเล็ก-กลาง",
+    specs: ["Solar PV cable 4mm² สีแดง, ยาว 100m", "ทนแดดทนความร้อน", "ใช้ฝั่งขั้วบวก (positive)"],
+  },
+  "Link|CB-1060AB-1": {
+    tagline: "สายโซล่าร์ 6mm² สีดำ 100m Solar PV cable กระแสสูงขึ้น",
+    body: "CB-1060AB-1 สายโซล่าร์ PV 6mm² สีดำ ยาว 100m ขนาดใหญ่กว่า 4mm² รองรับกระแสสูงขึ้น เหมาะระบบโซล่าเซลล์ขนาดใหญ่ หรือการเดินสายระยะไกลที่ต้องลด voltage drop",
+    specs: ["Solar PV cable 6mm² สีดำ, ยาว 100m", "รองรับกระแสสูงกว่า 4mm² เหมาะระบบใหญ่/ระยะไกล", "ทนแดดทนความร้อน"],
+  },
+  "Link|CB-1060AR-1": {
+    tagline: "สายโซล่าร์ 6mm² สีแดง 100m Solar PV cable กระแสสูงขึ้น",
+    body: "CB-1060AR-1 สายโซล่าร์ PV 6mm² สีแดง ยาว 100m รองรับกระแสสูงกว่า 4mm² เหมาะระบบโซล่าเซลล์ขนาดใหญ่หรือระยะไกล",
+    specs: ["Solar PV cable 6mm² สีแดง, ยาว 100m", "รองรับกระแสสูงกว่า 4mm² เหมาะระบบใหญ่/ระยะไกล", "ทนแดดทนความร้อน"],
+  },
+
+  // ───────────────── Link — Solar Cables (Pre-made with MC4) ─────────────────
+  "Link|CB-5054B-03": {
+    tagline: "สายโซล่าร์สำเร็จ 4mm² สีดำ 3m พร้อมหัว MC4 หัวท้าย",
+    body: "CB-5054B-03 สายโซล่าร์ PV 4mm² สีดำ ยาว 3 เมตร มีหัว MC4 connector สำเร็จทั้งสองด้าน เสียบได้ทันที ใช้ต่อฝั่งขั้วลบระหว่างแผงโซล่าร์กับ charge controller/inverter",
+    specs: ["Solar PV cable 4mm² สีดำ 3m, หัว MC4 สำเร็จสองด้าน", "ต่อใช้งานได้ทันที ไม่ต้องย้ำหัว", "ใช้ฝั่งขั้วลบ (negative)"],
+  },
+  "Link|CB-5054R-03": {
+    tagline: "สายโซล่าร์สำเร็จ 4mm² สีแดง 3m พร้อมหัว MC4 หัวท้าย",
+    body: "CB-5054R-03 สายโซล่าร์ PV 4mm² สีแดง ยาว 3 เมตร มีหัว MC4 connector สำเร็จทั้งสองด้าน ต่อใช้ได้ทันที ใช้ฝั่งขั้วบวกระหว่างแผงโซล่าร์",
+    specs: ["Solar PV cable 4mm² สีแดง 3m, หัว MC4 สำเร็จสองด้าน", "ต่อใช้งานได้ทันที ไม่ต้องย้ำหัว", "ใช้ฝั่งขั้วบวก (positive)"],
+  },
+  "Link|CB-5054B-05": {
+    tagline: "สายโซล่าร์สำเร็จ 4mm² สีดำ 5m พร้อมหัว MC4 หัวท้าย",
+    body: "CB-5054B-05 สายโซล่าร์ PV 4mm² สีดำ ยาว 5 เมตร มีหัว MC4 สำเร็จสองด้าน เหมาะระยะห่างระหว่างแผงกับอุปกรณ์มากกว่า 3m",
+    specs: ["Solar PV cable 4mm² สีดำ 5m, หัว MC4 สำเร็จสองด้าน", "ต่อใช้งานได้ทันที", "ใช้ฝั่งขั้วลบ (negative)"],
+  },
+  "Link|CB-5054R-05": {
+    tagline: "สายโซล่าร์สำเร็จ 4mm² สีแดง 5m พร้อมหัว MC4 หัวท้าย",
+    body: "CB-5054R-05 สายโซล่าร์ PV 4mm² สีแดง ยาว 5 เมตร มีหัว MC4 สำเร็จสองด้าน เหมาะระยะห่างระหว่างแผงกับอุปกรณ์มากกว่า 3m",
+    specs: ["Solar PV cable 4mm² สีแดง 5m, หัว MC4 สำเร็จสองด้าน", "ต่อใช้งานได้ทันที", "ใช้ฝั่งขั้วบวก (positive)"],
+  },
+  "Link|CB-5054B-10": {
+    tagline: "สายโซล่าร์สำเร็จ 4mm² สีดำ 10m พร้อมหัว MC4 หัวท้าย",
+    body: "CB-5054B-10 สายโซล่าร์ PV 4mm² สีดำ ยาว 10 เมตร มีหัว MC4 สำเร็จสองด้าน เหมาะงานที่ต้องการระยะห่างมากขึ้น เช่น rooftop ที่แผงอยู่ห่างจาก inverter",
+    specs: ["Solar PV cable 4mm² สีดำ 10m, หัว MC4 สำเร็จสองด้าน", "ต่อใช้งานได้ทันที", "ใช้ฝั่งขั้วลบ (negative)"],
+  },
+  "Link|CB-5054R-10": {
+    tagline: "สายโซล่าร์สำเร็จ 4mm² สีแดง 10m พร้อมหัว MC4 หัวท้าย",
+    body: "CB-5054R-10 สายโซล่าร์ PV 4mm² สีแดง ยาว 10 เมตร มีหัว MC4 สำเร็จสองด้าน เหมาะงาน rooftop ที่ระยะห่างมาก",
+    specs: ["Solar PV cable 4mm² สีแดง 10m, หัว MC4 สำเร็จสองด้าน", "ต่อใช้งานได้ทันที", "ใช้ฝั่งขั้วบวก (positive)"],
+  },
+
+  // ───────────────── Link — SFP / Fiber Modules ─────────────────
+  "Link|UT-901G-LC10": {
+    tagline: "SFP โมดูล 1.25G Gigabit LC 1310nm ระยะ 10km สำหรับ switch/router",
+    body: "UT-901G-LC10 SFP mini-GBIC โมดูล Gigabit (1.25G) หัวต่อ LC ความยาวคลื่น 1310nm ส่งสัญญาณได้ไกลสุด 10km เหมาะเชื่อม switch หรือ router ที่มี SFP port ผ่านสายใยแก้วนำแสง (fiber optic)",
+    specs: ["SFP 1.25G Gigabit, หัวต่อ LC, 1310nm", "ระยะสูงสุด 10km (Single-mode fiber)", "เข้ากันได้กับ switch/router ที่มีพอร์ต SFP"],
+  },
+  "Link|UT-901G-LC20-BT35": {
+    tagline: "SFP Mini-GBIC โมดูล 1.25G LC 1310nm ระยะ 20km",
+    body: "UT-901G-LC20-BT35 SFP mini-GBIC โมดูล Gigabit 1.25G หัวต่อ LC ความยาวคลื่น 1310nm ส่งสัญญาณได้ไกลสุด 20km ผ่านสาย single-mode fiber เหมาะเชื่อมต่อระหว่างอาคารหรือระยะไกล",
+    specs: ["SFP 1.25G Gigabit, หัวต่อ LC, 1310nm", "ระยะสูงสุด 20km (Single-mode fiber)", "เข้ากันได้กับ switch/router ที่มีพอร์ต SFP"],
+  },
+  "Link|UT-901G-LC20-BR53": {
+    tagline: "SFP Bi-Di โมดูล 1.25G LC 1550nm ระยะ 20km ใช้สายใยแก้วเส้นเดียว",
+    body: "UT-901G-LC20-BR53 SFP Bi-Directional (Bi-Di) โมดูล Gigabit 1.25G หัวต่อ LC ความยาวคลื่น 1550nm ส่ง-รับสัญญาณบนสาย single-mode fiber เส้นเดียว (ไม่ต้องใช้ 2 เส้น) ระยะสูงสุด 20km ใช้คู่กับ Bi-Di 1310nm อีกด้านหนึ่ง",
+    specs: ["SFP Bi-Di 1.25G, หัวต่อ LC, 1550nm", "ใช้ fiber เส้นเดียว (ส่ง+รับในเส้นเดียวกัน)", "ระยะสูงสุด 20km, ต้องใช้คู่กับ Bi-Di 1310nm"],
+  },
+
+  // ───────────────── Link — Solar Tools & Connectors ─────────────────
+  "Link|CB-1084": {
+    tagline: "คีมย้ำหัว MC4 Solar Crimping Tool สำหรับงานโซล่าเซลล์",
+    body: "CB-1084 คีมย้ำหัว MC4 (solar crimping tool) สำหรับย้ำหัว MC4 connector เข้ากับสายโซล่าร์ PV cable เครื่องมือจำเป็นสำหรับช่างติดตั้งระบบโซล่าเซลล์",
+    specs: ["คีมย้ำ MC4 solar connector", "ใช้ย้ำหัว MC4 เข้ากับสาย PV cable"],
+  },
+  "Link|CB-1086": {
+    tagline: "MC4 Spanner ประแจถอด-ขัน หัวต่อ MC4 โซล่าเซลล์",
+    body: "CB-1086 ประแจ (spanner) สำหรับขันและถอดหัว MC4 connector ในระบบโซล่าเซลล์ เครื่องมือจำเป็นสำหรับติดตั้งและบำรุงรักษาระบบ PV",
+    specs: ["MC4 Spanner/ประแจ ขัน-ถอดหัว MC4", "เครื่องมือสำหรับช่างระบบโซล่าเซลล์"],
+  },
+  "Link|CB-1002A": {
+    tagline: "หัว MC4 connector ตัวผู้+ตัวเมีย สำหรับต่อสายโซล่าร์",
+    body: "CB-1002A ชุดหัว MC4 connector ตัวผู้ (male) + ตัวเมีย (female) สำหรับต่อสายโซล่าร์ PV เข้ากับแผงหรืออุปกรณ์ เหมาะงาน DIY ระบบโซล่าเซลล์ที่ต้องย้ำหัวเอง",
+    specs: ["MC4 connector ตัวผู้ + ตัวเมีย", "สำหรับต่อสายโซล่าร์ PV cable"],
+  },
+  "Link|CB-1014": {
+    tagline: "MC4 Y-Branch สายแยก 2 ทาง รวมแผงโซล่าร์ขนาน",
+    body: "CB-1014 MC4 Y-Branch connector สายแยก 2 ทาง ใช้รวมสัญญาณจากแผงโซล่าร์ 2 แผงเป็น 1 สาย (ต่อขนาน) เหมาะงานระบบโซล่าเซลล์ที่มีแผงหลายแผงต้องรวมสาย",
+    specs: ["MC4 Y-Branch (สายแยก 2 ทาง)", "ใช้รวมแผงโซล่าร์แบบขนาน (parallel)"],
+  },
+
+  // ───────────────── Dahua — Monitors ─────────────────
+  "Dahua|DHI-LM22-B200S": {
+    tagline: "จอมอนิเตอร์ 22\" FHD 100Hz Dahua ลำโพงในตัว เหมาะห้องควบคุม CCTV",
+    body:
+      "DHI-LM22-B200S จอมอนิเตอร์ Dahua ขนาด 22 นิ้ว Full HD 1920×1080 อัตรารีเฟรช 100Hz มีลำโพงในตัว เหมาะสำหรับห้องควบคุม CCTV หรือใช้เป็น monitor ทั่วไป ออกแบบมาสำหรับใช้งานกับระบบกล้องวงจรปิดโดยเฉพาะ",
+    specs: [
+      "ขนาด 22 นิ้ว, ความละเอียด Full HD 1920×1080",
+      "อัตรารีเฟรช 100Hz",
+      "มีลำโพงในตัว",
+      "เหมาะห้องควบคุม CCTV",
+    ],
+  },
+  "Dahua|DHI-LM24-B200S": {
+    tagline: "จอมอนิเตอร์ 24\" FHD 100Hz Dahua ลำโพงในตัว เหมาะห้องควบคุม CCTV",
+    body:
+      "DHI-LM24-B200S จอมอนิเตอร์ Dahua ขนาด 24 นิ้ว Full HD 1920×1080 อัตรารีเฟรช 100Hz มีลำโพงในตัว เหมาะสำหรับห้องควบคุม CCTV ดูกล้องหลายช่องพร้อมกัน หรือใช้เป็น monitor ทั่วไปในออฟฟิศ",
+    specs: [
+      "ขนาด 24 นิ้ว, ความละเอียด Full HD 1920×1080",
+      "อัตรารีเฟรช 100Hz",
+      "มีลำโพงในตัว",
+      "เหมาะห้องควบคุม CCTV",
+    ],
+  },
 };
 
 export function productDoc(brand: string, model: string): ProductDoc | null {
