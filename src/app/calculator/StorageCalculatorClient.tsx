@@ -31,18 +31,25 @@ const BITRATE_PRESETS: { mbps: number; label: string; sub: string }[] = [
 ];
 
 const RESOLUTIONS = ["2MP", "4MP", "5MP", "8MP"];
+// typical H.264 max-bitrate setting per resolution — clicking a resolution
+// jumps the bitrate preset to this as a starting point (still manually
+// adjustable after, since actual bitrate depends on the camera's own
+// settings, not resolution alone).
+const RESOLUTION_DEFAULT_BITRATE: Record<string, number> = {
+  "2MP": 2, "4MP": 3, "5MP": 4, "8MP": 6,
+};
 const CODECS = ["H.264", "H.265"];
-// Bitrate presets are calibrated for H.264; H.265 delivers the same
-// quality at a lower bitrate, so scale the effective bitrate accordingly.
+// Bitrate presets are calibrated for H.264 at FPS_REFERENCE; H.265 delivers
+// the same quality at a lower bitrate, so scale the PRESET path accordingly.
+// Never applied to the custom bitrate field — that's a real value read off
+// the camera/NVR, already reflecting whatever codec/fps it's actually running.
 const CODEC_FACTORS: Record<string, number> = { "H.264": 1, "H.265": 0.5 };
+// Bitrate presets assume this fps; the preset path scales proportionally to
+// the selected fps (same reasoning as CODEC_FACTORS — custom entries are
+// exempt since they're already the real measured value at the real fps).
+const FPS_REFERENCE = 25;
 const FPS_PRESETS = ["15", "25"] as const;
 const HOURS_PRESETS = [["24", "ตลอด 24ชม."], ["12", "กลางวัน 12ชม."]] as const;
-
-function dayStatus(days: number): { badgeClass: string; label: string } {
-  if (days < 14) return { badgeClass: "border-red-200 bg-red-50 text-red-700", label: "น้อยเกิน" };
-  if (days < 30) return { badgeClass: "border-amber-200 bg-amber-50 text-amber-700", label: "พอใช้" };
-  return { badgeClass: "border-emerald-200 bg-emerald-50 text-emerald-700", label: "ดี" };
-}
 
 // How many GB does one day of recording need?
 function calcDailyGB(bitrateMbps: number, hours: number, cameras: number): number {
@@ -76,17 +83,17 @@ export default function StorageCalculatorClient({ products }: { products: Produc
   const fps = fpsMode === "custom" ? Math.max(1, customFps) : Number(fpsMode);
   const hours = hoursMode === "custom" ? Math.max(1, Math.min(24, customHours)) : Number(hoursMode);
   const codecFactor = CODEC_FACTORS[codec] ?? 1;
-  const effectiveBitrate: number = (() => {
-    const base =
-      bitratePreset !== "custom"
-        ? bitratePreset
-        : (() => {
-            const v = Number(customBitrateValue);
-            if (!v || v <= 0) return 0;
-            return customBitrateUnit === "Kbps" ? v / 1000 : v;
-          })();
-    return base * codecFactor;
-  })();
+  // preset path = generic "typical quality" lookup -> scale by codec + fps.
+  // custom path = real value read off the camera/NVR -> already reflects
+  // whatever codec/fps that camera is actually running, so no scaling.
+  const effectiveBitrate: number =
+    bitratePreset !== "custom"
+      ? bitratePreset * codecFactor * (fps / FPS_REFERENCE)
+      : (() => {
+          const v = Number(customBitrateValue);
+          if (!v || v <= 0) return 0;
+          return customBitrateUnit === "Kbps" ? v / 1000 : v;
+        })();
 
   const totalBandwidth = effectiveBitrate * cameras;
   const nvrBandwidth = nvrBandwidthStr && Number(nvrBandwidthStr) > 0
@@ -154,7 +161,7 @@ export default function StorageCalculatorClient({ products }: { products: Produc
     <div className="min-h-screen bg-slate-100">
       {/* header */}
       <header className="sticky top-0 z-30 bg-slate-900 text-white">
-        <div className="mx-auto flex max-w-4xl items-center gap-3 p-3 sm:p-4">
+        <div className="mx-auto flex items-center gap-3 p-3 sm:p-4">
           <Link
             href="/"
             className="flex shrink-0 items-center gap-1.5 rounded-md border border-slate-600 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
@@ -172,7 +179,7 @@ export default function StorageCalculatorClient({ products }: { products: Produc
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl space-y-4 p-4">
+      <main className="mx-auto space-y-4 p-4">
         {/* shared input panel */}
         <div className="rounded-xl bg-white p-5 shadow-sm">
           <h2 className="mb-4 text-sm font-bold text-slate-500 uppercase tracking-wide">
@@ -218,7 +225,10 @@ export default function StorageCalculatorClient({ products }: { products: Produc
                 {RESOLUTIONS.map((r) => (
                   <button
                     key={r}
-                    onClick={() => setResolution(r)}
+                    onClick={() => {
+                      setResolution(r);
+                      setBitratePreset(RESOLUTION_DEFAULT_BITRATE[r]);
+                    }}
                     className={`${btnBase} ${resolution === r ? btnActive : btnInactive}`}
                   >
                     {r}
@@ -228,6 +238,9 @@ export default function StorageCalculatorClient({ products }: { products: Produc
                   </button>
                 ))}
               </div>
+              <p className="mt-1.5 text-xs text-slate-400">
+                * เลือกความละเอียดจะตั้ง Bitrate เริ่มต้นให้อัตโนมัติ — ถ้ารู้ค่าจริงจากกล้อง ปรับที่ช่อง Bitrate ด้านล่างได้เลย
+              </p>
             </div>
 
             {/* codec */}
@@ -286,6 +299,9 @@ export default function StorageCalculatorClient({ products }: { products: Produc
                   </div>
                 )}
               </div>
+              <p className="mt-1.5 text-xs text-slate-400">
+                * มีผลเฉพาะตอนเลือก Bitrate แบบ preset ด้านล่าง (ค่า preset อิงที่ 25fps) — ถ้ากรอก Bitrate แบบกำหนดเอง (อ่านจากกล้องจริง) fps ไม่กระทบ เพราะค่านั้นรวม fps จริงไว้แล้ว
+              </p>
             </div>
 
             {/* hours per day */}
@@ -483,147 +499,11 @@ export default function StorageCalculatorClient({ products }: { products: Produc
           </div>
         </div>
 
-        {/* === RESULT PANEL === */}
-        <div className="overflow-hidden rounded-xl bg-white shadow-sm">
-          {/* summary: bandwidth + storage/day */}
-          <div className="border-b border-slate-100 px-5 py-4">
-            <h2 className="mb-3 font-bold text-slate-800">ผลการคำนวณ</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <div className={`rounded-lg border p-3 ${bandwidthExceeded ? "border-red-200 bg-red-50" : "border-slate-100 bg-slate-50"}`}>
-                <p className="text-xs text-slate-500">Bandwidth รวมทุกกล้อง</p>
-                <p className={`text-2xl font-extrabold ${bandwidthExceeded ? "text-red-600" : "text-slate-900"}`}>
-                  {totalBandwidth.toFixed(1)}<span className="ml-1 text-sm font-semibold">Mbps</span>
-                </p>
-                <p className="text-xs text-slate-400">{cameras} กล้อง × {effectiveBitrate.toFixed(2)} Mbps</p>
-                {nvrBandwidth && (
-                  <p className={`mt-1 text-xs font-semibold ${bandwidthExceeded ? "text-red-600" : "text-emerald-600"}`}>
-                    {bandwidthExceeded
-                      ? `⚠️ เกิน NVR (${nvrBandwidth} Mbps)`
-                      : `✓ ไม่เกิน NVR (${nvrBandwidth} Mbps)`}
-                  </p>
-                )}
-              </div>
-              <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
-                <p className="text-xs text-slate-500">พื้นที่ใช้ต่อวัน</p>
-                <p className="text-2xl font-extrabold text-slate-900">
-                  {dailyGB < 1000
-                    ? `${dailyGB.toFixed(1)} GB`
-                    : `${(dailyGB / 1000).toFixed(2)} TB`}
-                </p>
-                <p className="text-xs text-slate-400">{hours} ชม./วัน · {cameras} กล้อง</p>
-              </div>
-            </div>
-            {bandwidthExceeded && maxCamerasForNvr !== null && (
-              <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-800">
-                ⚠️ <strong>Bandwidth เกิน!</strong> ต้องลด bitrate เหลือ{" "}
-                <strong>{(nvrBandwidth! / cameras).toFixed(2)} Mbps/กล้อง</strong>{" "}
-                หรือลดกล้องเหลือ ≤ {maxCamerasForNvr} ตัว
-              </div>
-            )}
-          </div>
-
-          {/* target days table */}
-          <table className="w-full">
-            <thead>
-              <tr className="bg-slate-50 text-left text-xs font-medium text-slate-500">
-                <th className="px-5 py-3">เป้าหมาย</th>
-                <th className="px-5 py-3">พื้นที่ที่ต้องการ</th>
-                <th className="px-5 py-3">HDD แนะนำ</th>
-                <th className="px-5 py-3">สถานะ</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {dayRows.map(({ days, gb, tb, singleHdd, multi, exceedsBays }) => {
-                const { badgeClass, label } = dayStatus(days);
-                const is30 = days === 30;
-                return (
-                  <tr
-                    key={days}
-                    className={
-                      is30
-                        ? "border-l-4 border-emerald-500 bg-emerald-50"
-                        : "border-l-4 border-transparent hover:bg-slate-50"
-                    }
-                  >
-                    <td className="px-4 py-4">
-                      <span className={`text-3xl font-extrabold ${is30 ? "text-emerald-700" : "text-slate-800"}`}>
-                        {days}
-                      </span>
-                      <span className="ml-1 text-base font-medium text-slate-500">วัน</span>
-                    </td>
-                    <td className="px-4 py-4 text-sm text-slate-700">
-                      <div className="font-semibold">
-                        {gb < 1000 ? `${gb.toFixed(0)} GB` : `${tb.toFixed(2)} TB`}
-                      </div>
-                      {gb >= 1000 && (
-                        <div className="text-xs text-slate-400">{gb.toLocaleString("th-TH", { maximumFractionDigits: 0 })} GB</div>
-                      )}
-                    </td>
-                    <td className="px-4 py-4">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        {singleHdd ? (
-                          <span className="font-bold text-slate-800">{singleHdd} TB</span>
-                        ) : multi ? (
-                          <span className={`font-bold ${exceedsBays ? "text-amber-700" : "text-amber-700"}`}>
-                            {multi.size} TB × {multi.count} ตัว
-                          </span>
-                        ) : null}
-                        {exceedsBays && (
-                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 border border-amber-200">
-                            ⚠️ เกิน {nvrBays} bay
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-4 py-4">
-                      <span className={`inline-block rounded-full border px-3 py-0.5 text-xs font-semibold ${badgeClass}`}>
-                        {label}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-
-          {/* NAS callout — แสดงเมื่อมีแถวเกิน bay */}
-          {nvrBays !== null && dayRows.some((r) => r.exceedsBays) && (
-            <div className="mx-4 mb-4 mt-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              <p className="font-semibold">💡 ต้องการ HDD มากกว่า {nvrBays} ตัว</p>
-              <p className="mt-1 text-xs text-amber-700">
-                NVR ทั่วไปรองรับ HDD ได้จำกัด — งานที่ต้องการ storage ขนาดใหญ่ควรพิจารณา{" "}
-                <strong>NAS เฉพาะ surveillance</strong> (เช่น Synology, QNAP, Dahua) ที่รองรับหลาย bay
-                และเชื่อมต่อกับ NVR ผ่าน iSCSI/NFS แทน
-              </p>
-            </div>
-          )}
-
-          {/* custom target input */}
-          <div className="border-t border-slate-100 px-5 py-3 flex items-center gap-3">
-            <span className="text-sm text-slate-500">เพิ่มเป้าหมาย:</span>
-            <input
-              type="number"
-              min={1}
-              value={customTargetDays}
-              placeholder="เช่น 45"
-              onChange={(e) => setCustomTargetDays(e.target.value)}
-              className="h-8 w-20 rounded-md border border-slate-300 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-            />
-            <span className="text-sm text-slate-500">วัน</span>
-            {customTargetDays && (
-              <button onClick={() => setCustomTargetDays("")} className="text-xs text-slate-400 hover:text-red-500">
-                ล้าง
-              </button>
-            )}
-            <span className="ml-auto text-xs text-slate-400">* 1 TB = 1,000 GB · bitrate คงที่</span>
-          </div>
-        </div>
-
-        {/* === SOLUTION ANALYZER === */}
+        {/* === SOLUTION ANALYZER — ตอบลูกค้าตรงๆ ก่อน (มี HDD เท่านี้ เก็บได้กี่วัน) === */}
         <div className="overflow-hidden rounded-xl bg-white shadow-sm">
           <div className="border-b border-slate-100 px-5 py-4">
-            <h2 className="font-bold text-slate-800">🎯 วิเคราะห์ Solution ลูกค้า</h2>
-            <p className="mt-1 text-xs text-slate-400">ใส่ HDD ที่ลูกค้ามีหรือต้องการซื้อ — ระบบจะวิเคราะห์ว่าเพียงพอไหม</p>
+            <h2 className="font-bold text-slate-800">✅ ตอบลูกค้า: มี HDD เท่านี้ เก็บได้กี่วัน</h2>
+            <p className="mt-1 text-xs text-slate-400">ใส่ HDD ที่ลูกค้ามีหรือต้องการซื้อ — ระบบคำนวณจำนวนวันที่เก็บได้จริงทันที</p>
           </div>
           <div className="px-5 py-4 space-y-4">
             {/* HDD size */}
@@ -746,6 +626,135 @@ export default function StorageCalculatorClient({ products }: { products: Produc
             {!custTotalTB && (
               <p className="text-xs text-slate-400">ยังไม่ได้ใส่ข้อมูล HDD</p>
             )}
+          </div>
+        </div>
+
+        {/* === แนะนำ: HDD ตามเป้าหมายวันที่ต้องการ === */}
+        <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+          {/* summary: bandwidth + storage/day */}
+          <div className="border-b border-slate-100 px-5 py-4">
+            <h2 className="mb-3 font-bold text-slate-800">💡 แนะนำ HDD ตามเป้าหมายที่ต้องการ</h2>
+            <div className="grid grid-cols-2 gap-3">
+              <div className={`rounded-lg border p-3 ${bandwidthExceeded ? "border-red-200 bg-red-50" : "border-slate-100 bg-slate-50"}`}>
+                <p className="text-xs text-slate-500">Bandwidth รวมทุกกล้อง</p>
+                <p className={`text-2xl font-extrabold ${bandwidthExceeded ? "text-red-600" : "text-slate-900"}`}>
+                  {totalBandwidth.toFixed(1)}<span className="ml-1 text-sm font-semibold">Mbps</span>
+                </p>
+                <p className="text-xs text-slate-400">{cameras} กล้อง × {effectiveBitrate.toFixed(2)} Mbps</p>
+                {nvrBandwidth && (
+                  <p className={`mt-1 text-xs font-semibold ${bandwidthExceeded ? "text-red-600" : "text-emerald-600"}`}>
+                    {bandwidthExceeded
+                      ? `⚠️ เกิน NVR (${nvrBandwidth} Mbps)`
+                      : `✓ ไม่เกิน NVR (${nvrBandwidth} Mbps)`}
+                  </p>
+                )}
+              </div>
+              <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                <p className="text-xs text-slate-500">พื้นที่ใช้ต่อวัน</p>
+                <p className="text-2xl font-extrabold text-slate-900">
+                  {dailyGB < 1000
+                    ? `${dailyGB.toFixed(1)} GB`
+                    : `${(dailyGB / 1000).toFixed(2)} TB`}
+                </p>
+                <p className="text-xs text-slate-400">{hours} ชม./วัน · {cameras} กล้อง</p>
+              </div>
+            </div>
+            {bandwidthExceeded && maxCamerasForNvr !== null && (
+              <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-800">
+                ⚠️ <strong>Bandwidth เกิน!</strong> ต้องลด bitrate เหลือ{" "}
+                <strong>{(nvrBandwidth! / cameras).toFixed(2)} Mbps/กล้อง</strong>{" "}
+                หรือลดกล้องเหลือ ≤ {maxCamerasForNvr} ตัว
+              </div>
+            )}
+          </div>
+
+          {/* target days table */}
+          <table className="w-full">
+            <thead>
+              <tr className="bg-slate-50 text-left text-xs font-medium text-slate-500">
+                <th className="px-5 py-3">เป้าหมาย</th>
+                <th className="px-5 py-3">พื้นที่ที่ต้องการ</th>
+                <th className="px-5 py-3">HDD แนะนำ</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {dayRows.map(({ days, gb, tb, singleHdd, multi, exceedsBays }) => {
+                const is30 = days === 30;
+                return (
+                  <tr
+                    key={days}
+                    className={
+                      is30
+                        ? "border-l-4 border-emerald-500 bg-emerald-50"
+                        : "border-l-4 border-transparent hover:bg-slate-50"
+                    }
+                  >
+                    <td className="px-4 py-4">
+                      <span className={`text-3xl font-extrabold ${is30 ? "text-emerald-700" : "text-slate-800"}`}>
+                        {days}
+                      </span>
+                      <span className="ml-1 text-base font-medium text-slate-500">วัน</span>
+                    </td>
+                    <td className="px-4 py-4 text-sm text-slate-700">
+                      <div className="font-semibold">
+                        {gb < 1000 ? `${gb.toFixed(0)} GB` : `${tb.toFixed(2)} TB`}
+                      </div>
+                      {gb >= 1000 && (
+                        <div className="text-xs text-slate-400">{gb.toLocaleString("th-TH", { maximumFractionDigits: 0 })} GB</div>
+                      )}
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {singleHdd ? (
+                          <span className="font-bold text-slate-800">{singleHdd} TB</span>
+                        ) : multi ? (
+                          <span className={`font-bold ${exceedsBays ? "text-amber-700" : "text-amber-700"}`}>
+                            {multi.size} TB × {multi.count} ตัว
+                          </span>
+                        ) : null}
+                        {exceedsBays && (
+                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 border border-amber-200">
+                            ⚠️ เกิน {nvrBays} bay
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+
+          {/* NAS callout — แสดงเมื่อมีแถวเกิน bay */}
+          {nvrBays !== null && dayRows.some((r) => r.exceedsBays) && (
+            <div className="mx-4 mb-4 mt-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              <p className="font-semibold">💡 ต้องการ HDD มากกว่า {nvrBays} ตัว</p>
+              <p className="mt-1 text-xs text-amber-700">
+                NVR ทั่วไปรองรับ HDD ได้จำกัด — งานที่ต้องการ storage ขนาดใหญ่ควรพิจารณา{" "}
+                <strong>NAS เฉพาะ surveillance</strong> (เช่น Synology, QNAP, Dahua) ที่รองรับหลาย bay
+                และเชื่อมต่อกับ NVR ผ่าน iSCSI/NFS แทน
+              </p>
+            </div>
+          )}
+
+          {/* custom target input */}
+          <div className="border-t border-slate-100 px-5 py-3 flex items-center gap-3">
+            <span className="text-sm text-slate-500">เพิ่มเป้าหมาย:</span>
+            <input
+              type="number"
+              min={1}
+              value={customTargetDays}
+              placeholder="เช่น 45"
+              onChange={(e) => setCustomTargetDays(e.target.value)}
+              className="h-8 w-20 rounded-md border border-slate-300 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+            />
+            <span className="text-sm text-slate-500">วัน</span>
+            {customTargetDays && (
+              <button onClick={() => setCustomTargetDays("")} className="text-xs text-slate-400 hover:text-red-500">
+                ล้าง
+              </button>
+            )}
+            <span className="ml-auto text-xs text-slate-400">* 1 TB = 1,000 GB · bitrate คงที่</span>
           </div>
         </div>
 

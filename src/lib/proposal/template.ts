@@ -53,11 +53,12 @@ async function loadFontFaceCss(): Promise<string> {
 export type PriceDisplay = "member" | "public" | "both";
 
 function pricesHtml(item: ProposalItem, priceDisplay: PriceDisplay): string {
+  const cost = `<span class="price cost">ต้นทุน (${escapeHtml(item.costSupplier)}): ${baht(item.cost)}</span>`;
   const member = `<span class="price member">ราคาช่าง: ${baht(item.priceMember)}</span>`;
   const pub = `<span class="price public">ราคาหน้าร้าน: ${baht(item.pricePublic)}</span>`;
-  if (priceDisplay === "member") return member;
+  if (priceDisplay === "member") return cost + member;
   if (priceDisplay === "public") return pub;
-  return member + pub;
+  return cost + member + pub;
 }
 
 function cardHtml(item: ProposalItem, priceDisplay: PriceDisplay, isPageBreak: boolean): string {
@@ -105,6 +106,7 @@ export async function buildProposalHtml(
         .prices { margin-top: 12px; display: flex; gap: 24px; }
         .price { font-size: 15px; font-weight: 700; color: ${COLOR_PRICE}; }
         .price.public { color: #1e8449; }
+        .price.cost { color: #6b7280; font-weight: 400; }
         .card.page-break { break-after: page; page-break-after: always; }
       </style>
     </head>

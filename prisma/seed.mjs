@@ -65,10 +65,13 @@ async function seedProducts() {
       note: p.note ?? "",
     };
 
-    // CMIT priceMember = our raw cost. SiS priceMember = SiS's own suggested
-    // resale price (build_catalog.py decides which one goes in); either way
-    // onlineMin/onlineMax apply the same multipliers on top, untouched here.
+    // CMIT priceMember = our raw cost, sold to ช่าง as-is. SiS priceMember =
+    // raw NDP * supplier markup (build_catalog.py member_price(), +10% for
+    // SiS — 2026-07-06 rule); supplierCosts keeps the raw per-distributor
+    // quote(s) this was computed from. Either way onlineMin/onlineMax apply
+    // the same multipliers on raw cost on top, untouched here.
     const supplier = p.supplier ?? "CMIT";
+    const supplierCosts = p.supplierCosts ?? null;
 
     if (!existing) {
       await prisma.product.create({
@@ -78,6 +81,7 @@ async function seedProducts() {
           ...descriptive,
           priceMember: p.priceMember,
           supplier,
+          supplierCosts,
           onlineMin: p.onlineMin,
           onlineMax: p.onlineMax,
           status: p.status,
@@ -97,6 +101,7 @@ async function seedProducts() {
           ...descriptive,
           priceMember: p.priceMember,
           supplier,
+          supplierCosts,
           onlineMin: p.onlineMin,
           onlineMax: p.onlineMax,
           status: p.status,

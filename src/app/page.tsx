@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { publicPrice } from "@/lib/pricing";
+import { resolvePublicPrice } from "@/lib/pricing";
 import { deviceImage } from "@/lib/deviceImage";
 import { productSlug, SITE_URL } from "@/lib/seo";
 import ShopClient from "./ShopClient";
@@ -49,6 +49,8 @@ export default async function ShopHome() {
       onlineMin: true,
       onlineMax: true,
       publicPriceOverride: true,
+      publicPriceSupplier: true,
+      supplierCosts: true,
       viewCount: true,
     },
   });
@@ -62,7 +64,10 @@ export default async function ShopHome() {
       categoryLabel: r.categoryLabel,
       model: r.model,
       name: r.name,
-      price: publicPrice(r.id, r.onlineMin, r.onlineMax, r.publicPriceOverride),
+      price: resolvePublicPrice({
+        ...r,
+        supplierCosts: r.supplierCosts as Record<string, number> | null,
+      }),
       image: deviceImage(r.model, r.brand),
       slug: productSlug(r),
       viewCount: r.viewCount,

@@ -27,16 +27,28 @@ model Product {
   model         String
   name          String
   priceMember   Int?
-  // distributor this cost/price came from — "CMIT" (priceMember = raw cost)
-  // or "SiS" (priceMember = SiS's own suggested resale price, not our cost).
-  // Drives no pricing logic by itself; onlineMin/onlineMax always apply the
-  // same multipliers to priceMember regardless of supplier.
+  // distributor this cost/price came from — "CMIT" (priceMember = raw cost,
+  // sold to ช่าง as-is) or "SiS" (priceMember = raw NDP * 1.10 markup, since
+  // NDP is SiS's resale price not our cost — 2026-07-06 rule, applied in
+  // build_catalog.py member_price()/SUPPLIER_MARKUP). onlineMin/onlineMax are
+  // always based on raw cost, unaffected by this markup.
   supplier      String   @default("CMIT")
+  // raw cost quotes we've received per distributor, e.g. {"CMIT":925,"SiS":845}
+  // — kept even for the supplier we didn't pick as active, so switching back
+  // (or adding a new one like "digitalcom") doesn't lose the old quote.
+  supplierCosts Json?
   onlineMin     Int?
   onlineMax     Int?
   // staff-set exact storefront price. When non-null it overrides the auto price
   // computed within [onlineMin, onlineMax]. Never derived from products.json.
   publicPriceOverride Int?
+  // for products with more than one entry in supplierCosts: which
+  // distributor's cost basis the PUBLIC storefront price is computed from
+  // (2026-07-06 rule). null = auto, default to CMIT (most of the catalog is
+  // CMIT-sourced), falling back to whichever supplier has a quote if CMIT
+  // doesn't. Only meaningful when supplierCosts has >1 key; ignored
+  // otherwise. publicPriceOverride still wins over this when both are set.
+  publicPriceSupplier String?
   status        String   @default("in stock")
   // public storefront view counter. Bumped (atomic increment) by the public
   // POST /api/products/:id/view route when a detail page is opened. Never

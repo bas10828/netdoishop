@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { publicPrice } from "@/lib/pricing";
+import { resolvePublicPrice } from "@/lib/pricing";
 
 type IncomingItem = { id: number; qty: number };
 
@@ -53,12 +53,18 @@ export async function POST(req: Request) {
       name: true,
       onlineMin: true,
       onlineMax: true,
+      publicPriceOverride: true,
+      publicPriceSupplier: true,
+      supplierCosts: true,
     },
   });
 
   const items = rows
     .map((r) => {
-      const price = publicPrice(r.id, r.onlineMin, r.onlineMax);
+      const price = resolvePublicPrice({
+        ...r,
+        supplierCosts: r.supplierCosts as Record<string, number> | null,
+      });
       if (price === null) return null;
       return {
         id: r.id,

@@ -122,7 +122,7 @@ export default function CheckoutClient() {
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="bg-slate-900 text-white">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 p-4">
+        <div className="mx-auto flex items-center justify-between gap-3 p-4">
           <Link href="/" className="flex items-center gap-2" title="หน้าแรก">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -138,7 +138,7 @@ export default function CheckoutClient() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl space-y-6 p-4">
+      <main className="mx-auto space-y-6 p-4">
         {/* cart items */}
         <section className="rounded-lg border border-slate-200 bg-white p-4">
           <h2 className="mb-3 text-lg font-bold">รายการสั่งซื้อ</h2>

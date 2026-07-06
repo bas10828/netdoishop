@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { publicPrice } from "@/lib/pricing";
+import { resolvePublicPrice } from "@/lib/pricing";
 import { deviceImage, deviceImages } from "@/lib/deviceImage";
 import { productDoc } from "@/data/descriptions";
 import { SITE_URL, SITE_NAME, productSlug, idFromSlug } from "@/lib/seo";
@@ -28,6 +28,8 @@ const PUBLIC_SELECT = {
   onlineMin: true,
   onlineMax: true,
   publicPriceOverride: true,
+  publicPriceSupplier: true,
+  supplierCosts: true,
   status: true,
   viewCount: true,
 } as const;
@@ -48,7 +50,10 @@ async function getProduct(slug: string) {
   if (r.status === "SOLD OUT" || r.onlineMin === null || r.onlineMax === null) {
     return null;
   }
-  const price = publicPrice(r.id, r.onlineMin, r.onlineMax, r.publicPriceOverride);
+  const price = resolvePublicPrice({
+    ...r,
+    supplierCosts: r.supplierCosts as Record<string, number> | null,
+  });
   if (price === null) return null;
   return {
     id: r.id,
@@ -173,7 +178,7 @@ export default async function ProductPage({
 
       {/* header */}
       <header className="sticky top-0 z-30 bg-slate-900 text-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 p-3 sm:p-4">
+        <div className="mx-auto flex items-center justify-between gap-2 p-3 sm:p-4">
           <Link href="/" className="flex items-center gap-2 sm:gap-3" title="หน้าแรก">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -195,7 +200,7 @@ export default async function ProductPage({
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl p-4">
+      <main className="mx-auto p-4">
         {/* breadcrumb */}
         <nav className="mb-4 text-sm text-slate-500" aria-label="breadcrumb">
           <Link href="/" className="hover:text-slate-800">

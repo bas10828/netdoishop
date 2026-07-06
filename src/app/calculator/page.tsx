@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { publicPrice } from "@/lib/pricing";
+import { resolvePublicPrice } from "@/lib/pricing";
 import { deviceImage } from "@/lib/deviceImage";
 import { productSlug } from "@/lib/seo";
 import StorageCalculatorClient from "./StorageCalculatorClient";
@@ -24,6 +24,8 @@ export default async function CalculatorPage() {
       onlineMin: true,
       onlineMax: true,
       publicPriceOverride: true,
+      publicPriceSupplier: true,
+      supplierCosts: true,
     },
   });
 
@@ -35,7 +37,10 @@ export default async function CalculatorPage() {
       categoryLabel: r.categoryLabel,
       model: r.model,
       name: r.name,
-      price: publicPrice(r.id, r.onlineMin, r.onlineMax, r.publicPriceOverride),
+      price: resolvePublicPrice({
+        ...r,
+        supplierCosts: r.supplierCosts as Record<string, number> | null,
+      }),
       image: deviceImage(r.model, r.brand),
       slug: productSlug(r),
     }))

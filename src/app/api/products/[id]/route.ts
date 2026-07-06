@@ -3,13 +3,18 @@ import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { onlinePrices, publicPrice } from "@/lib/pricing";
+import { onlinePrices, resolvePublicPrice } from "@/lib/pricing";
 import { productSlug } from "@/lib/seo";
 
-// PATCH /api/products/:id  — partial update, login required. Accepts either or
-// both of:
-//   { priceMember: number | null }         -> cost price; recomputes online min/max
+// PATCH /api/products/:id  — partial update, login required. Accepts any of:
+//   { priceMember: number | null }          -> ราคาช่าง override; online min/max
+//     stay anchored to the raw cost on file (supplierCosts[supplier]) when
+//     known, so editing a SiS item's ช่างprice never corrupts the storefront
+//     range with the +10% markup already baked into priceMember
 //   { publicPriceOverride: number | null }  -> exact storefront price (null = auto)
+//   { publicPriceSupplier: string | null }  -> which distributor's cost the
+//     storefront price is computed from, for multi-supplier products
+//     (null = auto/cheapest)
 // Returns the updated row plus the effective storefront price.
 type Prisma = typeof import("@/lib/prisma").prisma;
 type ProductUpdate = Parameters<Prisma["product"]["update"]>[0]["data"];
@@ -51,7 +56,22 @@ export async function PATCH(
     if (priceMember === undefined) {
       return NextResponse.json({ error: "bad price" }, { status: 400 });
     }
-    const { onlineMin, onlineMax } = onlinePrices(priceMember);
+    const existing = await prisma.product.findUnique({
+      where: { id },
+      select: { supplier: true, supplierCosts: true },
+    });
+    if (!existing) {
+      return NextResponse.json({ error: "not found" }, { status: 404 });
+    }
+    const supplierCosts = existing.supplierCosts as Record<string, number> | null;
+    // online min/max always track the raw cost on file for the active
+    // supplier — never the edited ราคาช่าง number itself, which may already
+    // include a supplier markup (e.g. SiS +10%). Falls back to treating the
+    // edit as the raw cost for plain CMIT rows with no recorded supplierCosts
+    // (rawCost === priceMember there anyway, so this matches prior behavior).
+    const rawCost =
+      priceMember === null ? null : supplierCosts?.[existing.supplier] ?? priceMember;
+    const { onlineMin, onlineMax } = onlinePrices(rawCost);
     data.priceMember = priceMember;
     data.onlineMin = onlineMin;
     data.onlineMax = onlineMax;
@@ -63,6 +83,14 @@ export async function PATCH(
       return NextResponse.json({ error: "bad price" }, { status: 400 });
     }
     data.publicPriceOverride = override;
+  }
+
+  if ("publicPriceSupplier" in b) {
+    const sup = b.publicPriceSupplier;
+    if (sup !== null && typeof sup !== "string") {
+      return NextResponse.json({ error: "bad publicPriceSupplier" }, { status: 400 });
+    }
+    data.publicPriceSupplier = sup;
   }
 
   if ("status" in b) {
@@ -84,12 +112,10 @@ export async function PATCH(
     revalidatePath(`/product/${productSlug(updated)}`);
     return NextResponse.json({
       ...updated,
-      publicPrice: publicPrice(
-        updated.id,
-        updated.onlineMin,
-        updated.onlineMax,
-        updated.publicPriceOverride
-      ),
+      publicPrice: resolvePublicPrice({
+        ...updated,
+        supplierCosts: updated.supplierCosts as Record<string, number> | null,
+      }),
     });
   } catch {
     return NextResponse.json({ error: "not found" }, { status: 404 });

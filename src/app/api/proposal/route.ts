@@ -37,14 +37,31 @@ function parseOverrideMap(raw: unknown): Record<number, number> | undefined {
   return out;
 }
 
+const MAX_SUPPLIER_NAME_LEN = 40;
+
+function parseSupplierMap(raw: unknown): Record<number, string> | undefined {
+  if (raw === undefined) return {};
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return undefined;
+  const out: Record<number, string> = {};
+  for (const [key, val] of Object.entries(raw)) {
+    const id = Number(key);
+    if (!Number.isInteger(id) || id <= 0) return undefined;
+    if (typeof val !== "string" || val.length === 0 || val.length > MAX_SUPPLIER_NAME_LEN) return undefined;
+    out[id] = val;
+  }
+  return out;
+}
+
 function parseOverrides(raw: unknown): PriceOverrides | undefined {
   if (raw === undefined) return {};
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return undefined;
   const r = raw as Record<string, unknown>;
   const member = parseOverrideMap(r.member);
   const pub = parseOverrideMap(r.public);
-  if (!member || !pub) return undefined;
-  return { member, public: pub };
+  const cost = parseOverrideMap(r.cost);
+  const costSupplier = parseSupplierMap(r.costSupplier);
+  if (!member || !pub || !cost || !costSupplier) return undefined;
+  return { member, public: pub, cost, costSupplier };
 }
 
 export async function POST(req: Request) {

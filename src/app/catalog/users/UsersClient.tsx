@@ -177,7 +177,7 @@ export default function UsersClient({
     "rounded-md border border-slate-300 px-3 py-1.5 text-sm outline-none focus:border-sky-500";
 
   return (
-    <main className="mx-auto max-w-4xl p-4">
+    <main className="mx-auto p-4">
       <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}

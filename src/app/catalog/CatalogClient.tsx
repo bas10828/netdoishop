@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { productDoc } from "@/data/descriptions";
+import { sellPrice } from "@/lib/supplierMarkup";
+import { onlinePrices } from "@/lib/pricing";
 
 type Product = {
   id: number;
@@ -14,9 +16,11 @@ type Product = {
   name: string;
   priceMember: number | null;
   supplier: string;
+  supplierCosts: Record<string, number> | null;
   onlineMin: number | null;
   onlineMax: number | null;
   publicPriceOverride: number | null;
+  publicPriceSupplier: string | null; // staff-chosen supplier basis for storefront price (null = auto/cheapest)
   publicPrice: number | null; // effective storefront price (override ?? auto)
   image: string;
   viewCount: number;
@@ -69,6 +73,28 @@ export default function CatalogClient({
   // with the real ราคาช่าง/ราคาหน้าร้าน — never saved back to the Product row
   const [draftMember, setDraftMember] = useState<Record<number, string>>({});
   const [draftPublic, setDraftPublic] = useState<Record<number, string>>({});
+  // which distributor's cost quote to base ต้นทุน/ราคาช่าง on for THIS document
+  // — only relevant for items with more than one entry in supplierCosts
+  // (e.g. we've received both a CMIT and a SiS sheet for the same model).
+  // Defaults to the product's currently-active supplier.
+  const [costSupplier, setCostSupplier] = useState<Record<number, string>>({});
+
+  function supplierOptions(p: Product): string[] {
+    const keys = p.supplierCosts ? Object.keys(p.supplierCosts) : [];
+    return keys.length > 0 ? keys : [p.supplier];
+  }
+
+  function rawCostFor(p: Product, supplier: string): number | null {
+    return p.supplierCosts?.[supplier] ?? (supplier === p.supplier ? p.priceMember : null);
+  }
+
+  function pickCostSupplier(p: Product, supplier: string) {
+    setCostSupplier((prev) => ({ ...prev, [p.id]: supplier }));
+    const raw = rawCostFor(p, supplier);
+    if (raw !== null) {
+      setDraftMember((prev) => ({ ...prev, [p.id]: String(sellPrice(raw, supplier)) }));
+    }
+  }
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -108,15 +134,24 @@ export default function CatalogClient({
     setGenerating(format);
     setError("");
     try {
-      const overrides: { member: Record<number, number>; public: Record<number, number> } = {
-        member: {},
-        public: {},
-      };
+      const overrides: {
+        member: Record<number, number>;
+        public: Record<number, number>;
+        cost: Record<number, number>;
+        costSupplier: Record<number, string>;
+      } = { member: {}, public: {}, cost: {}, costSupplier: {} };
       for (const p of items) {
         if (!selected.has(p.id)) continue;
         if (priceDisplay === "member" || priceDisplay === "both") {
           const v = Number(draftMember[p.id] ?? p.priceMember ?? 0);
           if (Number.isFinite(v)) overrides.member[p.id] = v;
+
+          const sup = costSupplier[p.id] ?? p.supplier;
+          const raw = rawCostFor(p, sup);
+          if (raw !== null) {
+            overrides.cost[p.id] = raw;
+            overrides.costSupplier[p.id] = sup;
+          }
         }
         if (priceDisplay === "public" || priceDisplay === "both") {
           const v = Number(draftPublic[p.id] ?? p.publicPrice ?? 0);
@@ -198,6 +233,28 @@ export default function CatalogClient({
     }
   }
 
+  // staff pick of which distributor's cost the PUBLIC storefront price is
+  // computed from, for products with more than one supplier quote on file.
+  // "" = auto (cheapest). Persisted immediately — this affects every visitor.
+  async function setPublicPriceSupplier(p: Product, supplier: string) {
+    setError("");
+    try {
+      const res = await fetch(`/api/products/${p.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ publicPriceSupplier: supplier === "" ? null : supplier }),
+      });
+      if (!res.ok) {
+        setError("ตั้งค่าราคาหน้าร้านไม่สำเร็จ");
+        return;
+      }
+      const updated: Product = await res.json();
+      setItems((prev) => prev.map((x) => (x.id === p.id ? { ...updated, image: x.image } : x)));
+    } catch {
+      setError("เชื่อมต่อไม่ได้");
+    }
+  }
+
   // toggle stock state (พร้อมขาย <-> SOLD OUT) when restocking / selling out
   async function toggleStatus(p: Product) {
     const next = p.status === "SOLD OUT" ? "in stock" : "SOLD OUT";
@@ -262,7 +319,7 @@ export default function CatalogClient({
   }
 
   return (
-    <main className="mx-auto max-w-7xl p-4">
+    <main className="mx-auto p-4">
       <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" className="flex items-center gap-3" title="หน้าแรก">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -433,8 +490,8 @@ export default function CatalogClient({
                       onClick={() => startEdit(p, "cost")}
                       title={
                         p.supplier === "SiS"
-                          ? "ราคานี้คือราคาแนะนำจาก SiS (ไม่ใช่ต้นทุนเรา) — คลิกเพื่อแก้"
-                          : "คลิกเพื่อแก้ราคาทุน"
+                          ? "ราคานี้ = ต้นทุน SiS + markup 10% (ราคาช่างที่ขายจริง) — คลิกเพื่อแก้ราคาช่างเอง"
+                          : "คลิกเพื่อแก้ราคาช่าง"
                       }
                       className="rounded px-2 py-1 font-medium hover:bg-amber-100"
                     >
@@ -445,6 +502,38 @@ export default function CatalogClient({
                       )}
                       {baht(p.priceMember)} ✏️
                     </button>
+                  )}
+                  {p.supplierCosts && Object.keys(p.supplierCosts).length > 1 && (
+                    <details className="mt-0.5 text-left">
+                      <summary className="cursor-pointer text-[11px] text-slate-400 hover:text-slate-600">
+                        ต้นทุน {Object.keys(p.supplierCosts).length} แหล่ง ▾
+                      </summary>
+                      <table className="mt-1 border-collapse text-[11px]">
+                        <thead>
+                          <tr className="text-slate-400">
+                            <th className="pr-2 text-left font-normal">แหล่ง</th>
+                            <th className="pr-2 text-right font-normal">ต้นทุน</th>
+                            <th className="pr-2 text-right font-normal">ราคาช่าง</th>
+                            <th className="text-right font-normal">หน้าร้าน</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.entries(p.supplierCosts).map(([sup, cost]) => {
+                            const { onlineMin, onlineMax } = onlinePrices(cost);
+                            return (
+                              <tr key={sup}>
+                                <td className="pr-2 text-left">{sup}</td>
+                                <td className="pr-2 text-right">{baht(cost)}</td>
+                                <td className="pr-2 text-right">{baht(sellPrice(cost, sup))}</td>
+                                <td className="whitespace-nowrap text-right">
+                                  {baht(onlineMin)}–{baht(onlineMax)}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </details>
                   )}
                 </td>
                 <td className="px-3 py-2 text-right text-emerald-700">
@@ -477,6 +566,27 @@ export default function CatalogClient({
                       )}{" "}
                       ✏️
                     </button>
+                  )}
+                  {p.supplierCosts && Object.keys(p.supplierCosts).length > 1 && (
+                    <div className="mt-0.5 flex items-center justify-end gap-1 text-[11px] text-slate-400">
+                      แหล่งราคา
+                      <select
+                        value={p.publicPriceSupplier ?? ""}
+                        onChange={(e) => setPublicPriceSupplier(p, e.target.value)}
+                        disabled={p.publicPriceOverride !== null}
+                        title={
+                          p.publicPriceOverride !== null
+                            ? "ตั้งราคาเองอยู่ — ล้างราคาเองก่อนถึงจะเลือกแหล่งได้"
+                            : "เลือกว่าราคาหน้าร้านคำนวณจากต้นทุนของที่ไหน"
+                        }
+                        className="rounded border border-slate-300 px-1 py-0.5 text-slate-600 outline-none disabled:opacity-50"
+                      >
+                        <option value="">อัตโนมัติ (CMIT ก่อน)</option>
+                        {Object.keys(p.supplierCosts).map((sup) => (
+                          <option key={sup} value={sup}>{sup}</option>
+                        ))}
+                      </select>
+                    </div>
                   )}
                 </td>
                 <td className="px-3 py-2 text-right text-slate-500">
@@ -601,16 +711,33 @@ export default function CatalogClient({
                     </div>
                     <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
                       {(priceDisplay === "member" || priceDisplay === "both") && (
-                        <label className="flex flex-1 items-center gap-1 text-xs text-slate-500 sm:flex-initial">
-                          ราคาช่าง
-                          <input
-                            type="number"
-                            min={0}
-                            value={draftMember[p.id] ?? p.priceMember ?? ""}
-                            onChange={(e) => setDraftMember((prev) => ({ ...prev, [p.id]: e.target.value }))}
-                            className="w-full min-w-0 flex-1 rounded border border-slate-300 px-2 py-1 text-right text-sm text-rose-600 outline-none focus:border-slate-500 sm:w-24 sm:flex-initial"
-                          />
-                        </label>
+                        <>
+                          {supplierOptions(p).length > 1 && (
+                            <select
+                              value={costSupplier[p.id] ?? p.supplier}
+                              onChange={(e) => pickCostSupplier(p, e.target.value)}
+                              className="rounded border border-slate-300 px-1 py-1 text-xs text-slate-600 outline-none focus:border-slate-500"
+                              title="เลือกราคาจากที่รับมา"
+                            >
+                              {supplierOptions(p).map((sup) => (
+                                <option key={sup} value={sup}>{sup}</option>
+                              ))}
+                            </select>
+                          )}
+                          <div className="text-xs text-slate-400">
+                            ต้นทุน {baht(rawCostFor(p, costSupplier[p.id] ?? p.supplier))}
+                          </div>
+                          <label className="flex flex-1 items-center gap-1 text-xs text-slate-500 sm:flex-initial">
+                            ราคาช่าง
+                            <input
+                              type="number"
+                              min={0}
+                              value={draftMember[p.id] ?? p.priceMember ?? ""}
+                              onChange={(e) => setDraftMember((prev) => ({ ...prev, [p.id]: e.target.value }))}
+                              className="w-full min-w-0 flex-1 rounded border border-slate-300 px-2 py-1 text-right text-sm text-rose-600 outline-none focus:border-slate-500 sm:w-24 sm:flex-initial"
+                            />
+                          </label>
+                        </>
                       )}
                       {(priceDisplay === "public" || priceDisplay === "both") && (
                         <label className="flex flex-1 items-center gap-1 text-xs text-slate-500 sm:flex-initial">

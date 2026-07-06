@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { publicPrice } from "@/lib/pricing";
+import { resolvePublicPrice } from "@/lib/pricing";
 import { deviceImage } from "@/lib/deviceImage";
 import CatalogClient from "./CatalogClient";
 
@@ -39,11 +39,15 @@ export default async function CatalogPage() {
 
   // staff view (login-gated): attach the resolved product image and the
   // effective storefront price (override, else auto within min/max).
-  const products = rows.map((r) => ({
-    ...r,
-    image: deviceImage(r.model, r.brand),
-    publicPrice: publicPrice(r.id, r.onlineMin, r.onlineMax, r.publicPriceOverride),
-  }));
+  const products = rows.map((r) => {
+    const supplierCosts = r.supplierCosts as Record<string, number> | null;
+    return {
+      ...r,
+      supplierCosts,
+      image: deviceImage(r.model, r.brand),
+      publicPrice: resolvePublicPrice({ ...r, supplierCosts }),
+    };
+  });
 
   // stable category ordering, then brand, then model
   products.sort((a, b) => {

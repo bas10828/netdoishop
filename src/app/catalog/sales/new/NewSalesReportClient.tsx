@@ -142,7 +142,7 @@ export default function NewSalesReportClient() {
     "w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-sky-500";
 
   return (
-    <main className="mx-auto max-w-2xl p-4">
+    <main className="mx-auto p-4">
       <header className="mb-4 flex items-center justify-between gap-3">
         <h1 className="text-xl font-bold">บันทึกงานใหม่</h1>
         <Link

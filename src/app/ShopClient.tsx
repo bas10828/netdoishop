@@ -181,7 +181,7 @@ export default function ShopClient({
     <div className="min-h-screen">
       {/* header */}
       <header className="sticky top-0 z-30 bg-slate-900 text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 p-3 sm:gap-3 sm:p-4">
+        <div className="mx-auto flex items-center justify-between gap-2 p-3 sm:gap-3 sm:p-4">
           <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3" title="หน้าแรก">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -241,7 +241,7 @@ export default function ShopClient({
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl p-4">
+      <main className="mx-auto p-4">
         {/* search + filter */}
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <input
@@ -314,7 +314,7 @@ export default function ShopClient({
         {renderPager()}
 
         {/* product grid */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {paged.map((p) => (
             <div
               key={p.id}
