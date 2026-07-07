@@ -4,7 +4,26 @@ import { useMemo, useState } from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { productDoc } from "@/data/descriptions";
-import { sellPrice } from "@/lib/supplierMarkup";
+import { sellPrice, SUPPLIER_MARKUP } from "@/lib/supplierMarkup";
+
+// per-supplier badge color so every row states its cost source at a glance —
+// CMIT included (was previously left unlabeled, which read as "no source").
+const SUPPLIER_BADGE_CLASS: Record<string, string> = {
+  CMIT: "bg-slate-200 text-slate-700",
+  SiS: "bg-indigo-100 text-indigo-700",
+  "TP-Link": "bg-emerald-100 text-emerald-700",
+};
+function supplierBadgeClass(supplier: string): string {
+  return SUPPLIER_BADGE_CLASS[supplier] ?? "bg-amber-100 text-amber-700";
+}
+function supplierTooltip(supplier: string): string {
+  const markup = SUPPLIER_MARKUP[supplier] ?? 1.0;
+  if (markup === 1.0) {
+    return `ราคานี้ = ต้นทุน ${supplier} ตรง (ไม่มี markup) — คลิกเพื่อแก้ราคาช่างเอง`;
+  }
+  const pct = Math.round((markup - 1) * 100);
+  return `ราคานี้ = ต้นทุน ${supplier} + markup ${pct}% (ราคาช่างที่ขายจริง) — คลิกเพื่อแก้ราคาช่างเอง`;
+}
 import { onlinePrices } from "@/lib/pricing";
 
 type Product = {
@@ -51,6 +70,19 @@ export default function CatalogClient({
   const [items, setItems] = useState<Product[]>(products);
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string>("all");
+  // filter by cost source (CMIT/SiS/TP-Link/...) — matches either the item's
+  // active supplier OR any extra distributor quote on file (supplierCosts),
+  // so "หา tplink/sis" finds a product even when CMIT is still the live default.
+  const [supplierFilter, setSupplierFilter] = useState<string>("all");
+
+  const suppliers = useMemo(() => {
+    const present = new Set<string>();
+    for (const p of items) {
+      present.add(p.supplier);
+      if (p.supplierCosts) for (const s of Object.keys(p.supplierCosts)) present.add(s);
+    }
+    return [...present].sort();
+  }, [items]);
 
   // inline price editing — cost (ราคาทุน) or public storefront price
   const [editId, setEditId] = useState<number | null>(null);
@@ -100,6 +132,11 @@ export default function CatalogClient({
     const term = q.trim().toLowerCase();
     return items.filter((p) => {
       if (cat !== "all" && p.category !== cat) return false;
+      if (supplierFilter !== "all") {
+        const has = p.supplier === supplierFilter ||
+          (p.supplierCosts ? supplierFilter in p.supplierCosts : false);
+        if (!has) return false;
+      }
       if (!term) return true;
       const doc = productDoc(p.brand, p.model);
       const docText = doc
@@ -112,7 +149,7 @@ export default function CatalogClient({
         docText.includes(term)
       );
     });
-  }, [items, q, cat]);
+  }, [items, q, cat, supplierFilter]);
 
   function toggleSelected(id: number) {
     setSelected((prev) => {
@@ -392,6 +429,19 @@ export default function CatalogClient({
             </option>
           ))}
         </select>
+        <select
+          value={supplierFilter}
+          onChange={(e) => setSupplierFilter(e.target.value)}
+          className="rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
+          title="กรองตามแหล่งต้นทุน (ใบราคาที่ใช้คำนวณราคาทุน)"
+        >
+          <option value="all">ทุกแหล่งต้นทุน</option>
+          {suppliers.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
         <span className="text-sm text-slate-500">{filtered.length} รายการ</span>
       </div>
       <p className="mb-3 text-xs text-slate-400">
@@ -417,7 +467,14 @@ export default function CatalogClient({
               <th className="px-3 py-2 text-left">แบรนด์</th>
               <th className="px-3 py-2 text-left">รุ่น</th>
               <th className="px-3 py-2 text-left">รายละเอียด</th>
-              <th className="px-3 py-2 text-right">ราคาทุน (ช่าง)</th>
+              <th className="px-3 py-2 text-right">
+                ต้นทุน
+                <div className="text-[10px] font-normal text-slate-400">ราคาที่ซัพพลายเออร์คิดเรา</div>
+              </th>
+              <th className="px-3 py-2 text-right">
+                ราคาช่าง
+                <div className="text-[10px] font-normal text-slate-400">ต้นทุน + markup = ราคาขายช่าง</div>
+              </th>
               <th className="px-3 py-2 text-right">ออนไลน์ min</th>
               <th className="px-3 py-2 text-right">ออนไลน์ max</th>
               <th className="px-3 py-2 text-right">ราคาหน้าร้าน</th>
@@ -483,23 +540,24 @@ export default function CatalogClient({
                   })()}
                 </td>
                 <td className="px-3 py-2 text-right">
+                  <span
+                    title={`ต้นทุนดิบจากใบราคา ${p.supplier} (ก่อน markup) — ไม่ใช่ราคาช่าง แก้ไม่ได้ตรงนี้ ตามใบราคาจริง`}
+                  >
+                    <span className={`mr-1 rounded px-1 text-[10px] ${supplierBadgeClass(p.supplier)}`}>
+                      {p.supplier}
+                    </span>
+                    {baht(rawCostFor(p, p.supplier))}
+                  </span>
+                </td>
+                <td className="px-3 py-2 text-right">
                   {editId === p.id && editField === "cost" ? (
                     priceEditor(p)
                   ) : (
                     <button
                       onClick={() => startEdit(p, "cost")}
-                      title={
-                        p.supplier === "SiS"
-                          ? "ราคานี้ = ต้นทุน SiS + markup 10% (ราคาช่างที่ขายจริง) — คลิกเพื่อแก้ราคาช่างเอง"
-                          : "คลิกเพื่อแก้ราคาช่าง"
-                      }
+                      title={supplierTooltip(p.supplier)}
                       className="rounded px-2 py-1 font-medium hover:bg-amber-100"
                     >
-                      {p.supplier === "SiS" && (
-                        <span className="mr-1 rounded bg-indigo-100 px-1 text-[10px] text-indigo-700">
-                          SiS
-                        </span>
-                      )}
                       {baht(p.priceMember)} ✏️
                     </button>
                   )}
@@ -637,7 +695,7 @@ export default function CatalogClient({
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={12} className="px-3 py-8 text-center text-slate-400">
+                <td colSpan={13} className="px-3 py-8 text-center text-slate-400">
                   ไม่พบรายการ
                 </td>
               </tr>

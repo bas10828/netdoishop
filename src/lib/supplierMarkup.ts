@@ -6,6 +6,10 @@
 export const SUPPLIER_MARKUP: Record<string, number> = {
   CMIT: 1.0,
   SiS: 1.10,
+  // TP-Link direct VIGI dealer pricelist (2569-7-7): ราคาช่าง = Dealer Cost
+  // (ex.vat) +20%, per หัวหน้า สั่ง 2569-7-7 18:57 (double VAT 7%+7%=14% on
+  // buy+sell, plus margin).
+  "TP-Link": 1.20,
 };
 
 export function sellPrice(rawCost: number, supplier: string): number {

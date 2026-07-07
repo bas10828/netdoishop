@@ -5,6 +5,7 @@ import Link from "next/link";
 import { addToCart, useCart, cartCount, cartTotal } from "@/lib/cart";
 import ShareButton from "@/components/ShareButton";
 import MemberAuthControl from "./MemberAuthControl";
+import { productDoc } from "@/data/descriptions";
 
 // Public product. Deliberately has NO cost price and NO min/max range —
 // only a single sale price computed on the server.
@@ -92,11 +93,20 @@ export default function ShopClient({
       if (cat !== "all" && p.category !== cat) return false;
       if (brand !== "all" && p.brand !== brand) return false;
       if (!term) return true;
-      return (
+      if (
         p.brand.toLowerCase().includes(term) ||
         p.model.toLowerCase().includes(term) ||
         p.name.toLowerCase().includes(term)
-      );
+      ) {
+        return true;
+      }
+      // also search the Thai product description (tagline/body/specs) so
+      // customers can find things by everyday words ("กล้องกันน้ำ", "PoE
+      // 24 พอร์ต") that don't appear in the short catalog name/model.
+      const doc = productDoc(p.brand, p.model);
+      if (!doc) return false;
+      const docText = `${doc.tagline} ${doc.body} ${doc.specs.join(" ")}`.toLowerCase();
+      return docText.includes(term);
     });
   }, [products, q, cat, brand]);
 
