@@ -31,6 +31,7 @@ const POPULAR_BRANDS = [
   "Dahua",
   "Reyee",
   "TP-Link",
+  "TP-Link Omada",
   "TP-Link Tapo",
   "TP-Link VIGI",
   "Imou",
@@ -78,13 +79,13 @@ export default function ShopClient({
     setTimeout(() => setJustAdded((cur) => (cur === p.id ? null : cur)), 1500);
   };
 
-  // brand chips list — popular brands first (in this order), the rest A-Z,
-  // "all" always leading.
-  const brands = useMemo(() => {
+  // brand chips: "all" + popular brands only. Everything else goes in the
+  // "แบรนด์อื่น" dropdown so the row doesn't grow unbounded as brands are added.
+  const { chipBrands, otherBrands } = useMemo(() => {
     const present = new Set(products.map((p) => p.brand));
     const popular = POPULAR_BRANDS.filter((b) => present.has(b));
     const rest = [...present].filter((b) => !popular.includes(b)).sort();
-    return ["all", ...popular, ...rest];
+    return { chipBrands: ["all", ...popular], otherBrands: rest };
   }, [products]);
 
   const filtered = useMemo(() => {
@@ -299,9 +300,9 @@ export default function ShopClient({
           <span className="text-sm text-slate-500">{filtered.length} รายการ</span>
         </div>
 
-        {/* brand filter chips */}
-        <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
-          {brands.map((b) => (
+        {/* brand filter: popular chips + dropdown for the rest */}
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          {chipBrands.map((b) => (
             <button
               key={b}
               onClick={() => {
@@ -317,6 +318,26 @@ export default function ShopClient({
               {b === "all" ? "ทุกแบรนด์" : b}
             </button>
           ))}
+          <select
+            value={otherBrands.includes(brand) ? brand : ""}
+            onChange={(e) => {
+              if (!e.target.value) return;
+              setBrand(e.target.value);
+              setPage(1);
+            }}
+            className={`shrink-0 rounded-full border px-3 py-1 text-sm outline-none ${
+              otherBrands.includes(brand)
+                ? "border-sky-600 bg-sky-600 text-white"
+                : "border-slate-300 hover:border-slate-400"
+            }`}
+          >
+            <option value="">แบรนด์อื่น ({otherBrands.length})</option>
+            {otherBrands.map((b) => (
+              <option key={b} value={b} className="text-slate-900">
+                {b}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* scroll target + top pager */}
