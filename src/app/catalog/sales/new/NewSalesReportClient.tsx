@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const ERROR_LABEL: Record<string, string> = {
   "at least one photo required": "ต้องแนบรูปอย่างน้อย 1 รูป",
-  "too many photos": "แนบรูปหน้างานได้สูงสุด 50 รูป",
+  "too many photos": "แนบรูปหน้างานได้สูงสุด 100 รูป",
   "unsupported file type": "ไฟล์ต้องเป็นรูปภาพ (jpg/png/webp/gif)",
   "file too large": "ไฟล์รูปใหญ่เกินไป (สูงสุด 15MB ต่อรูป)",
   "too many documents": "แนบเอกสารได้สูงสุด 10 ไฟล์",
@@ -178,7 +178,7 @@ export default function NewSalesReportClient() {
         </div>
 
         <FileField
-          label="รูปหน้างาน (สูงสุด 50 รูป)"
+          label="รูปหน้างาน (สูงสุด 100 รูป)"
           hint="เลือกได้หลายรอบ ถ้ารูปอยู่คนละโฟลเดอร์กัน — เปิดเลือกอีกรอบแล้วรูปเดิมจะไม่หาย"
           accept="image/*"
           files={photos}

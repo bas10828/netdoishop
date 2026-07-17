@@ -2,7 +2,7 @@ import { mkdir, writeFile, unlink } from "fs/promises";
 import { join } from "path";
 import { randomUUID } from "crypto";
 
-export const MAX_PHOTOS = 50;
+export const MAX_PHOTOS = 100;
 export const MAX_PHOTO_BYTES = 15 * 1024 * 1024;
 export const ALLOWED_PHOTO_MIME: Record<string, string> = {
   "image/jpeg": "jpg",
