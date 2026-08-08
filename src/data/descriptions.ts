@@ -1649,6 +1649,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "หมุน Pan/Tilt มองรอบ 360°",
       "ตรวจจับการเคลื่อนไหว, คุยโต้ตอบ 2 ทาง",
       "ภาพกลางคืน, ใส่ microSD บันทึกในเครื่อง",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|TC41": {
@@ -1660,6 +1661,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "หมุน Pan/Tilt 360° (นอกอาคาร)",
       "Color Night Vision ภาพสีกลางคืน + Motion Tracking",
       "ไฟ+ไซเรน, คุยโต้ตอบ 2 ทาง, ใส่ microSD",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|TC43": {
@@ -1671,6 +1673,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "หมุน Pan/Tilt 360° (นอกอาคาร)",
       "AI ตรวจจับ + Starlight Color Night Vision",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD, กันน้ำ IP66",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   // กล้อง WiFi Outdoor Pan/Tilt
@@ -1686,6 +1689,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI แจ้งเตือนแยก คน/สัตว์เลี้ยง/รถ",
       "ไฟ+ไซเรนขู่ผู้บุกรุก, คุยโต้ตอบ 2 ทาง",
       "ใส่ microSD ได้สูงสุด 512GB, กันน้ำ IP66",
+      "microSD 32GB บันทึกได้ ~4.0 วัน, 64GB ~8.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C560WS": {
@@ -1699,6 +1703,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Starlight Color Night Vision (ไกล 30 ม.)",
       "AI แยก คน/สัตว์/รถ, ไฟ+ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB, กันน้ำ IP66",
+      "microSD 32GB บันทึกได้ ~1.0 วัน, 64GB ~2.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C545D": {
@@ -1712,6 +1717,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI แยก คน/สัตว์/รถ + Motion Tracking",
       "ไฟ+ไซเรน, คุยโต้ตอบ 2 ทาง",
       "microSD สูงสุด 512GB, กันน้ำ IP66",
+      "microSD 32GB บันทึกได้ ~1.3 วัน, 64GB ~2.7 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps) — คำนวณรวม 2 เลนส์",
     ],
   },
   "TP-Link Tapo|C530WS": {
@@ -1724,6 +1730,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Starlight Color Night Vision (ไกล 30 ม.)",
       "AI แยก คน/สัตว์/รถ, ไฟ+ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB, กันน้ำ IP66",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C520WS": {
@@ -1736,6 +1743,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Starlight Color Night Vision (ไกล 30 ม.)",
       "AI แยก คน/สัตว์/รถ, ไฟ+ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB, กันน้ำ IP66",
+      "microSD 32GB บันทึกได้ ~2.0 วัน, 64GB ~4.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C510W": {
@@ -1748,6 +1756,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Color Night Vision (ไกล 30 ม.)",
       "ตรวจจับ คน/การเคลื่อนไหว, ไฟ+ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB, กันน้ำ IP65",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C500": {
@@ -1761,6 +1770,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Physical Privacy Mode, ตั้งเสียงเตือนเองได้",
       "ไฟ+ไซเรน, คุยโต้ตอบ 2 ทาง",
       "microSD สูงสุด 512GB, กันน้ำ IP65",
+      "microSD 32GB บันทึกได้ ~4.0 วัน, 64GB ~8.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   // กล้อง WiFi Outdoor Bullet (ทรงกระบอก ไม่หมุน)
@@ -1774,6 +1784,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "เสา 2T2R + พอร์ต Ethernet",
       "AI แยก คน/สัตว์/รถ + ตรวจจับเสียงผิดปกติ",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD สูงสุด 512GB",
+      "microSD 32GB บันทึกได้ ~2.0 วัน, 64GB ~4.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C320WS": {
@@ -1786,6 +1797,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Starlight + Color Night Vision (ไกล 30 ม.)",
       "ตรวจจับการเคลื่อนไหว, ไซเรนเสียง, คุย 2 ทาง",
       "microSD สูงสุด 256GB, กันน้ำ IP66",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C310": {
@@ -1798,6 +1810,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Night Vision อินฟราเรดขาว-ดำ ไกล 30 ม.",
       "ตรวจจับการเคลื่อนไหว, ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 128GB, กันน้ำ IP66",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   // กล้อง Indoor/Outdoor
@@ -1811,6 +1824,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI แยก คน/สัตว์/รถ/เสียงทารกร้อง + Synchronized Smart Tracking",
       "Night Vision อินฟราเรดขาว-ดำ ไกลสุด 12 ม. (40ft), คุย 2 ทาง",
       "microSD สูงสุด 512GB",
+      "microSD 32GB บันทึกได้ ~1.3 วัน, 64GB ~2.7 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps) — คำนวณรวม 2 เลนส์",
     ],
   },
   "TP-Link Tapo|C246D": {
@@ -1823,6 +1837,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI แยก คน/สัตว์/รถ + Motion Tracking",
       "Night Vision ไกล 30 ม., ไฟ+ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB, กันน้ำ IP65",
+      "microSD 32GB บันทึกได้ ~1.3 วัน, 64GB ~2.7 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps) — คำนวณรวม 2 เลนส์",
     ],
   },
   "TP-Link Tapo|C216": {
@@ -1835,6 +1850,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ตรวจจับ คน/การเคลื่อนไหว/เสียงเด็กร้อง + Motion Tracking",
       "Night Vision ไกล 12 ม. มีไฟในตัวให้ภาพสี หรือสลับเป็น IR ขาว-ดำ, ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB, กันน้ำ IP65",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C206": {
@@ -1847,6 +1863,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ตรวจจับ คน/การเคลื่อนไหว/เสียงเด็กร้อง + Motion Tracking",
       "Night Vision ไกล 12 ม. มีไฟในตัวให้ภาพสี หรือสลับเป็น IR ขาว-ดำ, ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB, กันน้ำ IP65",
+      "microSD 32GB บันทึกได้ ~4.0 วัน, 64GB ~8.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   // กล้อง Indoor (ในบ้าน)
@@ -1861,6 +1878,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI แยก คน/สัตว์/รถ/เสียงเด็กร้อง/เสียงผิดปกติ",
       "Night Vision Starlight ภาพสีกลางคืน ไกล 12 ม., ไฟ+ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB",
+      "microSD 32GB บันทึกได้ ~1.0 วัน, 64GB ~2.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C250": {
@@ -1873,6 +1891,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI แยก คน/สัตว์/รถ/เสียงเด็กร้อง/เสียงผิดปกติ",
       "Night Vision ไกล 12 ม., ไฟ+ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB",
+      "microSD 32GB บันทึกได้ ~1.0 วัน, 64GB ~2.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C230": {
@@ -1885,6 +1904,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI แยก คน/สัตว์/รถ/เสียงเด็กร้อง/เสียงผิดปกติ",
       "Night Vision อินฟราเรดขาว-ดำ ไกลสุด 12 ม., ไซเรน 99dB, คุย 2 ทาง",
       "microSD สูงสุด 512GB",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C220": {
@@ -1892,11 +1912,12 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
     body:
       "Tapo C220 กล้องในบ้าน ความละเอียด 4MP หมุน Pan/Tilt 360° แจ้งเตือนการเคลื่อนไหว ไซเรน คุยโต้ตอบ 2 ทาง เหมาะดูแลบ้าน/ร้าน",
     specs: [
-      "ความละเอียด 4MP (2304×1296)",
+      "ความละเอียด 4MP (2560×1440)",
       "หมุน Pan/Tilt มองรอบ 360°",
       "ตรวจจับการเคลื่อนไหว, ไซเรน, คุย 2 ทาง",
       "Night Vision IR ขาว-ดำ ไกล 9 ม.",
       "microSD สูงสุด 256GB",
+      "microSD 32GB บันทึกได้ ~2.0 วัน, 64GB ~4.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C212": {
@@ -1909,6 +1930,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI ตรวจจับ คน + Motion Tracking",
       "Night Vision ไกล 9 ม., ไฟ+ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C211": {
@@ -1921,6 +1943,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI ตรวจจับ คน + Motion Tracking",
       "Night Vision IR ขาว-ดำ ไกล 9 ม., ไซเรน, คุย 2 ทาง",
       "microSD สูงสุด 512GB",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C210": {
@@ -1933,6 +1956,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ตรวจจับการเคลื่อนไหว, ไซเรน, คุย 2 ทาง",
       "Night Vision IR ขาว-ดำ ไกล 9 ม.",
       "microSD สูงสุด 256GB",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C200": {
@@ -1945,6 +1969,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ตรวจจับการเคลื่อนไหว, ไซเรน, คุย 2 ทาง",
       "Night Vision IR ขาว-ดำ ไกล 9 ม.",
       "microSD สูงสุด 128GB",
+      "microSD 32GB บันทึกได้ ~4.0 วัน, 64GB ~8.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   // กล้องโซลาร์/แบตเตอรี่ (ชุด Kit ไม่ต้องเดินไฟ)
@@ -1958,6 +1983,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "หมุน Pan/Tilt, จ่ายไฟต่อเนื่อง (Non-Stop Power)",
       "AI แยก คน/รถ, Color Night Vision (10 ม.)",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD ≤512GB, IP65",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C645D-KIT": {
@@ -1970,6 +1996,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "แบต 10000mAh + แผงโซลาร์ 5.2V 2.5W (Non-Stop Power)",
       "AI แยก คน/รถ, Color Night Vision (10 ม.)",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD ≤512GB, IP65",
+      "microSD 32GB บันทึกได้ ~1.3 วัน, 64GB ~2.7 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps) — คำนวณรวม 2 เลนส์",
     ],
   },
   "TP-Link Tapo|C660-KIT": {
@@ -1982,6 +2009,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "แบต 10000mAh + แผงโซลาร์ 5.2V 2.5W (Non-Stop Power)",
       "AI แยก คน/สัตว์/รถ, Starlight Color Night Vision (10 ม.)",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD ≤512GB, IP65",
+      "microSD 32GB บันทึกได้ ~1.0 วัน, 64GB ~2.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C630-KIT": {
@@ -1994,6 +2022,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "แบต 6700mAh + แผงโซลาร์ 5.2V 2.5W (Non-Stop Power)",
       "AI แยก คน/สัตว์/รถ, Color Night Vision (10 ม.)",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD ≤512GB, IP65",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C610-KIT": {
@@ -2006,6 +2035,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "แบต 6700mAh + แผงโซลาร์ 5.2V 2.5W (Non-Stop Power)",
       "ตรวจจับ คน, Color Night Vision (10 ม.)",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD ≤512GB, IP65",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C615F-KIT": {
@@ -2018,6 +2048,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "แบต 10400mAh + แผงโซลาร์ 5.2V 2.5W (Non-Stop Power)",
       "บันทึกต่อเนื่อง 24/7, AI แยก คน/รถ + AI Tracking",
       "Color Night Vision (10 ม.), microSD ≤512GB, IP65",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C460-KIT": {
@@ -2030,6 +2061,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "แบต 10000mAh + แผงโซลาร์ 5.2V 2.5W (Non-Stop Power)",
       "AI แยก คน/สัตว์/รถ, Color Night Vision (15 ม.)",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD ≤512GB, กันน้ำ",
+      "microSD 32GB บันทึกได้ ~1.0 วัน, 64GB ~2.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C425-KIT": {
@@ -2041,6 +2073,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "แบต 10000mAh + แผงโซลาร์ 5.2V 2.5W (Non-Stop Power)",
       "AI แยก คน/สัตว์/รถ, Color Night Vision (15 ม.)",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD ≤512GB, กันน้ำ",
+      "microSD 32GB บันทึกได้ ~2.0 วัน, 64GB ~4.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C425": {
@@ -2052,6 +2085,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "แบต 10000mAh ใช้ได้สูงสุด 300 วัน, ฐานแม่เหล็ก",
       "AI แยก คน/สัตว์/รถ, Color Night Vision (15 ม.)",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD ≤512GB, กันน้ำ IP66",
+      "microSD 32GB บันทึกได้ ~2.0 วัน, 64GB ~4.0 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C410-KIT": {
@@ -2063,6 +2097,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "แผงโซลาร์ 5.2V 2.5W (Non-Stop Power)",
       "ตรวจจับ คน, Color Night Vision (15 ม.)",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD ≤512GB, IP65",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|C411-KIT": {
@@ -2074,6 +2109,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "แผงโซลาร์ 5.2V 2.5W (Non-Stop Power)",
       "ตรวจจับ คน, Color Night Vision (15 ม.)",
       "ไฟ+ไซเรน, คุย 2 ทาง, microSD ≤512GB, IP65",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   // กริ่งประตูวิดีโอ + แผงโซลาร์
@@ -2087,6 +2123,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "มาพร้อมกริ่งในบ้าน Tapo D100C",
       "ตรวจจับ คน, Color Night Vision, คุย 2 ทาง + ตอบกลับด่วน",
       "microSD ≤512GB, กันน้ำ IP65",
+      "microSD 32GB บันทึกได้ ~2.7 วัน, 64GB ~5.3 วัน (บันทึกต่อเนื่อง 24ชม., TP-Link official @15fps)",
     ],
   },
   "TP-Link Tapo|A201": {
@@ -2479,6 +2516,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ช่องเสียบ micro-SD ในตัว (สูงสุด 512GB)",
       "จ่ายไฟ DC 12V เท่านั้น (ไม่มี PoE), กันน้ำกันฝุ่น IP66",
       "ต่อ VIGI NVR / ดูผ่านแอป VIGI",
+      "microSD 32GB บันทึกได้ ~0.99 วัน, 64GB ~2.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~3Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "TP-Link VIGI|C340S": {
@@ -2543,6 +2581,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ช่องเสียบ micro-SD ในตัว (สูงสุด 256GB)",
       "จ่ายไฟ DC 12V เท่านั้น (ไม่มี PoE)",
       "ต่อ VIGI NVR / ดูผ่านแอป VIGI",
+      "microSD 32GB บันทึกได้ ~0.99 วัน, 64GB ~2.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~3Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "TP-Link VIGI|C440": {
@@ -2612,6 +2651,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ไมค์+ลำโพงในตัว คุยโต้ตอบสองทาง",
       "ช่องเสียบ micro-SD ในตัว (สูงสุด 512GB)",
       "จ่ายไฟ DC 12V เท่านั้น (ไม่มี PoE), กันน้ำกันฝุ่น IP66",
+      "microSD 32GB บันทึกได้ ~0.99 วัน, 64GB ~2.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~3Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "TP-Link VIGI|C540": {
@@ -3207,6 +3247,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ไมค์+ลำโพงในตัว คุยโต้ตอบสองทาง (Two-Way Audio)",
       "ช่องเสียบ micro-SD ในตัว (สูงสุด 512GB), กันน้ำกันฝุ่น IP66",
       "จ่ายไฟ DC 12V (adapter แยก), ต่อ VIGI NVR / ดูผ่านแอป VIGI",
+      "microSD 32GB บันทึกได้ ~0.99 วัน, 64GB ~2.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~3Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
 
@@ -4621,6 +4662,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Two-Way Talk: ไมค์ + ลำโพงในตัว",
       "IR กลางคืนภาพขาวดำชัด",
       "ดูผ่านแอป DMSS",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~2Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Dahua|DH-H3AE-B": {
@@ -4633,6 +4675,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "WiFi 2.4GHz, ไม่ต้องเดินสาย",
       "Two-Way Talk: ไมค์ + ลำโพงในตัว",
       "ดูผ่านแอป DMSS",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Dahua|DH-IPC-HFW1339DTK1-SAW-IL": {
@@ -4645,6 +4688,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
       "ทรงกระบอก (bullet) สำหรับนอกอาคาร",
       "ดูผ่านแอป DMSS",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Dahua|DH-IPC-HFW1539DTK1-SAW-IL": {
@@ -4657,6 +4701,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Smart Dual Light: IR (ขาวดำ) + warm light (สี)",
       "ทรงกระบอก (bullet) สำหรับนอกอาคาร",
       "ดูผ่านแอป DMSS",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Dahua|DH-P3AS-PV": {
@@ -4669,6 +4714,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "WiFi 6 (802.11ax), ไม่ต้องเดินสาย LAN",
       "Two-Way Talk: ไมค์ + ลำโพงในตัว",
       "ดูผ่านแอป DMSS",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Dahua|DH-P5AS-PV": {
@@ -4681,6 +4727,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "WiFi 6 (802.11ax), ไม่ต้องเดินสาย LAN",
       "Two-Way Talk: ไมค์ + ลำโพงในตัว",
       "ดูผ่านแอป DMSS",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Dahua|DH-P3F-PV": {
@@ -4694,6 +4741,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "WiFi 6 (802.11ax), ไม่ต้องเดินสาย LAN",
       "Two-Way Talk: ไมค์ + ลำโพงในตัว",
       "ดูผ่านแอป DMSS",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Dahua|DH-P8F-PV": {
@@ -4707,6 +4755,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "WiFi 6 (802.11ax), ไม่ต้องเดินสาย LAN",
       "Two-Way Talk: ไมค์ + ลำโพงในตัว",
       "ดูผ่านแอป DMSS",
+      "microSD 32GB บันทึกได้ ~0.49 วัน, 64GB ~0.99 วัน (ประมาณการ จาก bitrate ทั่วไป ~6Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Dahua|DH-WNK-04B08-2MP": {
@@ -5058,6 +5107,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Auto Tracking ติดตามคนอัตโนมัติ, AI Human detection",
       "Two-Way Talk, WiFi 2.4GHz, กันน้ำ IP65",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~2Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|H8c Pro 2K": {
@@ -5069,6 +5119,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Color Night Vision (spotlight + IR), Auto Tracking",
       "Two-Way Talk, AI Human detection",
       "WiFi 2.4GHz, กันน้ำ (outdoor), ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|H8c Pro 3K": {
@@ -5080,6 +5131,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Color Night Vision (spotlight + IR), Auto Tracking",
       "AI Human detection, WiFi 2.4GHz, กันน้ำ",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|H8c Pro 4K": {
@@ -5091,6 +5143,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Color Night Vision (spotlight + IR), Auto Tracking",
       "AI Human detection, WiFi 2.4GHz, กันน้ำ",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.49 วัน, 64GB ~0.99 วัน (ประมาณการ จาก bitrate ทั่วไป ~6Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|H8c 4G": {
@@ -5103,6 +5156,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Auto Tracking: ติดตามอัตโนมัติ",
       "AI detection, Two-Way Talk",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
 
@@ -5116,6 +5170,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI detection, WiFi 2.4GHz",
       "ทนแดดทนน้ำ (outdoor)",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.59 วัน, 64GB ~1.2 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.) — คำนวณรวม 2 เลนส์ (3+3MP)",
     ],
   },
   "EZVIZ|H9c Dual 3K": {
@@ -5127,6 +5182,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ความละเอียดสูงกว่ารุ่น 2K Dual",
       "AI detection, WiFi 2.4GHz, ทนแดดทนน้ำ",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.37 วัน, 64GB ~0.74 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.) — คำนวณรวม 2 เลนส์ (5+5MP)",
     ],
   },
   "EZVIZ|H80f Multi": {
@@ -5138,6 +5194,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ซูม 12x (optical + digital)",
       "WiFi 2.4GHz, ทนแดดทนน้ำ",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.33 วัน, 64GB ~0.66 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.) — คำนวณรวม 3 เลนส์ (4+4+4MP)",
     ],
   },
   "EZVIZ|H80x Dual": {
@@ -5149,6 +5206,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "เห็นสองมุมพร้อมกัน ความละเอียดสูงสุด",
       "WiFi, ทนแดดทนน้ำ (outdoor)",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.37 วัน, 64GB ~0.74 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.) — คำนวณรวม 2 เลนส์ (8+2MP)",
     ],
   },
 
@@ -5162,6 +5220,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI Human detection: เปิดไฟ+แจ้งเตือนอัตโนมัติ",
       "WiFi 2.4GHz, ทนแดดทนน้ำ IP67",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~2Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|C3TN": {
@@ -5173,6 +5232,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "IR กลางคืนภาพขาวดำชัด",
       "WiFi 2.4GHz, กันน้ำ IP67",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~2Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|C3TN 2K": {
@@ -5184,6 +5244,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "IR กลางคืนภาพขาวดำชัด",
       "WiFi 2.4GHz, กันน้ำ (outdoor)",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|H3C Color 2K": {
@@ -5194,6 +5255,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ความละเอียด 2K, ColorVu: ภาพสีตลอดคืน",
       "H.265, กันน้ำ IP67",
       "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~2Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
 
@@ -5206,6 +5268,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ความละเอียด 1080P, Pan & Tilt 360°",
       "AI Human detection, Two-Way Talk",
       "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~2Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|H6c Pro 2K": {
@@ -5217,6 +5280,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Smart Color Night Vision: ภาพสีแสงน้อย",
       "AI Human detection, Two-Way Talk",
       "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|H6c Pro 3K": {
@@ -5228,6 +5292,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Smart Color Night Vision, AI detection",
       "Two-Way Talk, WiFi 2.4GHz",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|H6c Pro 4K": {
@@ -5239,6 +5304,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Smart Color Night Vision, AI detection",
       "Two-Way Talk, WiFi 2.4GHz",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.49 วัน, 64GB ~0.99 วัน (ประมาณการ จาก bitrate ทั่วไป ~6Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|C6N G1": {
@@ -5250,6 +5316,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "มุมมองครอบคลุมทุกมุมห้อง",
       "AI Human detection, Two-Way Talk",
       "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.49 วัน, 64GB ~0.99 วัน (ประมาณการ จาก bitrate ทั่วไป ~6Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|H7c Dual": {
@@ -5260,6 +5327,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Dual Lens 2K+ เห็นสองมุมพร้อมกัน",
       "AI Human detection, Two-Way Talk",
       "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.49 วัน, 64GB ~0.99 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.) — คำนวณรวม 2 เลนส์ (4+4MP)",
     ],
   },
   "EZVIZ|H1c": {
@@ -5271,6 +5339,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI Human Shape Detection",
       "WiFi 2.4GHz, ไมค์บันทึกเสียง",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~2Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
 
@@ -5284,6 +5353,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ชาร์จ Type-C, ไม่ต้องเดินสายไฟ",
       "AI Human detection, IR กลางคืน",
       "WiFi 2.4GHz, ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~2Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|E4p": {
@@ -5295,6 +5365,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ติดเพดานเห็นทั่วห้องในกล้องเดียว",
       "IR กลางคืน, WiFi 2.4GHz",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.59 วัน, 64GB ~1.2 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "EZVIZ|HB8 Lite": {
@@ -5307,6 +5378,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ไม่ต้องเสียบไฟ ไม่ต้องเดินสาย",
       "AI detection, WiFi 2.4GHz",
       "ดูผ่านแอป EZVIZ",
+      "microSD 32GB บันทึกได้ ~0.99 วัน, 64GB ~2.0 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
 
@@ -5321,6 +5393,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Two-Way Talk: ไมค์+ลำโพงในตัว",
       "WiFi 2.4GHz, ไม่ต้องเดินสาย",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-A52P-V1": {
@@ -5332,6 +5405,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ภาพคมชัด รายละเอียดสูงกว่า 2K",
       "Two-Way Talk: ไมค์+ลำโพงในตัว",
       "WiFi 2.4GHz, ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-S2XP-6MOWED": {
@@ -5343,6 +5417,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Pan & Tilt ในตัว",
       "WiFi 2.4GHz, Two-Way Talk",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.59 วัน, 64GB ~1.2 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.) — คำนวณรวม 2 เลนส์",
     ],
   },
   "Imou|IPC-K2MP-3H1WE": {
@@ -5355,6 +5430,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI Human detection",
       "WiFi 2.4GHz, Two-Way Talk",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-K2MP-5H1WE": {
@@ -5367,6 +5443,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ขนาดเล็ก กะทัดรัด",
       "WiFi 2.4GHz, Two-Way Talk",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|REX VT PRO": {
@@ -5378,6 +5455,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Video Intercom: โทรวิดีโอสื่อสารภายในบ้าน",
       "AI Human detection, Two-Way Talk",
       "WiFi 2.4GHz, ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-DK2": {
@@ -5389,6 +5467,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI Human detection",
       "Two-Way Talk: ไมค์+ลำโพงในตัว",
       "WiFi 2.4GHz, ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~1.5 วัน, 64GB ~3.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~2Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
 
@@ -5402,6 +5481,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "WiFi 6 (802.11ax), กันน้ำ IP67",
       "ไมค์บันทึกเสียงในตัว",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-F32P": {
@@ -5413,6 +5493,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ไมค์บันทึกเสียงในตัว",
       "WiFi 2.4GHz, ทนแดดทนน้ำ (outdoor)",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-F42P": {
@@ -5424,6 +5505,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ไมค์บันทึกเสียงในตัว",
       "WiFi 2.4GHz, ทนแดดทนน้ำ (outdoor)",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.99 วัน, 64GB ~2.0 วัน (ประมาณการ จาก bitrate ทั่วไป ~3Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-F52FP": {
@@ -5434,6 +5516,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ความละเอียด 3K/5MP, Full-Color Night ภาพสีทั้งคืน",
       "WiFi 2.4GHz, ทนแดดทนน้ำ (outdoor)",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
 
@@ -5447,6 +5530,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Pan & Tilt 360°, กันน้ำ IP66",
       "Two-Way Talk: ไมค์+ลำโพงในตัว",
       "WiFi 2.4GHz, ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-GS7EP-5M0WE": {
@@ -5458,6 +5542,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "WiFi 6 (802.11ax), กันน้ำ IP66",
       "Siren 110dB สัญญาณเตือนเสียงดัง",
       "Two-Way Talk (ไมค์+ลำโพง), ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-S31FEP": {
@@ -5469,6 +5554,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI Human detection, IR กลางคืน",
       "กันน้ำ (outdoor), WiFi 2.4GHz",
       "Two-Way Talk, ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-S51FEP": {
@@ -5480,6 +5566,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "AI Human detection, IR กลางคืน",
       "กันน้ำ (outdoor), WiFi 2.4GHz",
       "Two-Way Talk, ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-K7FP-5H0TE": {
@@ -5491,6 +5578,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "4G SIM: ส่งภาพผ่านมือถือ ไม่ต้องมี WiFi/เน็ตบ้าน",
       "AI Human detection, กันน้ำ (outdoor)",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-B7ED-5M0TEA-EU/FSP14": {
@@ -5503,6 +5591,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "บันทึกตลอด 24/7 ไม่ต้องเสียบไฟ ไม่ต้องมี WiFi",
       "เหมาะสวน ไร่ ไซต์งานห่างไกล",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.74 วัน, 64GB ~1.5 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
   "Imou|IPC-S7XP-10MOWED": {
@@ -5514,6 +5603,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Pan & Tilt, กันน้ำ (outdoor)",
       "WiFi 2.4GHz, Two-Way Talk",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.37 วัน, 64GB ~0.74 วัน (ประมาณการ จาก bitrate ทั่วไป ~4Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.) — คำนวณรวม 2 เลนส์",
     ],
   },
   "Imou|IPC-S7XP-6M0WED": {
@@ -5525,6 +5615,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Pan & Tilt, กันน้ำ (outdoor)",
       "WiFi 2.4GHz, Two-Way Talk",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.59 วัน, 64GB ~1.2 วัน (ประมาณการ จาก bitrate ทั่วไป ~2.5Mbps ที่ความละเอียดนี้ บันทึกต่อเนื่อง 24ชม.) — คำนวณรวม 2 เลนส์",
     ],
   },
   "Imou|PF1-4L": {
@@ -5537,6 +5628,7 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Dual Power: adapter + แบตเตอรี่",
       "Two-Way Talk, WiFi",
       "ดูผ่านแอป Imou Life",
+      "microSD 32GB บันทึกได้ ~0.99 วัน, 64GB ~2.0 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
 
@@ -5659,6 +5751,16 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "microSDHC 32GB Class 10",
       "เหมาะสำหรับบันทึกวีดีโอในกล้อง Imou",
       "ความเร็วเขียนรองรับวีดีโอ HD",
+    ],
+  },
+  "Imou|microSD S1 64GB": {
+    tagline: "microSDXC Imou S1 64GB U3/V30 สำหรับกล้อง Imou",
+    body:
+      "microSD S1 64GB การ์ดความจำ Imou รุ่น ST2-64-S1 สำหรับบันทึกวีดีโอลงการ์ดโดยตรงในตัวกล้อง ความจุ 64GB ระดับ U3/V30 อ่าน 95MB/s เขียน 38MB/s รองรับวีดีโอความละเอียดสูงต่อเนื่อง เหมาะใช้กับกล้อง Imou ทุกรุ่นที่มีช่อง microSD",
+    specs: [
+      "microSDXC 64GB, UHS-I U3/V30, Class 10",
+      "อ่าน 95MB/s, เขียน 38MB/s",
+      "เหมาะสำหรับบันทึกวีดีโอต่อเนื่องในกล้อง Imou",
     ],
   },
 
@@ -8283,6 +8385,22 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "Smart Switch จัดการผ่านเว็บ/CLI, รองรับ Static Routing, VLAN, ACL, QoS L2-L4",
       "รองรับ Omada SDN: Zero-Touch Provisioning, Cloud Management",
       "รองรับความปลอดภัย DHCP Snooping, 802.1X, RADIUS",
+    ],
+  },
+
+  // ───────────────── Vstarcam — 4G Outdoor Camera ─────────────────
+  "Vstarcam|CG622": {
+    tagline: "กล้อง Outdoor 4G PTZ ใส่ซิม ไม่ต้องมี WiFi หมุนได้ 270°",
+    body:
+      "Vstarcam CG622 กล้องนอกอาคารใส่ซิม 4G หมุน Pan/Tilt ได้ (แนวนอน 270° แนวตั้ง 90°) ไม่ต้องมี WiFi ใช้ได้ทุกที่ที่มีสัญญาณมือถือ เลนส์ F2.0 มุมมอง 91° ภาพสีกลางคืนเต็มรูปแบบ (Full-Color Night Vision) พร้อมไฟ IR ขาว-ดำสำรอง ตรวจจับความเคลื่อนไหว/คน แจ้งเตือนเรียลไทม์ คุยโต้ตอบ 2 ทาง กันน้ำ IP66 ดูผ่านแอป",
+    specs: [
+      "ความละเอียด 3MP, เลนส์ 4mm F2.0, มุมมอง 91°",
+      "ใส่ซิม 4G ไม่ต้องมี WiFi, กันน้ำ IP66",
+      "หมุน Pan/Tilt แนวนอน 270° แนวตั้ง 90°",
+      "Full-Color Night Vision + IR ขาว-ดำสำรอง (0.5Lux สี / 0.1Lux ขาวดำ)",
+      "ตรวจจับความเคลื่อนไหว/คน แจ้งเตือนเรียลไทม์, คุย 2 ทาง",
+      "ใส่ microSD สูงสุด 256GB",
+      "microSD 32GB บันทึกได้ ~1.2 วัน, 64GB ~2.4 วัน (ประมาณการ จาก bitrate ทั่วไปตามความละเอียดที่ระบุ บันทึกต่อเนื่อง 24ชม.)",
     ],
   },
 };

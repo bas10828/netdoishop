@@ -2,6 +2,8 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import SdCardCalculatorPanel from "./SdCardCalculatorPanel";
+import { calcDailyGB, GENERIC_BITRATE_MBPS_BY_MP } from "@/lib/storageCalc";
 
 type Product = {
   id: number;
@@ -11,6 +13,17 @@ type Product = {
   model: string;
   name: string;
   price: number;
+  image: string;
+  slug: string;
+};
+
+export type TapoCameraProduct = {
+  id: number;
+  brand: string;
+  model: string;
+  name: string;
+  status: string;
+  price: number | null;
   image: string;
   slug: string;
 };
@@ -36,7 +49,10 @@ const RESOLUTIONS = ["2MP", "4MP", "5MP", "8MP"];
 // adjustable after, since actual bitrate depends on the camera's own
 // settings, not resolution alone).
 const RESOLUTION_DEFAULT_BITRATE: Record<string, number> = {
-  "2MP": 2, "4MP": 3, "5MP": 4, "8MP": 6,
+  "2MP": GENERIC_BITRATE_MBPS_BY_MP[2],
+  "4MP": GENERIC_BITRATE_MBPS_BY_MP[4],
+  "5MP": GENERIC_BITRATE_MBPS_BY_MP[5],
+  "8MP": GENERIC_BITRATE_MBPS_BY_MP[8],
 };
 const CODECS = ["H.264", "H.265"];
 // Bitrate presets are calibrated for H.264 at FPS_REFERENCE; H.265 delivers
@@ -51,13 +67,15 @@ const FPS_REFERENCE = 25;
 const FPS_PRESETS = ["15", "25"] as const;
 const HOURS_PRESETS = [["24", "ตลอด 24ชม."], ["12", "กลางวัน 12ชม."]] as const;
 
-// How many GB does one day of recording need?
-function calcDailyGB(bitrateMbps: number, hours: number, cameras: number): number {
-  return (bitrateMbps * 3600 * hours * cameras) / 8 / 1000;
-}
+export default function StorageCalculatorClient({
+  products,
+  tapoCameraProducts,
+}: {
+  products: Product[];
+  tapoCameraProducts: TapoCameraProduct[];
+}) {
+  const [mode, setMode] = useState<"nvr" | "sdcard">("nvr");
 
-
-export default function StorageCalculatorClient({ products }: { products: Product[] }) {
   // shared inputs
   const [camerasStr, setCamerasStr] = useState("4");
   const [resolution, setResolution] = useState("2MP");
@@ -180,6 +198,33 @@ export default function StorageCalculatorClient({ products }: { products: Produc
       </header>
 
       <main className="mx-auto space-y-4 p-4">
+        {/* top-level mode switch — NVR/DVR multi-camera vs single WiFi camera + SD
+            card are different calculation domains (shared storage/bandwidth/bays
+            vs one camera's own local card), so this is a deliberate exception to
+            the "one panel, no toggle" design used within the NVR/DVR flow below. */}
+        <div className="flex gap-2 rounded-xl bg-white p-2 shadow-sm">
+          <button
+            onClick={() => setMode("nvr")}
+            className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-bold transition ${
+              mode === "nvr" ? "bg-sky-600 text-white" : "text-slate-500 hover:bg-slate-50"
+            }`}
+          >
+            🖥️ NVR/DVR + HDD (หลายกล้อง)
+          </button>
+          <button
+            onClick={() => setMode("sdcard")}
+            className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-bold transition ${
+              mode === "sdcard" ? "bg-sky-600 text-white" : "text-slate-500 hover:bg-slate-50"
+            }`}
+          >
+            📷 กล้อง WiFi เดี่ยว + SD Card
+          </button>
+        </div>
+
+        {mode === "sdcard" ? (
+          <SdCardCalculatorPanel products={products} cameraProducts={tapoCameraProducts} />
+        ) : (
+        <>
         {/* shared input panel */}
         <div className="rounded-xl bg-white p-5 shadow-sm">
           <h2 className="mb-4 text-sm font-bold text-slate-500 uppercase tracking-wide">
@@ -794,6 +839,8 @@ export default function StorageCalculatorClient({ products }: { products: Produc
             ← กลับไปหน้าร้าน
           </Link>
         </div>
+        </>
+        )}
       </main>
     </div>
   );

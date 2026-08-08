@@ -46,5 +46,38 @@ export default async function CalculatorPage() {
     }))
     .filter((p): p is typeof p & { price: number } => p.price !== null);
 
-  return <StorageCalculatorClient products={products} />;
+  // Tapo WiFi cameras for the SD-card calculator's model picker — sourced
+  // from the actual catalog, not a disconnected static list. Includes SOLD
+  // OUT models (e.g. C200) since staff still need to advise customers who
+  // already own one, even if we can't sell it right now.
+  const tapoCamRows = await prisma.product.findMany({
+    where: { brand: "TP-Link Tapo", category: "camera-wifi" },
+    select: {
+      id: true,
+      brand: true,
+      model: true,
+      name: true,
+      status: true,
+      onlineMin: true,
+      onlineMax: true,
+      publicPriceOverride: true,
+      publicPriceSupplier: true,
+      supplierCosts: true,
+    },
+  });
+  const tapoCameraProducts = tapoCamRows.map((r) => ({
+    id: r.id,
+    brand: r.brand,
+    model: r.model,
+    name: r.name,
+    status: r.status,
+    price: resolvePublicPrice({
+      ...r,
+      supplierCosts: r.supplierCosts as Record<string, number> | null,
+    }),
+    image: deviceImage(r.model, r.brand),
+    slug: productSlug(r),
+  }));
+
+  return <StorageCalculatorClient products={products} tapoCameraProducts={tapoCameraProducts} />;
 }
