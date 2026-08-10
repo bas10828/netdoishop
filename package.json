@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/select-db.mjs",
     "dev": "next dev -p 3005",
     "build": "prisma generate && next build",
+    "prestart": "node scripts/select-db.mjs",
     "start": "next start -p 3005",
     "lint": "next lint",
     "db:push": "prisma db push",
