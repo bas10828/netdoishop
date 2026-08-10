@@ -128,6 +128,18 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "มองเห็นสถานะผ่าน Ruijie Cloud (Unmanaged)",
     ],
   },
+  "Reyee|RG-ES220GS-LP": {
+    tagline: "สวิตช์ PoE+ 16 พอร์ต Cloud Managed งบไฟ 130W + พอร์ต SFP ไฟเบอร์",
+    body:
+      "RG-ES220GS-LP สวิตช์ PoE+ Gigabit 16 พอร์ต สำหรับงานกล้องวงจรปิดชุดใหญ่ จ่ายไฟผ่านสาย LAN งบไฟรวม 130W มีพอร์ต Gigabit อัพลิงก์และ SFP สำหรับต่อไฟเบอร์ขึ้นเครือข่ายหลัก บริหารจัดการและมองเห็นสถานะผ่าน Ruijie Cloud ได้ มี PoE Watchdog คอยเช็คกล้องค้างแล้วรีบูตให้อัตโนมัติ",
+    specs: [
+      "16 พอร์ต Gigabit PoE+ + 2 พอร์ต Gigabit uplink + 2 พอร์ต SFP",
+      "งบไฟ PoE รวม 130W, มาตรฐาน 802.3af/at",
+      "Cloud Managed ผ่าน Ruijie Cloud/แอป",
+      "PoE Watchdog รีบูตอุปกรณ์ค้างอัตโนมัติ",
+      "ตัวถังโลหะ ติดแร็คได้ ไม่มีพัดลม",
+    ],
+  },
   "Reyee|RG-ES106F-P": {
     tagline: "สวิตช์ PoE+ 4 พอร์ต งบไฟ 54W จ่ายไฟกล้อง/AP สายเดียวจบ",
     body:
@@ -5761,6 +5773,30 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "microSDXC 64GB, UHS-I U3/V30, Class 10",
       "อ่าน 95MB/s, เขียน 38MB/s",
       "เหมาะสำหรับบันทึกวีดีโอต่อเนื่องในกล้อง Imou",
+    ],
+  },
+
+  // ───────────────── Generic microSD Cards ─────────────────
+  "SanDisk|Ultra microSD 256GB": {
+    tagline: "microSDXC Ultra 256GB UHS-I อ่านไว 150MB/s",
+    body:
+      "SanDisk Ultra microSDXC UHS-I 256GB การ์ดความจำมาตรฐาน Class 10/U1/A1 อ่านสูงสุด 150MB/s แถมอะแดปเตอร์ SD ในกล่อง ใช้ได้ทั้งมือถือ กล้อง แท็บเล็ต และกล้องวงจรปิดที่รองรับ",
+    specs: [
+      "microSDXC 256GB, UHS-I, Class 10, U1, A1",
+      "อ่านสูงสุด 150MB/s",
+      "แถมอะแดปเตอร์แปลง SD Card ในกล่อง",
+      "รับประกัน 10 ปี (SanDisk)",
+    ],
+  },
+  "Kingston|Canvas Select Plus 64GB": {
+    tagline: "microSD Canvas Select Plus 64GB อ่านไว 100MB/s รับประกัน Lifetime",
+    body:
+      "Kingston Canvas Select Plus (SDCS2) 64GB การ์ดความจำ UHS-I Class 10/U1/V10/A1 อ่านสูงสุด 100MB/s แถมอะแดปเตอร์ SD ในกล่อง เหมาะใช้งานทั่วไปในมือถือ กล้อง และอุปกรณ์ที่มีช่อง microSD รับประกันตลอดอายุการใช้งาน",
+    specs: [
+      "microSDXC 64GB, UHS-I, Class 10, U1, V10, A1 (รุ่น SDCS2)",
+      "อ่านสูงสุด 100MB/s",
+      "แถมอะแดปเตอร์แปลง SD Card ในกล่อง",
+      "รับประกันตลอดอายุการใช้งาน (Lifetime Warranty)",
     ],
   },
 
