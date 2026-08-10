@@ -12,7 +12,7 @@ export default async function CalculatorPage() {
       status: { not: "SOLD OUT" },
       onlineMin: { not: null },
       onlineMax: { not: null },
-      category: { in: ["nvr", "dvr", "storage"] },
+      category: { in: ["nvr", "dvr", "harddisk", "sd-card"] },
     },
     select: {
       id: true,
