@@ -75,6 +75,7 @@ export default function StorageCalculatorClient({
   tapoCameraProducts: TapoCameraProduct[];
 }) {
   const [mode, setMode] = useState<"nvr" | "sdcard">("nvr");
+  const [goalMode, setGoalMode] = useState<"hdd" | "days">("hdd");
 
   // shared inputs
   const [camerasStr, setCamerasStr] = useState("4");
@@ -120,6 +121,12 @@ export default function StorageCalculatorClient({
   const bandwidthExceeded = nvrBandwidth !== null && totalBandwidth > nvrBandwidth;
   const maxCamerasForNvr = nvrBandwidth ? Math.floor(nvrBandwidth / effectiveBitrate) : null;
   const nvrBays = nvrBayStr && Number(nvrBayStr) > 0 ? Math.floor(Number(nvrBayStr)) : null;
+  const isAdvancedCustomized =
+    codec !== "H.265" ||
+    fpsMode !== "25" ||
+    bitratePreset !== RESOLUTION_DEFAULT_BITRATE[resolution] ||
+    !!nvrBandwidthStr ||
+    !!nvrBayStr;
 
   const dailyGB = useMemo(
     () => calcDailyGB(effectiveBitrate, hours, cameras),
@@ -288,67 +295,6 @@ export default function StorageCalculatorClient({
               </p>
             </div>
 
-            {/* codec */}
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">Codec</label>
-              <div className="flex flex-wrap gap-2">
-                {CODECS.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setCodec(c)}
-                    className={`${btnBase} ${codec === c ? btnActive : btnInactive}`}
-                  >
-                    {c}
-                    {c === "H.265" && (
-                      <span className="ml-1 text-xs opacity-70">ประหยัด ~50%</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* fps */}
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
-                FPS (เฟรม/วินาที)
-              </label>
-              <div className="flex flex-wrap items-center gap-2">
-                {FPS_PRESETS.map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setFpsMode(f)}
-                    className={`${btnBase} ${fpsMode === f ? btnActive : btnInactive}`}
-                  >
-                    {f} fps
-                  </button>
-                ))}
-                <button
-                  onClick={() => setFpsMode("custom")}
-                  className={`${btnBase} ${fpsMode === "custom" ? btnActive : btnInactive}`}
-                >
-                  กำหนดเอง
-                </button>
-                {fpsMode === "custom" && (
-                  <div className="flex items-center gap-1">
-                    <input
-                      type="number"
-                      min={1}
-                      max={60}
-                      value={customFps}
-                      onChange={(e) =>
-                        setCustomFps(Math.max(1, Math.min(60, Number(e.target.value) || 1)))
-                      }
-                      className="h-9 w-16 rounded-md border border-slate-300 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                    <span className="text-sm text-slate-500">fps</span>
-                  </div>
-                )}
-              </div>
-              <p className="mt-1.5 text-xs text-slate-400">
-                * มีผลเฉพาะตอนเลือก Bitrate แบบ preset ด้านล่าง (ค่า preset อิงที่ 25fps) — ถ้ากรอก Bitrate แบบกำหนดเอง (อ่านจากกล้องจริง) fps ไม่กระทบ เพราะค่านั้นรวม fps จริงไว้แล้ว
-              </p>
-            </div>
-
             {/* hours per day */}
             <div>
               <label className="mb-2 block text-sm font-semibold text-slate-700">
@@ -390,166 +336,287 @@ export default function StorageCalculatorClient({
               </div>
             </div>
 
-            {/* bitrate */}
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
-                Bitrate ต่อกล้อง
-              </label>
-              <p className="mb-2 text-xs text-slate-400">
-                ดูค่าจากการตั้งค่ากล้องหรือ NVR — กล้องส่วนใหญ่รัน max bitrate ที่ตั้งไว้
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {BITRATE_PRESETS.map(({ mbps, label, sub }) => (
-                  <button
-                    key={mbps}
-                    onClick={() => setBitratePreset(mbps)}
-                    className={`flex flex-col items-start rounded-md border px-3 py-1.5 text-sm transition ${
-                      bitratePreset === mbps ? btnActive : btnInactive
-                    }`}
-                  >
-                    <span className="font-semibold">{label}</span>
-                    <span className={`text-xs ${bitratePreset === mbps ? "opacity-75" : "text-slate-400"}`}>
-                      {sub}
+            {/* advanced: codec/fps/bitrate/NVR checks — collapsed by default with
+                sensible defaults already applied (H.265, 25fps, bitrate from
+                resolution), so most people never need to open this */}
+            <details className="group mt-2 overflow-hidden rounded-lg border border-slate-200">
+              <summary className="flex cursor-pointer select-none list-none items-center justify-between px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                <span>
+                  ⚙️ ตั้งค่าขั้นสูง (ไม่บังคับ) — Codec, FPS, Bitrate, เช็ก NVR
+                  {isAdvancedCustomized && (
+                    <span className="ml-2 rounded-full bg-sky-100 px-2 py-0.5 text-xs font-semibold text-sky-700">
+                      ตั้งค่าแล้ว
                     </span>
-                  </button>
-                ))}
-                <button
-                  onClick={() => setBitratePreset("custom")}
-                  className={`flex flex-col items-start rounded-md border px-3 py-1.5 text-sm transition ${
-                    bitratePreset === "custom" ? btnActive : btnInactive
-                  }`}
-                >
-                  <span className="font-semibold">กำหนดเอง</span>
-                  <span className={`text-xs ${bitratePreset === "custom" ? "opacity-75" : "text-slate-400"}`}>
-                    ใส่ Mbps / Kbps
-                  </span>
-                </button>
-              </div>
-              {bitratePreset === "custom" && (
-                <div className="mt-3 flex items-center gap-2">
-                  <input
-                    type="number"
-                    min={1}
-                    step={1}
-                    value={customBitrateValue}
-                    placeholder={customBitrateUnit === "Kbps" ? "เช่น 2048" : "เช่น 2"}
-                    onChange={(e) => setCustomBitrateValue(e.target.value)}
-                    className="h-9 w-28 rounded-md border border-slate-300 px-2 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-                  />
-                  <div className="flex overflow-hidden rounded-md border border-slate-300 text-sm">
-                    {(["Mbps", "Kbps"] as const).map((u) => (
+                  )}
+                </span>
+                <span className="text-slate-400 transition group-open:rotate-180">⌄</span>
+              </summary>
+              <div className="space-y-5 border-t border-slate-100 px-4 pb-4 pt-4">
+                {/* codec */}
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">Codec</label>
+                  <div className="flex flex-wrap gap-2">
+                    {CODECS.map((c) => (
                       <button
-                        key={u}
-                        onClick={() => setCustomBitrateUnit(u)}
-                        className={`px-3 py-1.5 font-medium transition ${
-                          customBitrateUnit === u
-                            ? "bg-sky-600 text-white"
-                            : "text-slate-600 hover:bg-slate-50"
-                        }`}
+                        key={c}
+                        onClick={() => setCodec(c)}
+                        className={`${btnBase} ${codec === c ? btnActive : btnInactive}`}
                       >
-                        {u}
+                        {c}
+                        {c === "H.265" && (
+                          <span className="ml-1 text-xs opacity-70">ประหยัด ~50%</span>
+                        )}
                       </button>
                     ))}
                   </div>
-                  {customBitrateValue && Number(customBitrateValue) > 0 && (
-                    <span className="text-xs text-slate-400">
-                      = {customBitrateUnit === "Kbps"
-                        ? (Number(customBitrateValue) / 1000).toFixed(3)
-                        : customBitrateValue}{" "}
-                      Mbps
-                    </span>
-                  )}
                 </div>
-              )}
-            </div>
 
-            {/* NVR bandwidth check */}
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
-                Bandwidth สูงสุดของ NVR (ไม่บังคับ)
-              </label>
-              <p className="mb-2 text-xs text-slate-400">
-                ใส่ค่า Input Bandwidth ของ NVR เพื่อเช็กว่าจำนวนกล้องที่เลือกไม่เกิน capacity
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                {[40, 80, 160, 320].map((bw) => (
-                  <button
-                    key={bw}
-                    onClick={() => setNvrBandwidthStr(String(bw))}
-                    className={`${btnBase} text-xs ${
-                      nvrBandwidthStr === String(bw) ? btnActive : btnInactive
-                    }`}
-                  >
-                    {bw} Mbps
-                  </button>
-                ))}
-                <div className="flex items-center gap-1">
-                  <input
-                    type="number"
-                    min={1}
-                    value={nvrBandwidthStr}
-                    placeholder="เช่น 80"
-                    onChange={(e) => setNvrBandwidthStr(e.target.value)}
-                    className="h-9 w-24 rounded-md border border-slate-300 px-2 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-                  />
-                  <span className="text-sm text-slate-500">Mbps</span>
-                  {nvrBandwidthStr && (
+                {/* fps */}
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    FPS (เฟรม/วินาที)
+                  </label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {FPS_PRESETS.map((f) => (
+                      <button
+                        key={f}
+                        onClick={() => setFpsMode(f)}
+                        className={`${btnBase} ${fpsMode === f ? btnActive : btnInactive}`}
+                      >
+                        {f} fps
+                      </button>
+                    ))}
                     <button
-                      onClick={() => setNvrBandwidthStr("")}
-                      className="text-xs text-slate-400 hover:text-red-500"
+                      onClick={() => setFpsMode("custom")}
+                      className={`${btnBase} ${fpsMode === "custom" ? btnActive : btnInactive}`}
                     >
-                      ล้าง
+                      กำหนดเอง
                     </button>
-                  )}
+                    {fpsMode === "custom" && (
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number"
+                          min={1}
+                          max={60}
+                          value={customFps}
+                          onChange={(e) =>
+                            setCustomFps(Math.max(1, Math.min(60, Number(e.target.value) || 1)))
+                          }
+                          className="h-9 w-16 rounded-md border border-slate-300 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                        <span className="text-sm text-slate-500">fps</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="mt-1.5 text-xs text-slate-400">
+                    * มีผลเฉพาะตอนเลือก Bitrate แบบ preset ด้านล่าง (ค่า preset อิงที่ 25fps) — ถ้ากรอก Bitrate แบบกำหนดเอง (อ่านจากกล้องจริง) fps ไม่กระทบ เพราะค่านั้นรวม fps จริงไว้แล้ว
+                  </p>
                 </div>
-              </div>
-            </div>
 
-            {/* NVR HDD bays */}
-            <div className="mt-4 border-t border-slate-100 pt-4">
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
-                NVR รองรับ HDD กี่ตัว (ไม่บังคับ)
-              </label>
-              <p className="mb-2 text-xs text-slate-400">
-                ใส่จำนวน bay เพื่อเช็กว่า HDD ที่แนะนำใส่ได้ใน NVR — ถ้าเกินจะแนะนำให้ใช้ NAS
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                {[1, 2, 4, 8].map((b) => (
-                  <button
-                    key={b}
-                    onClick={() => setNvrBayStr(String(b))}
-                    className={`${btnBase} text-xs ${nvrBayStr === String(b) ? btnActive : btnInactive}`}
+                {/* bitrate */}
+                <div className="border-t border-slate-100 pt-4">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Bitrate ต่อกล้อง
+                  </label>
+                  <p className="mb-2 text-xs text-slate-400">
+                    ดูค่าจากการตั้งค่ากล้องหรือ NVR — กล้องส่วนใหญ่รัน max bitrate ที่ตั้งไว้ (ค่าเริ่มต้นตั้งจากความละเอียดที่เลือกไว้แล้ว)
+                  </p>
+                  <select
+                    value={bitratePreset === "custom" ? "custom" : String(bitratePreset)}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setBitratePreset(v === "custom" ? "custom" : Number(v));
+                    }}
+                    className="h-10 w-full rounded-md border border-slate-300 px-3 text-sm font-medium text-slate-700 outline-none focus:border-sky-500 sm:w-72"
                   >
-                    {b} ตัว
-                  </button>
-                ))}
-                <div className="flex items-center gap-1">
-                  <input
-                    type="number"
-                    min={1}
-                    value={nvrBayStr}
-                    placeholder="เช่น 4"
-                    onChange={(e) => setNvrBayStr(e.target.value)}
-                    className="h-9 w-20 rounded-md border border-slate-300 px-2 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-                  />
-                  <span className="text-sm text-slate-500">ตัว</span>
-                  {nvrBayStr && (
-                    <button onClick={() => setNvrBayStr("")} className="text-xs text-slate-400 hover:text-red-500">
-                      ล้าง
-                    </button>
+                    {BITRATE_PRESETS.map(({ mbps, label, sub }) => (
+                      <option key={mbps} value={mbps}>
+                        {label} ({sub})
+                      </option>
+                    ))}
+                    <option value="custom">กำหนดเอง — ใส่ Mbps / Kbps เอง</option>
+                  </select>
+                  {bitratePreset === "custom" && (
+                    <div className="mt-3 flex items-center gap-2">
+                      <input
+                        type="number"
+                        min={1}
+                        step={1}
+                        value={customBitrateValue}
+                        placeholder={customBitrateUnit === "Kbps" ? "เช่น 2048" : "เช่น 2"}
+                        onChange={(e) => setCustomBitrateValue(e.target.value)}
+                        className="h-9 w-28 rounded-md border border-slate-300 px-2 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                      <div className="flex overflow-hidden rounded-md border border-slate-300 text-sm">
+                        {(["Mbps", "Kbps"] as const).map((u) => (
+                          <button
+                            key={u}
+                            onClick={() => setCustomBitrateUnit(u)}
+                            className={`px-3 py-1.5 font-medium transition ${
+                              customBitrateUnit === u
+                                ? "bg-sky-600 text-white"
+                                : "text-slate-600 hover:bg-slate-50"
+                            }`}
+                          >
+                            {u}
+                          </button>
+                        ))}
+                      </div>
+                      {customBitrateValue && Number(customBitrateValue) > 0 && (
+                        <span className="text-xs text-slate-400">
+                          = {customBitrateUnit === "Kbps"
+                            ? (Number(customBitrateValue) / 1000).toFixed(3)
+                            : customBitrateValue}{" "}
+                          Mbps
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
+
+                {/* NVR bandwidth check */}
+                <div className="border-t border-slate-100 pt-4">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Bandwidth สูงสุดของ NVR
+                  </label>
+                  <p className="mb-2 text-xs text-slate-400">
+                    ใส่ค่า Input Bandwidth ของ NVR เพื่อเช็กว่าจำนวนกล้องที่เลือกไม่เกิน capacity
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {[40, 80, 160, 320].map((bw) => (
+                      <button
+                        key={bw}
+                        onClick={() => setNvrBandwidthStr(String(bw))}
+                        className={`${btnBase} text-xs ${
+                          nvrBandwidthStr === String(bw) ? btnActive : btnInactive
+                        }`}
+                      >
+                        {bw} Mbps
+                      </button>
+                    ))}
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="number"
+                        min={1}
+                        value={nvrBandwidthStr}
+                        placeholder="เช่น 80"
+                        onChange={(e) => setNvrBandwidthStr(e.target.value)}
+                        className="h-9 w-24 rounded-md border border-slate-300 px-2 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                      <span className="text-sm text-slate-500">Mbps</span>
+                      {nvrBandwidthStr && (
+                        <button
+                          onClick={() => setNvrBandwidthStr("")}
+                          className="text-xs text-slate-400 hover:text-red-500"
+                        >
+                          ล้าง
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* NVR HDD bays */}
+                <div className="border-t border-slate-100 pt-4">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    NVR รองรับ HDD กี่ตัว
+                  </label>
+                  <p className="mb-2 text-xs text-slate-400">
+                    ใส่จำนวน bay เพื่อเช็กว่า HDD ที่แนะนำใส่ได้ใน NVR — ถ้าเกินจะแนะนำให้ใช้ NAS
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {[1, 2, 4, 8].map((b) => (
+                      <button
+                        key={b}
+                        onClick={() => setNvrBayStr(String(b))}
+                        className={`${btnBase} text-xs ${nvrBayStr === String(b) ? btnActive : btnInactive}`}
+                      >
+                        {b} ตัว
+                      </button>
+                    ))}
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="number"
+                        min={1}
+                        value={nvrBayStr}
+                        placeholder="เช่น 4"
+                        onChange={(e) => setNvrBayStr(e.target.value)}
+                        className="h-9 w-20 rounded-md border border-slate-300 px-2 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                      <span className="text-sm text-slate-500">ตัว</span>
+                      {nvrBayStr && (
+                        <button onClick={() => setNvrBayStr("")} className="text-xs text-slate-400 hover:text-red-500">
+                          ล้าง
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </details>
           </div>
         </div>
 
-        {/* === SOLUTION ANALYZER — ตอบลูกค้าตรงๆ ก่อน (มี HDD เท่านี้ เก็บได้กี่วัน) === */}
+        {/* === combined goal picker: "มี HDD เท่านี้ เก็บได้กี่วัน" vs "อยากเก็บกี่วัน ต้องใช้ HDD เท่าไหร่" —
+            one toggle instead of two always-visible blocks, so the customer only sees the question they asked */}
         <div className="overflow-hidden rounded-xl bg-white shadow-sm">
           <div className="border-b border-slate-100 px-5 py-4">
-            <h2 className="font-bold text-slate-800">✅ ตอบลูกค้า: มี HDD เท่านี้ เก็บได้กี่วัน</h2>
-            <p className="mt-1 text-xs text-slate-400">ใส่ HDD ที่ลูกค้ามีหรือต้องการซื้อ — ระบบคำนวณจำนวนวันที่เก็บได้จริงทันที</p>
+            <h2 className="mb-3 font-bold text-slate-800">📦 เก็บได้กี่วัน หรือ ต้องใช้ HDD เท่าไหร่?</h2>
+            <div className="flex gap-2 rounded-lg bg-slate-100 p-1">
+              <button
+                onClick={() => setGoalMode("hdd")}
+                className={`flex-1 rounded-md px-3 py-2 text-sm font-semibold transition ${
+                  goalMode === "hdd" ? "bg-white text-sky-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                มี HDD กี่ TB แล้ว → เก็บได้กี่วัน
+              </button>
+              <button
+                onClick={() => setGoalMode("days")}
+                className={`flex-1 rounded-md px-3 py-2 text-sm font-semibold transition ${
+                  goalMode === "days" ? "bg-white text-sky-700 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                อยากเก็บกี่วัน → ต้องใช้ HDD เท่าไหร่
+              </button>
+            </div>
+
+            {/* shared context: bandwidth + storage/day, relevant either way */}
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <div className={`rounded-lg border p-3 ${bandwidthExceeded ? "border-red-200 bg-red-50" : "border-slate-100 bg-slate-50"}`}>
+                <p className="text-xs text-slate-500">Bandwidth รวมทุกกล้อง</p>
+                <p className={`text-2xl font-extrabold ${bandwidthExceeded ? "text-red-600" : "text-slate-900"}`}>
+                  {totalBandwidth.toFixed(1)}<span className="ml-1 text-sm font-semibold">Mbps</span>
+                </p>
+                <p className="text-xs text-slate-400">{cameras} กล้อง × {effectiveBitrate.toFixed(2)} Mbps</p>
+                {nvrBandwidth && (
+                  <p className={`mt-1 text-xs font-semibold ${bandwidthExceeded ? "text-red-600" : "text-emerald-600"}`}>
+                    {bandwidthExceeded
+                      ? `⚠️ เกิน NVR (${nvrBandwidth} Mbps)`
+                      : `✓ ไม่เกิน NVR (${nvrBandwidth} Mbps)`}
+                  </p>
+                )}
+              </div>
+              <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                <p className="text-xs text-slate-500">พื้นที่ใช้ต่อวัน</p>
+                <p className="text-2xl font-extrabold text-slate-900">
+                  {dailyGB < 1000
+                    ? `${dailyGB.toFixed(1)} GB`
+                    : `${(dailyGB / 1000).toFixed(2)} TB`}
+                </p>
+                <p className="text-xs text-slate-400">{hours} ชม./วัน · {cameras} กล้อง</p>
+              </div>
+            </div>
+            {bandwidthExceeded && maxCamerasForNvr !== null && (
+              <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-800">
+                ⚠️ <strong>Bandwidth เกิน!</strong> ต้องลด bitrate เหลือ{" "}
+                <strong>{(nvrBandwidth! / cameras).toFixed(2)} Mbps/กล้อง</strong>{" "}
+                หรือลดกล้องเหลือ ≤ {maxCamerasForNvr} ตัว
+              </div>
+            )}
           </div>
+
+          {goalMode === "hdd" ? (
           <div className="px-5 py-4 space-y-4">
             {/* HDD size */}
             <div>
@@ -672,47 +739,8 @@ export default function StorageCalculatorClient({
               <p className="text-xs text-slate-400">ยังไม่ได้ใส่ข้อมูล HDD</p>
             )}
           </div>
-        </div>
-
-        {/* === แนะนำ: HDD ตามเป้าหมายวันที่ต้องการ === */}
-        <div className="overflow-hidden rounded-xl bg-white shadow-sm">
-          {/* summary: bandwidth + storage/day */}
-          <div className="border-b border-slate-100 px-5 py-4">
-            <h2 className="mb-3 font-bold text-slate-800">💡 แนะนำ HDD ตามเป้าหมายที่ต้องการ</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <div className={`rounded-lg border p-3 ${bandwidthExceeded ? "border-red-200 bg-red-50" : "border-slate-100 bg-slate-50"}`}>
-                <p className="text-xs text-slate-500">Bandwidth รวมทุกกล้อง</p>
-                <p className={`text-2xl font-extrabold ${bandwidthExceeded ? "text-red-600" : "text-slate-900"}`}>
-                  {totalBandwidth.toFixed(1)}<span className="ml-1 text-sm font-semibold">Mbps</span>
-                </p>
-                <p className="text-xs text-slate-400">{cameras} กล้อง × {effectiveBitrate.toFixed(2)} Mbps</p>
-                {nvrBandwidth && (
-                  <p className={`mt-1 text-xs font-semibold ${bandwidthExceeded ? "text-red-600" : "text-emerald-600"}`}>
-                    {bandwidthExceeded
-                      ? `⚠️ เกิน NVR (${nvrBandwidth} Mbps)`
-                      : `✓ ไม่เกิน NVR (${nvrBandwidth} Mbps)`}
-                  </p>
-                )}
-              </div>
-              <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
-                <p className="text-xs text-slate-500">พื้นที่ใช้ต่อวัน</p>
-                <p className="text-2xl font-extrabold text-slate-900">
-                  {dailyGB < 1000
-                    ? `${dailyGB.toFixed(1)} GB`
-                    : `${(dailyGB / 1000).toFixed(2)} TB`}
-                </p>
-                <p className="text-xs text-slate-400">{hours} ชม./วัน · {cameras} กล้อง</p>
-              </div>
-            </div>
-            {bandwidthExceeded && maxCamerasForNvr !== null && (
-              <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-800">
-                ⚠️ <strong>Bandwidth เกิน!</strong> ต้องลด bitrate เหลือ{" "}
-                <strong>{(nvrBandwidth! / cameras).toFixed(2)} Mbps/กล้อง</strong>{" "}
-                หรือลดกล้องเหลือ ≤ {maxCamerasForNvr} ตัว
-              </div>
-            )}
-          </div>
-
+          ) : (
+          <>
           {/* target days table */}
           <table className="w-full">
             <thead>
@@ -801,6 +829,8 @@ export default function StorageCalculatorClient({
             )}
             <span className="ml-auto text-xs text-slate-400">* 1 TB = 1,000 GB · bitrate คงที่</span>
           </div>
+          </>
+          )}
         </div>
 
         {/* product recommendations */}
