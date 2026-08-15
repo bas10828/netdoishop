@@ -15,7 +15,8 @@ import {
 
 // POST /api/sales-reports  (multipart/form-data) — any logged-in staff.
 // Fields: customerName, jobDescription, amount, note,
-//   photos (1-50 image files), documents (0-10 image/PDF files — quotation,
+//   photos (0-100 image files — optional, staff sometimes forget to take
+//   them on-site), documents (0-10 image/PDF files — quotation,
 //   bill, tax invoice, etc. — kept for later reference/download).
 // staffId is always the logged-in user, never taken from the request body.
 export async function POST(req: Request) {
@@ -39,12 +40,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "bad amount" }, { status: 400 });
   }
 
+  // photos are optional — staff on-site sometimes forget to take them, and
+  // the job still needs to be logged
   const photoFiles = form.getAll("photos").filter(
     (f): f is File => f instanceof File && f.size > 0
   );
-  if (photoFiles.length === 0) {
-    return NextResponse.json({ error: "at least one photo required" }, { status: 400 });
-  }
   const photoError = validateFiles(photoFiles, MAX_PHOTOS, MAX_PHOTO_BYTES, ALLOWED_PHOTO_MIME, {
     tooMany: "too many photos",
     badType: "unsupported file type",

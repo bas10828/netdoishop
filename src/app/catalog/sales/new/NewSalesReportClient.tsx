@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const ERROR_LABEL: Record<string, string> = {
-  "at least one photo required": "ต้องแนบรูปอย่างน้อย 1 รูป",
   "too many photos": "แนบรูปหน้างานได้สูงสุด 100 รูป",
   "unsupported file type": "ไฟล์ต้องเป็นรูปภาพ (jpg/png/webp/gif)",
   "file too large": "ไฟล์รูปใหญ่เกินไป (สูงสุด 15MB ต่อรูป)",
@@ -178,17 +177,14 @@ export default function NewSalesReportClient() {
         </div>
 
         <FileField
-          label="รูปหน้างาน (สูงสุด 100 รูป)"
-          hint="เลือกได้หลายรอบ ถ้ารูปอยู่คนละโฟลเดอร์กัน — เปิดเลือกอีกรอบแล้วรูปเดิมจะไม่หาย"
+          label="รูปหน้างาน (ไม่บังคับ, สูงสุด 100 รูป)"
+          hint="เลือกได้หลายรอบ ถ้ารูปอยู่คนละโฟลเดอร์กัน — เปิดเลือกอีกรอบแล้วรูปเดิมจะไม่หาย ลืมถ่ายก็บันทึกงานได้ ไม่บังคับ"
           accept="image/*"
           files={photos}
           onAdd={(list) => addFiles(setPhotos, list)}
           onRemove={(i) => setPhotos((prev) => prev.filter((_, idx) => idx !== i))}
           previewable
         />
-        {photos.length === 0 && (
-          <p className="-mt-2 text-xs text-amber-600">ต้องแนบรูปอย่างน้อย 1 รูปก่อนบันทึก</p>
-        )}
 
         <FileField
           label="เอกสารแนบ — ใบเสนอราคา / บิล / ใบกำกับภาษี (ไม่บังคับ, สูงสุด 10 ไฟล์)"
@@ -202,7 +198,7 @@ export default function NewSalesReportClient() {
 
         <button
           type="submit"
-          disabled={submitting || photos.length === 0}
+          disabled={submitting}
           className="w-full rounded-md bg-sky-600 py-2 text-sm font-semibold text-white hover:bg-sky-700 disabled:opacity-50"
         >
           {submitting ? "กำลังบันทึก..." : "บันทึกงาน"}

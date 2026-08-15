@@ -88,9 +88,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     (f): f is File => f instanceof File && f.size > 0
   );
 
-  if (keepPhotos.length + newPhotoFiles.length === 0) {
-    return NextResponse.json({ error: "at least one photo required" }, { status: 400 });
-  }
+  // photos are optional — staff on-site sometimes forget to take them
   const photoError = validateFiles(
     newPhotoFiles,
     MAX_PHOTOS - keepPhotos.length,

@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import type { SalesReportRow } from "./SalesClient";
 
 const ERROR_LABEL: Record<string, string> = {
-  "at least one photo required": "ต้องมีรูปอย่างน้อย 1 รูป",
   "too many photos": "แนบรูปหน้างานได้สูงสุด 100 รูป",
   "unsupported file type": "ไฟล์ต้องเป็นรูปภาพ (jpg/png/webp/gif)",
   "file too large": "ไฟล์รูปใหญ่เกินไป (สูงสุด 15MB ต่อรูป)",
