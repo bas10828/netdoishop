@@ -30,6 +30,20 @@ export type TapoCameraProduct = {
 
 const baht = (n: number) => n.toLocaleString("th-TH");
 
+// extract the TB figure embedded in an HDD model string, e.g. "Purple 4TB" ->
+// 4. Used to match a recommended capacity to a real in-stock SKU + price.
+function capacityFromModel(model: string): number | null {
+  const m = model.match(/(\d+)\s*TB/i);
+  return m ? Number(m[1]) : null;
+}
+
+// extract channel count from an NVR's name, e.g. "AcuSense NVR 8CH, 2 HDD"
+// or "VIGI 16 Channel Network Video Recorder" -> 8, 16.
+function channelsFromName(name: string): number | null {
+  const m = name.match(/(\d+)\s*-?\s*(?:ch\b|channel)/i);
+  return m ? Number(m[1]) : null;
+}
+
 // Common camera bitrate presets — cameras typically run at max bitrate setting.
 // Both Mbps and Kbps equivalents shown since camera UIs use either unit.
 const BITRATE_PRESETS: { mbps: number; label: string; sub: string }[] = [
@@ -77,6 +91,18 @@ export default function StorageCalculatorClient({
   const [mode, setMode] = useState<"nvr" | "sdcard">("nvr");
   const [goalMode, setGoalMode] = useState<"hdd" | "days">("hdd");
 
+  // real in-stock HDD SKUs, cheapest first per size — excludes promo-set
+  // pricing (conditional on buying a camera bundle, not a standalone price)
+  const hddProducts = useMemo(
+    () =>
+      products
+        .filter((p) => p.category === "harddisk" && !/promo/i.test(p.model))
+        .sort((a, b) => a.price - b.price),
+    [products]
+  );
+  const matchedHdd = (size: number | null | undefined) =>
+    size ? hddProducts.find((p) => capacityFromModel(p.model) === size) : undefined;
+
   // shared inputs
   const [camerasStr, setCamerasStr] = useState("4");
   const [resolution, setResolution] = useState("2MP");
@@ -99,6 +125,20 @@ export default function StorageCalculatorClient({
 
   // derived
   const cameras = Math.max(1, Math.floor(Number(camerasStr) || 1));
+
+  // NVR only (IP cameras — DVR is for analog/HD-TVI, out of scope here),
+  // matched to the channel count this setup needs and capped so the list
+  // doesn't dump the entire recorder catalog on the page
+  const recorderProducts = useMemo(() => {
+    const nvrOnly = products
+      .filter((p) => p.category === "nvr")
+      .map((p) => ({ ...p, channels: channelsFromName(p.name) }));
+    const fits = nvrOnly.filter((p) => p.channels !== null && p.channels >= cameras);
+    const pool = fits.length > 0 ? fits : nvrOnly;
+    return pool
+      .sort((a, b) => (a.channels ?? 999) - (b.channels ?? 999) || a.price - b.price)
+      .slice(0, 6);
+  }, [products, cameras]);
   const fps = fpsMode === "custom" ? Math.max(1, customFps) : Number(fpsMode);
   const hours = hoursMode === "custom" ? Math.max(1, Math.min(24, customHours)) : Number(hoursMode);
   const codecFactor = CODEC_FACTORS[codec] ?? 1;
@@ -671,6 +711,29 @@ export default function StorageCalculatorClient({
                   {custHddSize} TB × {custCount} ตัว = <span className="text-base">{custTotalTB} TB</span>
                 </p>
 
+                {(() => {
+                  const p = matchedHdd(custHddSize || null);
+                  if (!p) return null;
+                  return (
+                    <Link
+                      href={`/product/${p.slug}`}
+                      target="_blank"
+                      rel="noopener"
+                      className="mb-3 flex items-center gap-3 rounded-lg border border-white bg-white/70 p-2.5 transition hover:border-slate-300"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p.image} alt={p.model} className="h-12 w-12 shrink-0 rounded bg-slate-50 p-1 object-contain" />
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-bold text-slate-800">{p.brand} {p.model}</div>
+                        <div className="text-xs text-slate-500">
+                          ฿{baht(p.price)}/ลูก
+                          {custCount && custCount > 1 && <> · รวม {custCount} ลูก = <strong className="text-emerald-700">฿{baht(p.price * custCount)}</strong></>}
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })()}
+
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   {/* days */}
                   <div className="rounded-lg bg-white/70 p-3 text-center">
@@ -748,6 +811,7 @@ export default function StorageCalculatorClient({
                 <th className="px-5 py-3">เป้าหมาย</th>
                 <th className="px-5 py-3">พื้นที่ที่ต้องการ</th>
                 <th className="px-5 py-3">HDD แนะนำ</th>
+                <th className="px-5 py-3">ราคาโดยประมาณ</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -792,6 +856,29 @@ export default function StorageCalculatorClient({
                         )}
                       </div>
                     </td>
+                    <td className="px-4 py-4 text-sm">
+                      {(() => {
+                        const size = singleHdd ?? multi?.size ?? null;
+                        const count = singleHdd ? 1 : multi?.count ?? 0;
+                        const p = matchedHdd(size);
+                        if (!p) return <span className="text-xs text-slate-400">ไม่มีในสต็อก</span>;
+                        return (
+                          <Link
+                            href={`/product/${p.slug}`}
+                            target="_blank"
+                            rel="noopener"
+                            className="inline-flex flex-col text-emerald-700 hover:underline"
+                          >
+                            <span className="font-bold">
+                              ฿{baht(p.price * count)}
+                            </span>
+                            <span className="text-xs text-slate-400">
+                              {p.brand} {p.model}{count > 1 && ` × ${count}`}
+                            </span>
+                          </Link>
+                        );
+                      })()}
+                    </td>
                   </tr>
                 );
               })}
@@ -833,12 +920,14 @@ export default function StorageCalculatorClient({
           )}
         </div>
 
-        {/* product recommendations */}
-        {products.length > 0 && (
+        {/* recorder recommendations — HDD already surfaced contextually above
+            with matched price, so this list stays to NVR/DVR only instead of
+            dumping every harddisk/sd-card SKU in the shop here too */}
+        {recorderProducts.length > 0 && (
           <div>
-            <h2 className="mb-3 font-bold text-slate-700">สินค้าแนะนำจากร้าน</h2>
+            <h2 className="mb-3 font-bold text-slate-700">NVR แนะนำ — รองรับ {cameras} กล้องขึ้นไป</h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map((p) => (
+              {recorderProducts.map((p) => (
                 <Link
                   key={p.id}
                   href={`/product/${p.slug}`}
