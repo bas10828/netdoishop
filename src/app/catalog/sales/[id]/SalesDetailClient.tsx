@@ -181,6 +181,7 @@ export default function SalesDetailClient({
                     href={d.url}
                     download={d.name}
                     aria-label={`ดาวน์โหลด ${d.name}`}
+                    title={`ดาวน์โหลด ${d.name}`}
                     className="text-slate-400 hover:text-slate-700"
                   >
                     ⬇
@@ -230,6 +231,7 @@ export default function SalesDetailClient({
                             disabled={deletingDeviceId === d.id}
                             className="text-slate-400 hover:text-red-600 disabled:opacity-50"
                             aria-label="ลบรายการ Inventory นี้"
+                            title="ลบรายการ Inventory นี้"
                           >
                             ✕
                           </button>
@@ -300,7 +302,7 @@ export default function SalesDetailClient({
                     i === null ? i : (i - 1 + report.photos.length) % report.photos.length
                   )
                 }
-                aria-label="รูปก่อนหน้า"
+                aria-label="รูปก่อนหน้า" title="รูปก่อนหน้า"
                 className="absolute left-0 top-1/2 z-10 -translate-y-1/2 -translate-x-2 rounded-full bg-black/50 p-3 text-2xl text-white hover:bg-black/70 sm:-translate-x-14"
               >
                 ‹
@@ -319,7 +321,7 @@ export default function SalesDetailClient({
                 onClick={() =>
                   setLightboxIndex((i) => (i === null ? i : (i + 1) % report.photos.length))
                 }
-                aria-label="รูปถัดไป"
+                aria-label="รูปถัดไป" title="รูปถัดไป"
                 className="absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-2 rounded-full bg-black/50 p-3 text-2xl text-white hover:bg-black/70 sm:translate-x-14"
               >
                 ›

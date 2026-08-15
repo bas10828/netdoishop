@@ -71,7 +71,10 @@ export default async function SalesPage({
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
-      include: { staff: { select: { name: true, username: true } } },
+      include: {
+        staff: { select: { name: true, username: true } },
+        devices: { orderBy: { id: "asc" } },
+      },
     }),
   ]);
 
@@ -86,7 +89,15 @@ export default async function SalesPage({
     photos: r.photos as string[],
     documents: r.documents as { url: string; name: string }[],
     note: r.note,
-    devices: [],
+    devices: r.devices.map((d) => ({
+      id: d.id,
+      brand: d.brand,
+      model: d.model,
+      serialNumber: d.serialNumber,
+      macAddress: d.macAddress,
+      deviceName: d.deviceName,
+      sourceFile: d.sourceFile,
+    })),
   }));
 
   return (

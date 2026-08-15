@@ -196,11 +196,20 @@ export default function SalesClient({
           <p className="py-4 text-center text-slate-400">ยังไม่มีข้อมูล</p>
         ) : (
           <ul className="divide-y divide-slate-100">
-            {totals.map((t) => (
-              <li key={t.staffId} className="flex items-center justify-between py-2">
-                <span className="font-medium">{t.name}</span>
-                <span className="text-sm text-slate-500">{t.count} งาน</span>
-                <span className="text-lg font-bold text-emerald-600">฿{baht(t.total)}</span>
+            {totals.map((t, i) => (
+              <li key={t.staffId} className="flex items-center justify-between gap-3 py-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 shrink-0 text-center text-xs text-slate-300">
+                    {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}
+                  </span>
+                  <span className="font-medium">{t.name}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-slate-400">{t.count} งาน</span>
+                  <span className="w-24 text-right text-lg font-bold text-emerald-600">
+                    ฿{baht(t.total)}
+                  </span>
+                </div>
               </li>
             ))}
           </ul>
@@ -208,40 +217,82 @@ export default function SalesClient({
       </div>
 
       {/* recent jobs — compact summary, click through for full detail */}
-      <div className="divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="space-y-2">
         {reports.map((r) => (
-          <Link
+          <div
             key={r.id}
-            href={`/catalog/sales/${r.id}`}
-            target="_blank"
-            rel="noopener"
-            className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50"
+            className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
           >
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-bold">👤 {r.staffName}</span>
-                <span className="text-sm text-slate-500">{r.customerName || "—"}</span>
-                {r.photos.length > 0 && (
-                  <span className="text-xs text-slate-400">📷{r.photos.length}</span>
-                )}
-                {r.documents.length > 0 && (
-                  <span className="text-xs text-slate-400">📄{r.documents.length}</span>
+            <Link
+              href={`/catalog/sales/${r.id}`}
+              target="_blank"
+              rel="noopener"
+              className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-bold">👤 {r.staffName}</span>
+                  <span className="text-sm text-slate-500">{r.customerName || "—"}</span>
+                  {r.photos.length > 0 && (
+                    <span className="rounded-full bg-sky-50 px-1.5 py-0.5 text-xs text-sky-600">
+                      📷{r.photos.length}
+                    </span>
+                  )}
+                  {r.documents.length > 0 && (
+                    <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-xs text-slate-500">
+                      📄{r.documents.length}
+                    </span>
+                  )}
+                  {r.devices.length > 0 && (
+                    <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-xs text-emerald-600">
+                      📦{r.devices.length}
+                    </span>
+                  )}
+                </div>
+                {r.jobDescription && (
+                  <p className="mt-0.5 truncate text-sm text-slate-500">{r.jobDescription}</p>
                 )}
               </div>
-              {r.jobDescription && (
-                <p className="mt-0.5 truncate text-sm text-slate-500">{r.jobDescription}</p>
-              )}
-            </div>
-            <div className="shrink-0 text-right">
-              <div className="font-bold text-emerald-600">฿{baht(r.amount)}</div>
-              <div className="text-xs text-slate-400">
-                {new Date(r.createdAt).toLocaleDateString("th-TH")}
+              <div className="shrink-0 text-right">
+                <div className="font-bold text-emerald-600">฿{baht(r.amount)}</div>
+                <div className="text-xs text-slate-400">
+                  {new Date(r.createdAt).toLocaleDateString("th-TH")}
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+
+            {r.devices.length > 0 && (
+              <div className="border-t border-slate-100 bg-slate-50/60 px-4 py-2">
+                <div className="overflow-x-auto rounded-md border border-slate-200 bg-white">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="bg-slate-50 text-left text-slate-500">
+                        <th className="px-2 py-1.5 font-medium">Brand</th>
+                        <th className="px-2 py-1.5 font-medium">Model</th>
+                        <th className="px-2 py-1.5 font-medium">Serial</th>
+                        <th className="px-2 py-1.5 font-medium">MAC</th>
+                        <th className="px-2 py-1.5 font-medium">Device</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {r.devices.map((d) => (
+                        <tr key={d.id} className="hover:bg-slate-50">
+                          <td className="px-2 py-1.5">{d.brand || "—"}</td>
+                          <td className="px-2 py-1.5">{d.model || "—"}</td>
+                          <td className="px-2 py-1.5 font-mono">{d.serialNumber || "—"}</td>
+                          <td className="px-2 py-1.5 font-mono">{d.macAddress || "—"}</td>
+                          <td className="px-2 py-1.5">{d.deviceName || "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
         ))}
         {reports.length === 0 && (
-          <p className="py-12 text-center text-slate-400">
+          <p className="rounded-lg border border-slate-200 bg-white py-12 text-center text-slate-400 shadow-sm">
             {hasActiveFilters ? "ไม่พบรายงานที่ตรงเงื่อนไข" : "ยังไม่มีรายงานการขาย"}
           </p>
         )}

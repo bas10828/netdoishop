@@ -142,6 +142,8 @@ export default function EditSalesReportForm({
               <button
                 type="button"
                 onClick={() => setPhotos((prev) => prev.filter((_, idx) => idx !== i))}
+                aria-label="ลบรูปนี้"
+                title="ลบรูปนี้"
                 className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white hover:bg-red-700"
               >
                 ✕
@@ -179,6 +181,8 @@ export default function EditSalesReportForm({
               <button
                 type="button"
                 onClick={() => setDocuments((prev) => prev.filter((_, idx) => idx !== i))}
+                aria-label="ลบเอกสารนี้"
+                title="ลบเอกสารนี้"
                 className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white hover:bg-red-700"
               >
                 ✕

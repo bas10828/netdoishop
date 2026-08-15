@@ -68,6 +68,7 @@ function FileField({
                 type="button"
                 onClick={() => onRemove(i)}
                 aria-label={`ลบ ${f.name}`}
+                title={`ลบ ${f.name}`}
                 className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white hover:bg-red-700"
               >
                 ✕
