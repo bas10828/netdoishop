@@ -3,25 +3,15 @@ import ExcelJS from "exceljs";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { parseScanWorkbook } from "@/lib/siteScanParser";
 
 const MAX_FILE_BYTES = 20 * 1024 * 1024;
 
-// Column names as they appear in the phone-scanner app's export
-// (autoscan_results.xlsx, sheet "Barcode Results"). Matched case-insensitive
-// so a re-export with different casing still works. BarcodeText is
-// deliberately not mapped — it's the raw scanned string, Serial already has
-// the parsed value out of it (per explicit direction, 2026-08-15).
-const COLUMN_MAP: Record<string, string> = {
-  brand: "brand",
-  model: "model",
-  mac: "macAddress",
-  serial: "serialNumber",
-  filename: "deviceName",
-};
-
 // POST /api/site-devices (multipart/form-data) — any logged-in staff.
-// Fields: siteName (text, required), file (.xlsx, required — the phone
-// scanner app's "autoscan_results.xlsx" barcode-scan export).
+// Fields: siteName (text, required), file (.xlsx, required). Handles three
+// known export shapes (see parseScanWorkbook / [[project_si_sites]]):
+// phone barcode-scanner table, camera/NVR network-scan (table + per-NVR
+// key-value sheets), and the manual master-inventory table.
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -58,51 +48,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "could not read xlsx file" }, { status: 400 });
   }
 
-  const sheet = workbook.worksheets[0];
-  if (!sheet || sheet.rowCount < 2) {
+  if (workbook.worksheets.length === 0) {
     return NextResponse.json({ error: "sheet is empty" }, { status: 400 });
   }
 
-  // header row -> column index (1-based, ExcelJS convention) for whichever
-  // of our known fields are present; unknown/extra columns are ignored
-  const fieldCol = new Map<string, number>();
-  sheet.getRow(1).eachCell((cell, colNumber) => {
-    const key = String(cell.value ?? "").trim().toLowerCase();
-    const field = COLUMN_MAP[key];
-    if (field) fieldCol.set(field, colNumber);
-  });
-  if (fieldCol.size === 0) {
-    return NextResponse.json({ error: "no recognized columns in sheet" }, { status: 400 });
-  }
-
-  const cellText = (row: ExcelJS.Row, field: string): string | null => {
-    const col = fieldCol.get(field);
-    if (!col) return null;
-    const v = row.getCell(col).value;
-    if (v === null || v === undefined) return null;
-    const s = String(typeof v === "object" && "text" in v ? v.text : v).trim();
-    return s || null;
-  };
-
-  const rows: {
-    brand: string | null;
-    model: string | null;
-    serialNumber: string | null;
-    macAddress: string | null;
-    deviceName: string | null;
-  }[] = [];
-  sheet.eachRow((row, rowNumber) => {
-    if (rowNumber === 1) return; // header
-    const brand = cellText(row, "brand");
-    const model = cellText(row, "model");
-    const serialNumber = cellText(row, "serialNumber");
-    const macAddress = cellText(row, "macAddress");
-    const deviceName = cellText(row, "deviceName");
-    if (!brand && !model && !serialNumber && !macAddress && !deviceName) return; // fully blank row
-    rows.push({ brand, model, serialNumber, macAddress, deviceName });
-  });
-
-  if (rows.length === 0) {
+  const devices = parseScanWorkbook(workbook);
+  if (devices.length === 0) {
     return NextResponse.json({ error: "no data rows found" }, { status: 400 });
   }
 
@@ -114,16 +65,17 @@ export async function POST(req: Request) {
     (await prisma.site.create({ data: { name: siteName } }));
 
   await prisma.siteDevice.createMany({
-    data: rows.map((r) => ({
+    data: devices.map((d) => ({
       siteId: site.id,
-      brand: r.brand,
-      model: r.model,
-      serialNumber: r.serialNumber,
-      macAddress: r.macAddress,
-      deviceName: r.deviceName,
+      brand: d.brand,
+      model: d.model,
+      serialNumber: d.serialNumber,
+      macAddress: d.macAddress,
+      deviceName: d.deviceName,
       sourceFile: file.name,
+      extra: Object.keys(d.extra).length > 0 ? d.extra : undefined,
     })),
   });
 
-  return NextResponse.json({ siteId: site.id, count: rows.length }, { status: 201 });
+  return NextResponse.json({ siteId: site.id, count: devices.length }, { status: 201 });
 }
