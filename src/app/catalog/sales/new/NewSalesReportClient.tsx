@@ -12,9 +12,9 @@ const ERROR_LABEL: Record<string, string> = {
   "unsupported document type": "เอกสารต้องเป็นรูปภาพหรือ PDF",
   "document too large": "ไฟล์เอกสารใหญ่เกินไป (สูงสุด 10MB ต่อไฟล์)",
   "bad amount": "กรอกยอดขายให้ถูกต้อง",
-  "device scan file too large": "ไฟล์สแกนอุปกรณ์ใหญ่เกินไป (สูงสุด 20MB)",
-  "device scan must be an .xlsx file": "ไฟล์สแกนอุปกรณ์ต้องเป็น .xlsx เท่านั้น",
-  "could not read device scan xlsx file": "อ่านไฟล์สแกนอุปกรณ์ไม่ได้ — ไฟล์อาจเสีย",
+  "device scan file too large": "ไฟล์ Inventory Scan ใหญ่เกินไป (สูงสุด 20MB)",
+  "device scan must be an .xlsx file": "ไฟล์ Inventory Scan ต้องเป็น .xlsx เท่านั้น",
+  "could not read device scan xlsx file": "อ่านไฟล์ Inventory Scan ไม่ได้ — ไฟล์อาจเสีย",
   "no recognized device rows in scan file": "ไม่พบคอลัมน์ที่รู้จัก (Brand/Model/MAC/Serial/FileName) ในไฟล์สแกน",
 };
 
@@ -204,20 +204,22 @@ export default function NewSalesReportClient() {
           previewable={false}
         />
 
-        <div>
+        <div className="rounded-md border border-emerald-200 bg-emerald-50/50 p-3">
           <label className="mb-1 block text-sm font-semibold text-slate-700">
-            ไฟล์สแกนอุปกรณ์ (ไม่บังคับ)
+            📦 ไฟล์ Inventory Scan (ไม่บังคับ)
           </label>
           <p className="mb-2 text-xs text-slate-400">
-            จากแอปสแกน QR/บาร์โค้ด (.xlsx) — แนบไว้เพื่อบันทึกว่างานนี้ใช้อุปกรณ์ตัวไหนบ้าง (SN/MAC)
+            จากแอปสแกน QR/บาร์โค้ด (.xlsx) — แนบไว้เพื่อบันทึกว่างานนี้ใช้ Inventory ตัวไหนบ้าง (SN/MAC)
           </p>
           <input
             type="file"
             accept=".xlsx"
             onChange={(e) => setDeviceScan(e.target.files?.[0] ?? null)}
-            className="block w-full text-sm"
+            className="block w-full text-xs text-slate-500 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-emerald-600 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-emerald-700"
           />
-          {deviceScan && <p className="mt-1 text-xs text-slate-500">เลือกแล้ว: {deviceScan.name}</p>}
+          {deviceScan && (
+            <p className="mt-1.5 text-xs font-medium text-emerald-700">✓ เลือกแล้ว: {deviceScan.name}</p>
+          )}
         </div>
 
         <button

@@ -13,9 +13,9 @@ const ERROR_LABEL: Record<string, string> = {
   "bad amount": "กรอกยอดขายให้ถูกต้อง",
   forbidden: "ไม่มีสิทธิ์แก้ไขรายงานนี้",
   "not found": "ไม่พบรายงานนี้แล้ว",
-  "device scan file too large": "ไฟล์สแกนอุปกรณ์ใหญ่เกินไป (สูงสุด 20MB)",
-  "device scan must be an .xlsx file": "ไฟล์สแกนอุปกรณ์ต้องเป็น .xlsx เท่านั้น",
-  "could not read device scan xlsx file": "อ่านไฟล์สแกนอุปกรณ์ไม่ได้ — ไฟล์อาจเสีย",
+  "device scan file too large": "ไฟล์ Inventory Scan ใหญ่เกินไป (สูงสุด 20MB)",
+  "device scan must be an .xlsx file": "ไฟล์ Inventory Scan ต้องเป็น .xlsx เท่านั้น",
+  "could not read device scan xlsx file": "อ่านไฟล์ Inventory Scan ไม่ได้ — ไฟล์อาจเสีย",
   "no recognized device rows in scan file": "ไม่พบคอลัมน์ที่รู้จัก (Brand/Model/MAC/Serial/FileName) ในไฟล์สแกน",
 };
 
@@ -201,10 +201,10 @@ export default function EditSalesReportForm({
 
       <div className="rounded-md border border-emerald-200 bg-emerald-50/50 p-3">
         <label className="mb-1 block text-xs font-semibold text-slate-700">
-          📦 แนบไฟล์สแกนอุปกรณ์เพิ่ม (ไม่บังคับ)
+          📦 แนบไฟล์ Inventory Scan เพิ่ม (ไม่บังคับ)
         </label>
         <p className="mb-2 text-xs text-slate-400">
-          อุปกรณ์ที่แนบไว้แล้วจะไม่หาย — ไฟล์ .xlsx นี้แค่เพิ่มรายการใหม่เข้าไป
+          รายการ Inventory ที่แนบไว้แล้วจะไม่หาย — ไฟล์ .xlsx นี้แค่เพิ่มรายการใหม่เข้าไป
         </p>
         <input
           type="file"

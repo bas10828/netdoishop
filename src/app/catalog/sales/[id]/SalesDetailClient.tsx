@@ -54,7 +54,7 @@ export default function SalesDetailClient({
   const canModify = report.staffId === currentStaffId || role === "admin";
 
   async function deleteDevice(deviceId: number) {
-    if (!window.confirm("ลบอุปกรณ์รายการนี้?")) return;
+    if (!window.confirm("ลบรายการ Inventory นี้?")) return;
     setDeletingDeviceId(deviceId);
     try {
       const res = await fetch(`/api/sales-report-devices/${deviceId}`, { method: "DELETE" });
@@ -201,7 +201,7 @@ export default function SalesDetailClient({
         {report.devices.length > 0 && (
           <div className="mb-4">
             <h2 className="mb-2 text-xs font-semibold text-slate-500">
-              อุปกรณ์ที่ใช้ในงานนี้ ({report.devices.length})
+              📦 Inventory ที่ใช้ในงานนี้ ({report.devices.length})
             </h2>
             <div className="overflow-x-auto rounded-md border border-slate-200">
               <table className="w-full text-xs">
@@ -229,7 +229,7 @@ export default function SalesDetailClient({
                             onClick={() => deleteDevice(d.id)}
                             disabled={deletingDeviceId === d.id}
                             className="text-slate-400 hover:text-red-600 disabled:opacity-50"
-                            aria-label="ลบอุปกรณ์นี้"
+                            aria-label="ลบรายการ Inventory นี้"
                           >
                             ✕
                           </button>
