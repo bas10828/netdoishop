@@ -1,11 +1,12 @@
 // ราคาช่าง markup applied on top of a distributor's raw quoted cost. CMIT
 // quotes are our own cost already (sold to ช่าง as-is). SiS quotes are SiS's
-// own resale price, not our cost, so we add 10% before reselling to ช่าง
-// (2026-07-06 rule). Mirrors SUPPLIER_MARKUP in build_catalog.py — add new
-// distributors (e.g. "digitalcom") to both places.
+// own resale price, not our cost, so we add a margin before reselling to
+// ช่าง (2026-08-14 rule: 10%→20%, same rate as TP-Link). Mirrors
+// SUPPLIER_MARKUP in build_catalog.py — add new distributors (e.g.
+// "digitalcom") to both places.
 export const SUPPLIER_MARKUP: Record<string, number> = {
   CMIT: 1.0,
-  SiS: 1.10,
+  SiS: 1.20,
   // TP-Link direct VIGI dealer pricelist (2569-7-7): ราคาช่าง = Dealer Cost
   // (ex.vat) +20%, per หัวหน้า สั่ง 2569-7-7 18:57 (double VAT 7%+7%=14% on
   // buy+sell, plus margin).
