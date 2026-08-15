@@ -49,7 +49,13 @@ export default async function SalesPage({
   const page = Math.max(1, Number(searchParams.page) || 1);
 
   const where: Record<string, unknown> = {};
-  if (q) where.customerName = { contains: q, mode: "insensitive" };
+  if (q) {
+    where.OR = [
+      { customerName: { contains: q, mode: "insensitive" } },
+      { jobDescription: { contains: q, mode: "insensitive" } },
+      { note: { contains: q, mode: "insensitive" } },
+    ];
+  }
   if (staffFilter) where.staffId = staffFilter;
   if (from || to) {
     const createdAt: { gte?: Date; lte?: Date } = {};

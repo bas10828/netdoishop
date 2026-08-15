@@ -186,13 +186,13 @@ export default function SalesClient({
       <div className="mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <div className="flex flex-wrap items-end gap-3">
           <div className="min-w-[10rem] flex-1">
-            <label className="mb-1 block text-xs font-semibold text-slate-500">ชื่อลูกค้า</label>
+            <label className="mb-1 block text-xs font-semibold text-slate-500">ค้นหา</label>
             <input
               type="text"
               value={qInput}
               onChange={(e) => setQInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && applyFilters()}
-              placeholder="ค้นหาชื่อลูกค้า..."
+              placeholder="ชื่อลูกค้า, รายละเอียดงาน, หมายเหตุ..."
               className="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-sky-500"
             />
           </div>
