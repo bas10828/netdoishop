@@ -23,6 +23,102 @@ const ERROR_LABEL: Record<string, string> = {
 // you open the dialog, so we accumulate in state instead).
 const fileKey = (f: File) => `${f.name}_${f.size}_${f.lastModified}`;
 
+type ManualDevice = {
+  brand: string;
+  model: string;
+  serialNumber: string;
+  macAddress: string;
+  deviceName: string;
+};
+const emptyManualDevice = (): ManualDevice => ({
+  brand: "",
+  model: "",
+  serialNumber: "",
+  macAddress: "",
+  deviceName: "",
+});
+const deviceCellCls =
+  "w-full min-w-0 rounded border border-slate-200 px-1.5 py-1 text-xs outline-none focus:border-emerald-500";
+
+// A few devices typed by hand right on the report — no need to make an
+// Excel file just for 1-2 items. Every field in every row is directly
+// editable (this is unsaved local state until the form submits, so there's
+// no separate "add" vs "edit" mode to build).
+function ManualDeviceTable({
+  devices,
+  onChange,
+}: {
+  devices: ManualDevice[];
+  onChange: (next: ManualDevice[]) => void;
+}) {
+  function update(i: number, field: keyof ManualDevice, value: string) {
+    onChange(devices.map((d, idx) => (idx === i ? { ...d, [field]: value } : d)));
+  }
+  function remove(i: number) {
+    onChange(devices.filter((_, idx) => idx !== i));
+  }
+
+  return (
+    <div>
+      {devices.length > 0 && (
+        <div className="mb-2 overflow-x-auto rounded-md border border-slate-200 bg-white">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="bg-slate-50 text-left text-slate-500">
+                <th className="px-2 py-1.5 font-medium">Brand</th>
+                <th className="px-2 py-1.5 font-medium">Model</th>
+                <th className="px-2 py-1.5 font-medium">Serial</th>
+                <th className="px-2 py-1.5 font-medium">MAC</th>
+                <th className="px-2 py-1.5 font-medium">Device</th>
+                <th className="px-2 py-1.5" />
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {devices.map((d, i) => (
+                <tr key={i}>
+                  <td className="px-1.5 py-1">
+                    <input value={d.brand} onChange={(e) => update(i, "brand", e.target.value)} className={deviceCellCls} />
+                  </td>
+                  <td className="px-1.5 py-1">
+                    <input value={d.model} onChange={(e) => update(i, "model", e.target.value)} className={deviceCellCls} />
+                  </td>
+                  <td className="px-1.5 py-1">
+                    <input value={d.serialNumber} onChange={(e) => update(i, "serialNumber", e.target.value)} className={deviceCellCls} />
+                  </td>
+                  <td className="px-1.5 py-1">
+                    <input value={d.macAddress} onChange={(e) => update(i, "macAddress", e.target.value)} className={deviceCellCls} />
+                  </td>
+                  <td className="px-1.5 py-1">
+                    <input value={d.deviceName} onChange={(e) => update(i, "deviceName", e.target.value)} className={deviceCellCls} />
+                  </td>
+                  <td className="px-1.5 py-1 text-right">
+                    <button
+                      type="button"
+                      onClick={() => remove(i)}
+                      aria-label="ลบแถวนี้"
+                      title="ลบแถวนี้"
+                      className="text-slate-400 hover:text-red-600"
+                    >
+                      ✕
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <button
+        type="button"
+        onClick={() => onChange([...devices, emptyManualDevice()])}
+        className="rounded-md border border-emerald-300 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-50"
+      >
+        + เพิ่มแถว Inventory
+      </button>
+    </div>
+  );
+}
+
 function FileField({
   label,
   hint,
@@ -108,6 +204,7 @@ export default function NewSalesReportClient() {
   const [photos, setPhotos] = useState<File[]>([]);
   const [documents, setDocuments] = useState<File[]>([]);
   const [deviceScan, setDeviceScan] = useState<File | null>(null);
+  const [manualDevices, setManualDevices] = useState<ManualDevice[]>([]);
 
   function addFiles(setter: React.Dispatch<React.SetStateAction<File[]>>, list: FileList) {
     // snapshot synchronously — the caller resets input.value right after
@@ -130,6 +227,12 @@ export default function NewSalesReportClient() {
       photos.forEach((f) => formData.append("photos", f));
       documents.forEach((f) => formData.append("documents", f));
       if (deviceScan) formData.append("deviceScan", deviceScan);
+      const nonEmptyManualDevices = manualDevices.filter(
+        (d) => d.brand || d.model || d.serialNumber || d.macAddress || d.deviceName
+      );
+      if (nonEmptyManualDevices.length > 0) {
+        formData.append("manualDevices", JSON.stringify(nonEmptyManualDevices));
+      }
       const res = await fetch("/api/sales-reports", { method: "POST", body: formData });
       const data = await res.json();
       if (!res.ok) {
@@ -207,20 +310,21 @@ export default function NewSalesReportClient() {
 
         <div className="rounded-md border border-emerald-200 bg-emerald-50/50 p-3">
           <label className="mb-1 block text-sm font-semibold text-slate-700">
-            📦 ไฟล์ Inventory Scan (ไม่บังคับ)
+            📦 Inventory (ไม่บังคับ)
           </label>
           <p className="mb-2 text-xs text-slate-400">
-            จากแอปสแกน QR/บาร์โค้ด (.xlsx) — แนบไว้เพื่อบันทึกว่างานนี้ใช้ Inventory ตัวไหนบ้าง (SN/MAC)
+            มีเยอะ ใช้ไฟล์สแกนจากแอป QR/บาร์โค้ด (.xlsx) — มีแค่ 1-2 ตัวพิมพ์เองด้านล่างได้เลย ไม่ต้องเปิด Excel
           </p>
           <input
             type="file"
             accept=".xlsx"
             onChange={(e) => setDeviceScan(e.target.files?.[0] ?? null)}
-            className="block w-full text-xs text-slate-500 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-emerald-600 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-emerald-700"
+            className="mb-3 block w-full text-xs text-slate-500 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-emerald-600 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-emerald-700"
           />
           {deviceScan && (
-            <p className="mt-1.5 text-xs font-medium text-emerald-700">✓ เลือกแล้ว: {deviceScan.name}</p>
+            <p className="mb-3 -mt-2 text-xs font-medium text-emerald-700">✓ เลือกแล้ว: {deviceScan.name}</p>
           )}
+          <ManualDeviceTable devices={manualDevices} onChange={setManualDevices} />
         </div>
 
         <button

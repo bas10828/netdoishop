@@ -93,6 +93,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: deviceScan.error }, { status: 400 });
   }
 
+  // manually-typed rows from the "just 1-2 devices" inline form — same
+  // shape as ParsedDevice, added by the client before the report exists yet
+  let manualDevices: ParsedDevice[] = [];
+  const manualDevicesRaw = form.get("manualDevices");
+  if (typeof manualDevicesRaw === "string" && manualDevicesRaw) {
+    try {
+      const parsed = JSON.parse(manualDevicesRaw);
+      if (!Array.isArray(parsed)) throw new Error("not an array");
+      manualDevices = parsed.map((d) => ({
+        brand: typeof d.brand === "string" && d.brand.trim() ? d.brand.trim() : null,
+        model: typeof d.model === "string" && d.model.trim() ? d.model.trim() : null,
+        serialNumber: typeof d.serialNumber === "string" && d.serialNumber.trim() ? d.serialNumber.trim() : null,
+        macAddress: typeof d.macAddress === "string" && d.macAddress.trim() ? d.macAddress.trim() : null,
+        deviceName: typeof d.deviceName === "string" && d.deviceName.trim() ? d.deviceName.trim() : null,
+      }));
+    } catch {
+      return NextResponse.json({ error: "bad manual devices" }, { status: 400 });
+    }
+  }
+
   const photos = (await saveUploadedFiles(photoFiles, ALLOWED_PHOTO_MIME)).map((p) => p.url);
   const documents = await saveUploadedFiles(docFiles, ALLOWED_DOC_MIME);
 
@@ -108,16 +128,20 @@ export async function POST(req: Request) {
         note,
       },
     });
-    if (deviceScan) {
+    const deviceRows = [
+      ...(deviceScan ? deviceScan.devices.map((d) => ({ ...d, sourceFile: deviceScan.sourceFile })) : []),
+      ...manualDevices.map((d) => ({ ...d, sourceFile: "manual" })),
+    ];
+    if (deviceRows.length > 0) {
       await prisma.salesReportDevice.createMany({
-        data: deviceScan.devices.map((d) => ({
+        data: deviceRows.map((d) => ({
           salesReportId: report.id,
           brand: d.brand,
           model: d.model,
           serialNumber: d.serialNumber,
           macAddress: d.macAddress,
           deviceName: d.deviceName,
-          sourceFile: deviceScan.sourceFile,
+          sourceFile: d.sourceFile,
         })),
       });
     }

@@ -4,9 +4,33 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import EditSalesReportForm from "../EditSalesReportForm";
-import type { SalesReportRow } from "../SalesClient";
+import type { SalesReportDeviceRow, SalesReportRow } from "../SalesClient";
 
 const baht = (n: number) => n.toLocaleString("th-TH");
+
+type DeviceDraft = {
+  brand: string;
+  model: string;
+  serialNumber: string;
+  macAddress: string;
+  deviceName: string;
+};
+const emptyDeviceDraft = (): DeviceDraft => ({
+  brand: "",
+  model: "",
+  serialNumber: "",
+  macAddress: "",
+  deviceName: "",
+});
+const draftFromDevice = (d: SalesReportDeviceRow): DeviceDraft => ({
+  brand: d.brand ?? "",
+  model: d.model ?? "",
+  serialNumber: d.serialNumber ?? "",
+  macAddress: d.macAddress ?? "",
+  deviceName: d.deviceName ?? "",
+});
+const deviceCellCls =
+  "w-full min-w-0 rounded border border-slate-200 px-1.5 py-1 text-xs outline-none focus:border-emerald-500";
 
 async function downloadAllAsZip(report: SalesReportRow) {
   const { default: JSZip } = await import("jszip");
@@ -50,6 +74,12 @@ export default function SalesDetailClient({
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
   const [deletingDeviceId, setDeletingDeviceId] = useState<number | null>(null);
+  const [editingDeviceId, setEditingDeviceId] = useState<number | null>(null);
+  const [editDraft, setEditDraft] = useState<DeviceDraft>(emptyDeviceDraft());
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [addingDevice, setAddingDevice] = useState(false);
+  const [newDevice, setNewDevice] = useState<DeviceDraft>(emptyDeviceDraft());
+  const [savingNewDevice, setSavingNewDevice] = useState(false);
 
   const canModify = report.staffId === currentStaffId || role === "admin";
 
@@ -61,6 +91,50 @@ export default function SalesDetailClient({
       if (res.ok) router.refresh();
     } finally {
       setDeletingDeviceId(null);
+    }
+  }
+
+  function startEditDevice(d: SalesReportDeviceRow) {
+    setEditingDeviceId(d.id);
+    setEditDraft(draftFromDevice(d));
+  }
+
+  async function saveEditDevice() {
+    if (editingDeviceId === null) return;
+    setSavingEdit(true);
+    try {
+      const res = await fetch(`/api/sales-report-devices/${editingDeviceId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editDraft),
+      });
+      if (res.ok) {
+        setEditingDeviceId(null);
+        router.refresh();
+      }
+    } finally {
+      setSavingEdit(false);
+    }
+  }
+
+  async function submitNewDevice() {
+    if (!newDevice.brand && !newDevice.model && !newDevice.serialNumber && !newDevice.macAddress && !newDevice.deviceName) {
+      return;
+    }
+    setSavingNewDevice(true);
+    try {
+      const res = await fetch("/api/sales-report-devices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ salesReportId: report.id, ...newDevice }),
+      });
+      if (res.ok) {
+        setNewDevice(emptyDeviceDraft());
+        setAddingDevice(false);
+        router.refresh();
+      }
+    } finally {
+      setSavingNewDevice(false);
     }
   }
 
@@ -199,49 +273,202 @@ export default function SalesDetailClient({
           </div>
         )}
 
-        {report.devices.length > 0 && (
+        {(report.devices.length > 0 || canModify) && (
           <div className="mb-4">
             <h2 className="mb-2 text-xs font-semibold text-slate-500">
-              📦 Inventory ที่ใช้ในงานนี้ ({report.devices.length})
+              📦 Inventory ที่ใช้ในงานนี้ {report.devices.length > 0 && `(${report.devices.length})`}
             </h2>
-            <div className="overflow-x-auto rounded-md border border-slate-200">
-              <table className="w-full text-xs">
-                <thead>
-                  <tr className="bg-slate-50 text-left text-slate-500">
-                    <th className="px-2 py-1.5">Brand</th>
-                    <th className="px-2 py-1.5">Model</th>
-                    <th className="px-2 py-1.5">Serial</th>
-                    <th className="px-2 py-1.5">MAC</th>
-                    <th className="px-2 py-1.5">Device</th>
-                    {canModify && <th className="px-2 py-1.5" />}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {report.devices.map((d) => (
-                    <tr key={d.id}>
-                      <td className="px-2 py-1.5">{d.brand || "—"}</td>
-                      <td className="px-2 py-1.5">{d.model || "—"}</td>
-                      <td className="px-2 py-1.5 font-mono">{d.serialNumber || "—"}</td>
-                      <td className="px-2 py-1.5 font-mono">{d.macAddress || "—"}</td>
-                      <td className="px-2 py-1.5">{d.deviceName || "—"}</td>
-                      {canModify && (
-                        <td className="px-2 py-1.5 text-right">
-                          <button
-                            onClick={() => deleteDevice(d.id)}
-                            disabled={deletingDeviceId === d.id}
-                            className="text-slate-400 hover:text-red-600 disabled:opacity-50"
-                            aria-label="ลบรายการ Inventory นี้"
-                            title="ลบรายการ Inventory นี้"
-                          >
-                            ✕
-                          </button>
-                        </td>
-                      )}
+            {report.devices.length > 0 && (
+              <div className="max-h-96 overflow-y-auto overflow-x-auto rounded-md border border-slate-200">
+                <table className="w-full text-xs">
+                  <thead className="sticky top-0">
+                    <tr className="bg-slate-50 text-left text-slate-500">
+                      <th className="px-2 py-1.5">Brand</th>
+                      <th className="px-2 py-1.5">Model</th>
+                      <th className="px-2 py-1.5">Serial</th>
+                      <th className="px-2 py-1.5">MAC</th>
+                      <th className="px-2 py-1.5">Device</th>
+                      {canModify && <th className="px-2 py-1.5" />}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {report.devices.map((d) =>
+                      editingDeviceId === d.id ? (
+                        <tr key={d.id} className="bg-emerald-50/50">
+                          <td className="px-1.5 py-1">
+                            <input
+                              value={editDraft.brand}
+                              onChange={(e) => setEditDraft((s) => ({ ...s, brand: e.target.value }))}
+                              className={deviceCellCls}
+                            />
+                          </td>
+                          <td className="px-1.5 py-1">
+                            <input
+                              value={editDraft.model}
+                              onChange={(e) => setEditDraft((s) => ({ ...s, model: e.target.value }))}
+                              className={deviceCellCls}
+                            />
+                          </td>
+                          <td className="px-1.5 py-1">
+                            <input
+                              value={editDraft.serialNumber}
+                              onChange={(e) => setEditDraft((s) => ({ ...s, serialNumber: e.target.value }))}
+                              className={deviceCellCls}
+                            />
+                          </td>
+                          <td className="px-1.5 py-1">
+                            <input
+                              value={editDraft.macAddress}
+                              onChange={(e) => setEditDraft((s) => ({ ...s, macAddress: e.target.value }))}
+                              className={deviceCellCls}
+                            />
+                          </td>
+                          <td className="px-1.5 py-1">
+                            <input
+                              value={editDraft.deviceName}
+                              onChange={(e) => setEditDraft((s) => ({ ...s, deviceName: e.target.value }))}
+                              className={deviceCellCls}
+                            />
+                          </td>
+                          <td className="whitespace-nowrap px-1.5 py-1 text-right">
+                            <button
+                              onClick={saveEditDevice}
+                              disabled={savingEdit}
+                              aria-label="บันทึก"
+                              title="บันทึก"
+                              className="mr-2 text-emerald-600 hover:text-emerald-800 disabled:opacity-50"
+                            >
+                              ✓
+                            </button>
+                            <button
+                              onClick={() => setEditingDeviceId(null)}
+                              aria-label="ยกเลิก"
+                              title="ยกเลิก"
+                              className="text-slate-400 hover:text-slate-600"
+                            >
+                              ✕
+                            </button>
+                          </td>
+                        </tr>
+                      ) : (
+                        <tr key={d.id} className="hover:bg-slate-50">
+                          <td className="px-2 py-1.5">{d.brand || "—"}</td>
+                          <td className="px-2 py-1.5">{d.model || "—"}</td>
+                          <td className="px-2 py-1.5 font-mono">{d.serialNumber || "—"}</td>
+                          <td className="px-2 py-1.5 font-mono">{d.macAddress || "—"}</td>
+                          <td className="px-2 py-1.5">{d.deviceName || "—"}</td>
+                          {canModify && (
+                            <td className="whitespace-nowrap px-2 py-1.5 text-right">
+                              <button
+                                onClick={() => startEditDevice(d)}
+                                aria-label="แก้ไขรายการนี้"
+                                title="แก้ไขรายการนี้"
+                                className="mr-2 text-slate-400 hover:text-sky-600"
+                              >
+                                ✏️
+                              </button>
+                              <button
+                                onClick={() => deleteDevice(d.id)}
+                                disabled={deletingDeviceId === d.id}
+                                className="text-slate-400 hover:text-red-600 disabled:opacity-50"
+                                aria-label="ลบรายการ Inventory นี้"
+                                title="ลบรายการ Inventory นี้"
+                              >
+                                ✕
+                              </button>
+                            </td>
+                          )}
+                        </tr>
+                      )
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {canModify && (
+              <div className="mt-2">
+                {addingDevice ? (
+                  <div className="overflow-x-auto rounded-md border border-emerald-200 bg-emerald-50/50 p-2">
+                    <table className="w-full text-xs">
+                      <tbody>
+                        <tr>
+                          <td className="px-1 py-1">
+                            <input
+                              value={newDevice.brand}
+                              onChange={(e) => setNewDevice((s) => ({ ...s, brand: e.target.value }))}
+                              placeholder="Brand"
+                              className={deviceCellCls}
+                            />
+                          </td>
+                          <td className="px-1 py-1">
+                            <input
+                              value={newDevice.model}
+                              onChange={(e) => setNewDevice((s) => ({ ...s, model: e.target.value }))}
+                              placeholder="Model"
+                              className={deviceCellCls}
+                            />
+                          </td>
+                          <td className="px-1 py-1">
+                            <input
+                              value={newDevice.serialNumber}
+                              onChange={(e) => setNewDevice((s) => ({ ...s, serialNumber: e.target.value }))}
+                              placeholder="Serial"
+                              className={deviceCellCls}
+                            />
+                          </td>
+                          <td className="px-1 py-1">
+                            <input
+                              value={newDevice.macAddress}
+                              onChange={(e) => setNewDevice((s) => ({ ...s, macAddress: e.target.value }))}
+                              placeholder="MAC"
+                              className={deviceCellCls}
+                            />
+                          </td>
+                          <td className="px-1 py-1">
+                            <input
+                              value={newDevice.deviceName}
+                              onChange={(e) => setNewDevice((s) => ({ ...s, deviceName: e.target.value }))}
+                              placeholder="Device"
+                              className={deviceCellCls}
+                            />
+                          </td>
+                          <td className="whitespace-nowrap px-1 py-1 text-right">
+                            <button
+                              onClick={submitNewDevice}
+                              disabled={savingNewDevice}
+                              className="mr-2 text-emerald-600 hover:text-emerald-800 disabled:opacity-50"
+                              aria-label="เพิ่มแถวนี้"
+                              title="เพิ่มแถวนี้"
+                            >
+                              ✓
+                            </button>
+                            <button
+                              onClick={() => {
+                                setAddingDevice(false);
+                                setNewDevice(emptyDeviceDraft());
+                              }}
+                              aria-label="ยกเลิก"
+                              title="ยกเลิก"
+                              className="text-slate-400 hover:text-slate-600"
+                            >
+                              ✕
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setAddingDevice(true)}
+                    className="rounded-md border border-emerald-300 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-50"
+                  >
+                    + เพิ่มแถว Inventory
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         )}
 

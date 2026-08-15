@@ -36,6 +36,10 @@ export type SalesReportRow = {
 };
 
 const baht = (n: number) => n.toLocaleString("th-TH");
+// list rows show a quick preview only — a 90-row inventory table inline in
+// a scrolling list is what "ตาลาย" looks like; full table + edit/delete
+// lives on the detail page.
+const DEVICE_PREVIEW_LIMIT = 5;
 
 export type SalesFilters = { q: string; staffId: string; from: string; to: string };
 export type SalesPagination = { page: number; pageSize: number; totalCount: number };
@@ -275,7 +279,7 @@ export default function SalesClient({
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      {r.devices.map((d) => (
+                      {r.devices.slice(0, DEVICE_PREVIEW_LIMIT).map((d) => (
                         <tr key={d.id} className="hover:bg-slate-50">
                           <td className="px-2 py-1.5">{d.brand || "—"}</td>
                           <td className="px-2 py-1.5">{d.model || "—"}</td>
@@ -287,6 +291,16 @@ export default function SalesClient({
                     </tbody>
                   </table>
                 </div>
+                {r.devices.length > DEVICE_PREVIEW_LIMIT && (
+                  <Link
+                    href={`/catalog/sales/${r.id}`}
+                    target="_blank"
+                    rel="noopener"
+                    className="mt-1.5 inline-block text-xs text-sky-700 hover:underline"
+                  >
+                    + อีก {r.devices.length - DEVICE_PREVIEW_LIMIT} รายการ — ดูทั้งหมดในหน้ารายละเอียด
+                  </Link>
+                )}
               </div>
             )}
           </div>
