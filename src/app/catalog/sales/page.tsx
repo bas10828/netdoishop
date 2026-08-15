@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
@@ -6,12 +7,19 @@ import SalesClient, { type SalesReportRow, type StaffTotal } from "./SalesClient
 
 export const dynamic = "force-dynamic";
 
-export default async function SalesPage() {
+const PAGE_SIZE = 30;
+
+export default async function SalesPage({
+  searchParams,
+}: {
+  searchParams: { q?: string; from?: string; to?: string; staffId?: string; page?: string };
+}) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
 
-  // DB-side aggregate — must not be derived from the capped recent-jobs
-  // list below, or totals would silently understate.
+  // DB-side aggregate — must not be derived from the filtered/paged list
+  // below, or totals would silently understate. Always all-time, unfiltered
+  // (it's a leaderboard, not a "totals for this search" figure).
   const grouped = await prisma.salesReport.groupBy({
     by: ["staffId"],
     _sum: { amount: true },
@@ -34,11 +42,32 @@ export default async function SalesPage() {
     })
     .sort((a, b) => b.total - a.total);
 
-  const recentRows = await prisma.salesReport.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 100,
-    include: { staff: { select: { name: true, username: true } } },
-  });
+  const q = (searchParams.q ?? "").trim();
+  const staffFilter = searchParams.staffId ?? "";
+  const from = searchParams.from ?? "";
+  const to = searchParams.to ?? "";
+  const page = Math.max(1, Number(searchParams.page) || 1);
+
+  const where: Record<string, unknown> = {};
+  if (q) where.customerName = { contains: q, mode: "insensitive" };
+  if (staffFilter) where.staffId = staffFilter;
+  if (from || to) {
+    const createdAt: { gte?: Date; lte?: Date } = {};
+    if (from) createdAt.gte = new Date(`${from}T00:00:00`);
+    if (to) createdAt.lte = new Date(`${to}T23:59:59`);
+    where.createdAt = createdAt;
+  }
+
+  const [totalCount, recentRows] = await Promise.all([
+    prisma.salesReport.count({ where }),
+    prisma.salesReport.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+      include: { staff: { select: { name: true, username: true } } },
+    }),
+  ]);
 
   const reports: SalesReportRow[] = recentRows.map((r) => ({
     id: r.id,
@@ -54,11 +83,15 @@ export default async function SalesPage() {
   }));
 
   return (
-    <SalesClient
-      totals={totals}
-      reports={reports}
-      currentStaffId={session.user?.id ?? ""}
-      role={session.user?.role ?? "staff"}
-    />
+    <Suspense>
+      <SalesClient
+        totals={totals}
+        reports={reports}
+        currentStaffId={session.user?.id ?? ""}
+        role={session.user?.role ?? "staff"}
+        filters={{ q, staffId: staffFilter, from, to }}
+        pagination={{ page, pageSize: PAGE_SIZE, totalCount }}
+      />
+    </Suspense>
   );
 }

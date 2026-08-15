@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import EditSalesReportForm from "./EditSalesReportForm";
 
@@ -53,23 +53,71 @@ async function downloadAllAsZip(report: SalesReportRow) {
   URL.revokeObjectURL(a.href);
 }
 
+export type SalesFilters = { q: string; staffId: string; from: string; to: string };
+export type SalesPagination = { page: number; pageSize: number; totalCount: number };
+
 export default function SalesClient({
   totals,
   reports,
   currentStaffId,
   role,
+  filters,
+  pagination,
 }: {
   totals: StaffTotal[];
   reports: SalesReportRow[];
   currentStaffId: string;
   role: string;
+  filters: SalesFilters;
+  pagination: SalesPagination;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [lightbox, setLightbox] = useState<{ photos: string[]; index: number } | null>(null);
   const [zipping, setZipping] = useState<number | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [deleteError, setDeleteError] = useState("");
+  const [qInput, setQInput] = useState(filters.q);
+  const [fromInput, setFromInput] = useState(filters.from);
+  const [toInput, setToInput] = useState(filters.to);
+  const [staffInput, setStaffInput] = useState(filters.staffId);
+
+  const hasActiveFilters = !!(filters.q || filters.staffId || filters.from || filters.to);
+  const totalPages = Math.max(1, Math.ceil(pagination.totalCount / pagination.pageSize));
+
+  function applyFilters(overrides: Partial<SalesFilters & { page: string }> = {}) {
+    const params = new URLSearchParams();
+    const next = {
+      q: qInput,
+      staffId: staffInput,
+      from: fromInput,
+      to: toInput,
+      page: "1",
+      ...overrides,
+    };
+    if (next.q) params.set("q", next.q);
+    if (next.staffId) params.set("staffId", next.staffId);
+    if (next.from) params.set("from", next.from);
+    if (next.to) params.set("to", next.to);
+    if (next.page && next.page !== "1") params.set("page", next.page);
+    router.push(`/catalog/sales${params.toString() ? `?${params.toString()}` : ""}`);
+  }
+
+  function goToPage(p: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (p <= 1) params.delete("page");
+    else params.set("page", String(p));
+    router.push(`/catalog/sales${params.toString() ? `?${params.toString()}` : ""}`);
+  }
+
+  function clearFilters() {
+    setQInput("");
+    setFromInput("");
+    setToInput("");
+    setStaffInput("");
+    router.push("/catalog/sales");
+  }
 
   function canModify(r: SalesReportRow) {
     return r.staffId === currentStaffId || role === "admin";
@@ -133,6 +181,75 @@ export default function SalesClient({
           </Link>
         </div>
       </header>
+
+      {/* search / filter bar */}
+      <div className="mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="min-w-[10rem] flex-1">
+            <label className="mb-1 block text-xs font-semibold text-slate-500">ชื่อลูกค้า</label>
+            <input
+              type="text"
+              value={qInput}
+              onChange={(e) => setQInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && applyFilters()}
+              placeholder="ค้นหาชื่อลูกค้า..."
+              className="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-sky-500"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-semibold text-slate-500">พนักงาน</label>
+            <select
+              value={staffInput}
+              onChange={(e) => setStaffInput(e.target.value)}
+              className="h-9 rounded-md border border-slate-300 px-2 text-sm outline-none focus:border-sky-500"
+            >
+              <option value="">ทั้งหมด</option>
+              {totals.map((t) => (
+                <option key={t.staffId} value={t.staffId}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-semibold text-slate-500">จากวันที่</label>
+            <input
+              type="date"
+              value={fromInput}
+              onChange={(e) => setFromInput(e.target.value)}
+              className="h-9 rounded-md border border-slate-300 px-2 text-sm outline-none focus:border-sky-500"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-semibold text-slate-500">ถึงวันที่</label>
+            <input
+              type="date"
+              value={toInput}
+              onChange={(e) => setToInput(e.target.value)}
+              className="h-9 rounded-md border border-slate-300 px-2 text-sm outline-none focus:border-sky-500"
+            />
+          </div>
+          <button
+            onClick={() => applyFilters()}
+            className="h-9 rounded-md bg-sky-600 px-4 text-sm font-medium text-white hover:bg-sky-700"
+          >
+            ค้นหา
+          </button>
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="h-9 rounded-md border border-slate-300 px-4 text-sm font-medium hover:bg-slate-100"
+            >
+              ล้างตัวกรอง
+            </button>
+          )}
+        </div>
+        {hasActiveFilters && (
+          <p className="mt-2 text-xs text-slate-500">
+            พบ {pagination.totalCount.toLocaleString("th-TH")} รายการที่ตรงเงื่อนไข
+          </p>
+        )}
+      </div>
 
       {/* per-staff totals */}
       <div className="mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -272,9 +389,33 @@ export default function SalesClient({
           )
         )}
         {reports.length === 0 && (
-          <p className="py-12 text-center text-slate-400">ยังไม่มีรายงานการขาย</p>
+          <p className="py-12 text-center text-slate-400">
+            {hasActiveFilters ? "ไม่พบรายงานที่ตรงเงื่อนไข" : "ยังไม่มีรายงานการขาย"}
+          </p>
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <button
+            onClick={() => goToPage(pagination.page - 1)}
+            disabled={pagination.page <= 1}
+            className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium hover:bg-slate-100 disabled:opacity-40"
+          >
+            ‹ ก่อนหน้า
+          </button>
+          <span className="text-sm text-slate-500">
+            หน้า {pagination.page} / {totalPages}
+          </span>
+          <button
+            onClick={() => goToPage(pagination.page + 1)}
+            disabled={pagination.page >= totalPages}
+            className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium hover:bg-slate-100 disabled:opacity-40"
+          >
+            ถัดไป ›
+          </button>
+        </div>
+      )}
 
       {lightbox && (
         <div
