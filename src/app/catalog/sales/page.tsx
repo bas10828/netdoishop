@@ -86,6 +86,7 @@ export default async function SalesPage({
     photos: r.photos as string[],
     documents: r.documents as { url: string; name: string }[],
     note: r.note,
+    devices: [],
   }));
 
   return (

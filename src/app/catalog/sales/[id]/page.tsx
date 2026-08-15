@@ -16,7 +16,10 @@ export default async function SalesDetailPage({ params }: { params: { id: string
 
   const r = await prisma.salesReport.findUnique({
     where: { id },
-    include: { staff: { select: { name: true, username: true } } },
+    include: {
+      staff: { select: { name: true, username: true } },
+      devices: { orderBy: { id: "asc" } },
+    },
   });
   if (!r) notFound();
 
@@ -31,6 +34,15 @@ export default async function SalesDetailPage({ params }: { params: { id: string
     photos: r.photos as string[],
     documents: r.documents as { url: string; name: string }[],
     note: r.note,
+    devices: r.devices.map((d) => ({
+      id: d.id,
+      brand: d.brand,
+      model: d.model,
+      serialNumber: d.serialNumber,
+      macAddress: d.macAddress,
+      deviceName: d.deviceName,
+      sourceFile: d.sourceFile,
+    })),
   };
 
   return (

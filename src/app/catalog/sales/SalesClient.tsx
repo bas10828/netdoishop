@@ -11,6 +11,16 @@ export type StaffTotal = {
   count: number;
 };
 
+export type SalesReportDeviceRow = {
+  id: number;
+  brand: string | null;
+  model: string | null;
+  serialNumber: string | null;
+  macAddress: string | null;
+  deviceName: string | null;
+  sourceFile: string;
+};
+
 export type SalesReportRow = {
   id: number;
   staffId: string;
@@ -22,6 +32,7 @@ export type SalesReportRow = {
   photos: string[];
   documents: { url: string; name: string }[];
   note: string;
+  devices: SalesReportDeviceRow[];
 };
 
 const baht = (n: number) => n.toLocaleString("th-TH");

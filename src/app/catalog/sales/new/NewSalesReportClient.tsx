@@ -12,6 +12,10 @@ const ERROR_LABEL: Record<string, string> = {
   "unsupported document type": "เอกสารต้องเป็นรูปภาพหรือ PDF",
   "document too large": "ไฟล์เอกสารใหญ่เกินไป (สูงสุด 10MB ต่อไฟล์)",
   "bad amount": "กรอกยอดขายให้ถูกต้อง",
+  "device scan file too large": "ไฟล์สแกนอุปกรณ์ใหญ่เกินไป (สูงสุด 20MB)",
+  "device scan must be an .xlsx file": "ไฟล์สแกนอุปกรณ์ต้องเป็น .xlsx เท่านั้น",
+  "could not read device scan xlsx file": "อ่านไฟล์สแกนอุปกรณ์ไม่ได้ — ไฟล์อาจเสีย",
+  "no recognized device rows in scan file": "ไม่พบคอลัมน์ที่รู้จัก (Brand/Model/MAC/Serial/FileName) ในไฟล์สแกน",
 };
 
 // dedupe key for picking the same folder twice, or across separate picker
@@ -102,6 +106,7 @@ export default function NewSalesReportClient() {
   const [submitting, setSubmitting] = useState(false);
   const [photos, setPhotos] = useState<File[]>([]);
   const [documents, setDocuments] = useState<File[]>([]);
+  const [deviceScan, setDeviceScan] = useState<File | null>(null);
 
   function addFiles(setter: React.Dispatch<React.SetStateAction<File[]>>, list: FileList) {
     // snapshot synchronously — the caller resets input.value right after
@@ -123,6 +128,7 @@ export default function NewSalesReportClient() {
       const formData = new FormData(formRef.current);
       photos.forEach((f) => formData.append("photos", f));
       documents.forEach((f) => formData.append("documents", f));
+      if (deviceScan) formData.append("deviceScan", deviceScan);
       const res = await fetch("/api/sales-reports", { method: "POST", body: formData });
       const data = await res.json();
       if (!res.ok) {
@@ -197,6 +203,22 @@ export default function NewSalesReportClient() {
           onRemove={(i) => setDocuments((prev) => prev.filter((_, idx) => idx !== i))}
           previewable={false}
         />
+
+        <div>
+          <label className="mb-1 block text-sm font-semibold text-slate-700">
+            ไฟล์สแกนอุปกรณ์ (ไม่บังคับ)
+          </label>
+          <p className="mb-2 text-xs text-slate-400">
+            จากแอปสแกน QR/บาร์โค้ด (.xlsx) — แนบไว้เพื่อบันทึกว่างานนี้ใช้อุปกรณ์ตัวไหนบ้าง (SN/MAC)
+          </p>
+          <input
+            type="file"
+            accept=".xlsx"
+            onChange={(e) => setDeviceScan(e.target.files?.[0] ?? null)}
+            className="block w-full text-sm"
+          />
+          {deviceScan && <p className="mt-1 text-xs text-slate-500">เลือกแล้ว: {deviceScan.name}</p>}
+        </div>
 
         <button
           type="submit"

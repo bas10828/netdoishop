@@ -13,6 +13,10 @@ const ERROR_LABEL: Record<string, string> = {
   "bad amount": "กรอกยอดขายให้ถูกต้อง",
   forbidden: "ไม่มีสิทธิ์แก้ไขรายงานนี้",
   "not found": "ไม่พบรายงานนี้แล้ว",
+  "device scan file too large": "ไฟล์สแกนอุปกรณ์ใหญ่เกินไป (สูงสุด 20MB)",
+  "device scan must be an .xlsx file": "ไฟล์สแกนอุปกรณ์ต้องเป็น .xlsx เท่านั้น",
+  "could not read device scan xlsx file": "อ่านไฟล์สแกนอุปกรณ์ไม่ได้ — ไฟล์อาจเสีย",
+  "no recognized device rows in scan file": "ไม่พบคอลัมน์ที่รู้จัก (Brand/Model/MAC/Serial/FileName) ในไฟล์สแกน",
 };
 
 type PhotoItem = { kind: "existing"; url: string } | { kind: "new"; file: File };
@@ -39,6 +43,7 @@ export default function EditSalesReportForm({
   const [documents, setDocuments] = useState<DocItem[]>(
     report.documents.map((d) => ({ kind: "existing", url: d.url, name: d.name }))
   );
+  const [deviceScan, setDeviceScan] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
@@ -77,6 +82,7 @@ export default function EditSalesReportForm({
       documents.forEach((d) => {
         if (d.kind === "new") fd.append("documents", d.file);
       });
+      if (deviceScan) fd.append("deviceScan", deviceScan);
 
       const res = await fetch(`/api/sales-reports/${report.id}`, { method: "PATCH", body: fd });
       const data = await res.json();
@@ -185,6 +191,22 @@ export default function EditSalesReportForm({
           }}
           className="block text-xs"
         />
+      </div>
+
+      <div>
+        <label className="mb-1 block text-xs font-semibold text-slate-700">
+          แนบไฟล์สแกนอุปกรณ์เพิ่ม (ไม่บังคับ)
+        </label>
+        <p className="mb-1 text-xs text-slate-400">
+          อุปกรณ์ที่แนบไว้แล้วจะไม่หาย — ไฟล์นี้แค่เพิ่มรายการใหม่เข้าไป
+        </p>
+        <input
+          type="file"
+          accept=".xlsx"
+          onChange={(e) => setDeviceScan(e.target.files?.[0] ?? null)}
+          className="block text-xs"
+        />
+        {deviceScan && <p className="mt-1 text-xs text-slate-500">เลือกแล้ว: {deviceScan.name}</p>}
       </div>
 
       <div className="flex gap-2 pt-1">

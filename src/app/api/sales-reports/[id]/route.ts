@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import ExcelJS from "exceljs";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -13,6 +14,7 @@ import {
   saveUploadedFiles,
   deleteUploadedFiles,
 } from "@/lib/salesReportFiles";
+import { MAX_DEVICE_SCAN_BYTES, parseDeviceScanSheet } from "@/lib/salesReportDeviceScan";
 
 // only the report's own staff, or an admin, may edit/delete it
 async function canModify(reportStaffId: string, session: { user?: { id?: string; role?: string } }) {
@@ -23,7 +25,9 @@ async function canModify(reportStaffId: string, session: { user?: { id?: string;
 // Fields: customerName, jobDescription, amount, note,
 //   keepPhotos (JSON string[] — existing photo URLs to keep, rest are removed),
 //   keepDocuments (JSON string[] — existing document URLs to keep),
-//   photos / documents (new files to append, same rules as create).
+//   photos / documents (new files to append, same rules as create),
+//   deviceScan (0-1 .xlsx file — optional, appends more devices to
+//   whatever's already attached; existing devices are never touched here).
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -108,6 +112,29 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   );
   if (docError) return NextResponse.json({ error: docError }, { status: 400 });
 
+  const scanFile = form.get("deviceScan");
+  let newDevices: ReturnType<typeof parseDeviceScanSheet> = [];
+  let scanFileName = "";
+  if (scanFile instanceof File && scanFile.size > 0) {
+    if (scanFile.size > MAX_DEVICE_SCAN_BYTES) {
+      return NextResponse.json({ error: "device scan file too large" }, { status: 400 });
+    }
+    if (!scanFile.name.toLowerCase().endsWith(".xlsx")) {
+      return NextResponse.json({ error: "device scan must be an .xlsx file" }, { status: 400 });
+    }
+    const workbook = new ExcelJS.Workbook();
+    try {
+      await workbook.xlsx.load(await scanFile.arrayBuffer());
+    } catch {
+      return NextResponse.json({ error: "could not read device scan xlsx file" }, { status: 400 });
+    }
+    newDevices = parseDeviceScanSheet(workbook);
+    if (newDevices.length === 0) {
+      return NextResponse.json({ error: "no recognized device rows in scan file" }, { status: 400 });
+    }
+    scanFileName = scanFile.name;
+  }
+
   const addedPhotos = (await saveUploadedFiles(newPhotoFiles, ALLOWED_PHOTO_MIME)).map((p) => p.url);
   const addedDocs = await saveUploadedFiles(newDocFiles, ALLOWED_DOC_MIME);
 
@@ -121,6 +148,20 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     where: { id },
     data: { customerName, jobDescription, amount, note, photos, documents },
   });
+
+  if (newDevices.length > 0) {
+    await prisma.salesReportDevice.createMany({
+      data: newDevices.map((d) => ({
+        salesReportId: id,
+        brand: d.brand,
+        model: d.model,
+        serialNumber: d.serialNumber,
+        macAddress: d.macAddress,
+        deviceName: d.deviceName,
+        sourceFile: scanFileName,
+      })),
+    });
+  }
 
   // cleanup after the DB write succeeds — an orphaned file is a minor
   // annoyance, but deleting a file the DB still references would be worse

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import ExcelJS from "exceljs";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -12,12 +13,36 @@ import {
   validateFiles,
   saveUploadedFiles,
 } from "@/lib/salesReportFiles";
+import { MAX_DEVICE_SCAN_BYTES, parseDeviceScanSheet, type ParsedDevice } from "@/lib/salesReportDeviceScan";
+
+// Validates + parses an optional device-scan .xlsx (autoscan_results.xlsx
+// shape — see [[project_si_sites]]). Returns null (nothing to attach) if no
+// file was given, an error string for a 400, or the parsed device rows.
+async function readDeviceScan(
+  form: FormData
+): Promise<{ error: string } | { devices: ParsedDevice[]; sourceFile: string } | null> {
+  const file = form.get("deviceScan");
+  if (!(file instanceof File) || file.size === 0) return null;
+  if (file.size > MAX_DEVICE_SCAN_BYTES) return { error: "device scan file too large" };
+  if (!file.name.toLowerCase().endsWith(".xlsx")) return { error: "device scan must be an .xlsx file" };
+  const workbook = new ExcelJS.Workbook();
+  try {
+    await workbook.xlsx.load(await file.arrayBuffer());
+  } catch {
+    return { error: "could not read device scan xlsx file" };
+  }
+  const devices = parseDeviceScanSheet(workbook);
+  if (devices.length === 0) return { error: "no recognized device rows in scan file" };
+  return { devices, sourceFile: file.name };
+}
 
 // POST /api/sales-reports  (multipart/form-data) — any logged-in staff.
 // Fields: customerName, jobDescription, amount, note,
 //   photos (0-100 image files — optional, staff sometimes forget to take
 //   them on-site), documents (0-10 image/PDF files — quotation,
-//   bill, tax invoice, etc. — kept for later reference/download).
+//   bill, tax invoice, etc. — kept for later reference/download),
+//   deviceScan (0-1 .xlsx file — optional barcode-scan export of the
+//   equipment installed for this job, see [[project_si_sites]]).
 // staffId is always the logged-in user, never taken from the request body.
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -63,6 +88,11 @@ export async function POST(req: Request) {
   });
   if (docError) return NextResponse.json({ error: docError }, { status: 400 });
 
+  const deviceScan = await readDeviceScan(form);
+  if (deviceScan && "error" in deviceScan) {
+    return NextResponse.json({ error: deviceScan.error }, { status: 400 });
+  }
+
   const photos = (await saveUploadedFiles(photoFiles, ALLOWED_PHOTO_MIME)).map((p) => p.url);
   const documents = await saveUploadedFiles(docFiles, ALLOWED_DOC_MIME);
 
@@ -78,6 +108,19 @@ export async function POST(req: Request) {
         note,
       },
     });
+    if (deviceScan) {
+      await prisma.salesReportDevice.createMany({
+        data: deviceScan.devices.map((d) => ({
+          salesReportId: report.id,
+          brand: d.brand,
+          model: d.model,
+          serialNumber: d.serialNumber,
+          macAddress: d.macAddress,
+          deviceName: d.deviceName,
+          sourceFile: deviceScan.sourceFile,
+        })),
+      });
+    }
     return NextResponse.json(report, { status: 201 });
   } catch {
     return NextResponse.json({ error: "save failed" }, { status: 500 });

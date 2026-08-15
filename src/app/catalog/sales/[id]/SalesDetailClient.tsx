@@ -49,8 +49,20 @@ export default function SalesDetailClient({
   const [zipping, setZipping] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [deletingDeviceId, setDeletingDeviceId] = useState<number | null>(null);
 
   const canModify = report.staffId === currentStaffId || role === "admin";
+
+  async function deleteDevice(deviceId: number) {
+    if (!window.confirm("ลบอุปกรณ์รายการนี้?")) return;
+    setDeletingDeviceId(deviceId);
+    try {
+      const res = await fetch(`/api/sales-report-devices/${deviceId}`, { method: "DELETE" });
+      if (res.ok) router.refresh();
+    } finally {
+      setDeletingDeviceId(null);
+    }
+  }
 
   async function deleteReport() {
     if (!window.confirm("ลบรายงานนี้ทั้งหมด? (รวมรูปและเอกสารแนบ) กู้คืนไม่ได้")) return;
@@ -183,6 +195,51 @@ export default function SalesDetailClient({
           <div className="mb-4">
             <h2 className="mb-1 text-xs font-semibold text-slate-500">หมายเหตุ</h2>
             <p className="text-sm text-slate-600">📝 {report.note}</p>
+          </div>
+        )}
+
+        {report.devices.length > 0 && (
+          <div className="mb-4">
+            <h2 className="mb-2 text-xs font-semibold text-slate-500">
+              อุปกรณ์ที่ใช้ในงานนี้ ({report.devices.length})
+            </h2>
+            <div className="overflow-x-auto rounded-md border border-slate-200">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="bg-slate-50 text-left text-slate-500">
+                    <th className="px-2 py-1.5">Brand</th>
+                    <th className="px-2 py-1.5">Model</th>
+                    <th className="px-2 py-1.5">Serial</th>
+                    <th className="px-2 py-1.5">MAC</th>
+                    <th className="px-2 py-1.5">Device</th>
+                    {canModify && <th className="px-2 py-1.5" />}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {report.devices.map((d) => (
+                    <tr key={d.id}>
+                      <td className="px-2 py-1.5">{d.brand || "—"}</td>
+                      <td className="px-2 py-1.5">{d.model || "—"}</td>
+                      <td className="px-2 py-1.5 font-mono">{d.serialNumber || "—"}</td>
+                      <td className="px-2 py-1.5 font-mono">{d.macAddress || "—"}</td>
+                      <td className="px-2 py-1.5">{d.deviceName || "—"}</td>
+                      {canModify && (
+                        <td className="px-2 py-1.5 text-right">
+                          <button
+                            onClick={() => deleteDevice(d.id)}
+                            disabled={deletingDeviceId === d.id}
+                            className="text-slate-400 hover:text-red-600 disabled:opacity-50"
+                            aria-label="ลบอุปกรณ์นี้"
+                          >
+                            ✕
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 

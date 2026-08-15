@@ -102,48 +102,33 @@ model SalesReport {
   documents      Json     @default("[]")
   note           String   @default("")
   updatedAt      DateTime @updatedAt
+  devices        SalesReportDevice[]
 
   @@index([staffId])
   @@index([createdAt])
 }
 
-// SI (system-integration) install site — a school/hospital/office where we
-// installed network gear. Name is typed by staff at upload time (the Excel
-// scan files carry no site info themselves, only the folder they happen to
-// sit in on someone's PC — see [[project_sales_reports]]-style memory notes
-// for why that can't be trusted as data).
-model Site {
-  id        Int          @id @default(autoincrement())
-  name      String
-  createdAt DateTime     @default(now())
-  devices   SiteDevice[]
-
-  @@index([name])
-}
-
-// One row per device found in a site's barcode/QR autoscan export
+// One row per device found in a job's barcode/QR autoscan export
 // (autoscan_results.xlsx: BarcodeText, Brand, Model, MAC, MAC_, FileName,
-// Serial). BarcodeText is intentionally NOT stored — it's the raw scanned
-// string, Serial already has the parsed value out of it. Most columns are
-// nullable: real scans regularly have blank cells (a QR that didn't decode,
-// a model the scanner couldn't read, etc). `extra` is a Json catch-all for
-// future source formats (camera/NVR network scans, the manual master
-// inventory sheet) that carry different columns than this one — same
-// flexible-Json convention as `Order.items` / `SalesReport.photos`.
-model SiteDevice {
-  id           Int      @id @default(autoincrement())
-  siteId       Int
-  site         Site     @relation(fields: [siteId], references: [id])
-  brand        String?
-  model        String?
-  serialNumber String?
-  macAddress   String?
-  deviceName   String? // e.g. "AP422" — the scan tool's FileName column
-  sourceFile   String // original uploaded filename, for traceability
-  extra        Json?
-  createdAt    DateTime @default(now())
+// Serial), attached to the specific SalesReport it belongs to — e.g.
+// "installed cameras for customer X" -> which exact devices went in.
+// BarcodeText is intentionally NOT stored — it's the raw scanned string,
+// Serial already has the parsed value out of it. Most columns are
+// nullable: real scans regularly have blank cells (a QR that didn't
+// decode, a model the scanner couldn't read, etc).
+model SalesReportDevice {
+  id            Int         @id @default(autoincrement())
+  salesReportId Int
+  salesReport   SalesReport @relation(fields: [salesReportId], references: [id], onDelete: Cascade)
+  brand         String?
+  model         String?
+  serialNumber  String?
+  macAddress    String?
+  deviceName    String? // e.g. "AP422" — the scan tool's FileName column
+  sourceFile    String // original uploaded filename, for traceability
+  createdAt     DateTime    @default(now())
 
-  @@index([siteId])
+  @@index([salesReportId])
   @@index([serialNumber])
 }
 
