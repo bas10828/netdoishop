@@ -13,8 +13,9 @@ next-env.d.ts
 # cost prices (ราคาช่าง) live in products.json; price sheets show ราคาช่าง too
 data/products.json
 data/sheets/
-# supplier price-list photos (CMIT etc) — member-only pricing, reference archive only
-cmit/
+# supplier price-list photos (CMIT, SiS, TP-Link, ...) — member-only pricing,
+# reference archive only, never for the public repo
+supplier-pricelists/
 
 # staff-uploaded sales report photos (local dev only — prod uses a Docker volume)
 public/uploads/
