@@ -1,0 +1,296 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import EditSalesReportForm from "../EditSalesReportForm";
+import type { SalesReportRow } from "../SalesClient";
+
+const baht = (n: number) => n.toLocaleString("th-TH");
+
+async function downloadAllAsZip(report: SalesReportRow) {
+  const { default: JSZip } = await import("jszip");
+  const zip = new JSZip();
+
+  await Promise.all(
+    report.photos.map(async (url, i) => {
+      const blob = await fetch(url).then((r) => r.blob());
+      const ext = url.split(".").pop() || "jpg";
+      zip.file(`photo-${String(i + 1).padStart(2, "0")}.${ext}`, blob);
+    })
+  );
+  await Promise.all(
+    report.documents.map(async (d) => {
+      const blob = await fetch(d.url).then((r) => r.blob());
+      zip.file(d.name, blob);
+    })
+  );
+
+  const blob = await zip.generateAsync({ type: "blob" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `sales-report-${report.id}.zip`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+export default function SalesDetailClient({
+  report,
+  currentStaffId,
+  role,
+}: {
+  report: SalesReportRow;
+  currentStaffId: string;
+  role: string;
+}) {
+  const router = useRouter();
+  const [editing, setEditing] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [zipping, setZipping] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+
+  const canModify = report.staffId === currentStaffId || role === "admin";
+
+  async function deleteReport() {
+    if (!window.confirm("ลบรายงานนี้ทั้งหมด? (รวมรูปและเอกสารแนบ) กู้คืนไม่ได้")) return;
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      const res = await fetch(`/api/sales-reports/${report.id}`, { method: "DELETE" });
+      if (!res.ok) {
+        setDeleteError("ลบไม่สำเร็จ");
+        return;
+      }
+      router.push("/catalog/sales");
+    } catch {
+      setDeleteError("เชื่อมต่อไม่ได้");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "ArrowRight") {
+        setLightboxIndex((i) => (i === null ? i : (i + 1) % report.photos.length));
+      } else if (e.key === "ArrowLeft") {
+        setLightboxIndex((i) =>
+          i === null ? i : (i - 1 + report.photos.length) % report.photos.length
+        );
+      } else if (e.key === "Escape") {
+        setLightboxIndex(null);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxIndex, report.photos.length]);
+
+  if (editing) {
+    return (
+      <main className="mx-auto max-w-2xl p-4">
+        <EditSalesReportForm
+          report={report}
+          onCancel={() => setEditing(false)}
+          onSaved={() => {
+            setEditing(false);
+            router.refresh();
+          }}
+        />
+      </main>
+    );
+  }
+
+  return (
+    <main className="mx-auto max-w-2xl p-4">
+      <div className="mb-4 flex items-center justify-between">
+        <Link href="/catalog/sales" className="text-sm text-sky-700 hover:underline">
+          ← กลับรายการทั้งหมด
+        </Link>
+      </div>
+
+      <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="font-bold">👤 {report.staffName}</span>
+            <span className="text-sm text-slate-500">{report.customerName || "—"}</span>
+          </div>
+          <span className="text-xs text-slate-400">
+            {new Date(report.createdAt).toLocaleString("th-TH")}
+          </span>
+        </div>
+
+        <p className="mb-4 text-2xl font-bold text-emerald-600">฿{baht(report.amount)}</p>
+
+        {report.jobDescription && (
+          <div className="mb-4">
+            <h2 className="mb-1 text-xs font-semibold text-slate-500">รายละเอียดงาน</h2>
+            <p className="text-sm text-slate-700">{report.jobDescription}</p>
+          </div>
+        )}
+
+        {report.photos.length > 0 && (
+          <div className="mb-4">
+            <h2 className="mb-2 text-xs font-semibold text-slate-500">
+              รูปหน้างาน ({report.photos.length})
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {report.photos.map((p, i) => (
+                <button key={p} type="button" onClick={() => setLightboxIndex(i)} className="block">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={p}
+                    alt="รูปงาน"
+                    loading="lazy"
+                    className="h-20 w-20 rounded-md border border-slate-200 object-cover hover:opacity-80"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {report.documents.length > 0 && (
+          <div className="mb-4">
+            <h2 className="mb-2 text-xs font-semibold text-slate-500">
+              เอกสารแนบ ({report.documents.length})
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {report.documents.map((d) => (
+                <span
+                  key={d.url}
+                  className="inline-flex items-center gap-1 rounded-md border border-slate-300 px-2 py-1 text-xs"
+                >
+                  <a href={d.url} target="_blank" rel="noreferrer" className="text-sky-700 hover:underline">
+                    📄 {d.name}
+                  </a>
+                  <a
+                    href={d.url}
+                    download={d.name}
+                    aria-label={`ดาวน์โหลด ${d.name}`}
+                    className="text-slate-400 hover:text-slate-700"
+                  >
+                    ⬇
+                  </a>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {report.note && (
+          <div className="mb-4">
+            <h2 className="mb-1 text-xs font-semibold text-slate-500">หมายเหตุ</h2>
+            <p className="text-sm text-slate-600">📝 {report.note}</p>
+          </div>
+        )}
+
+        {deleteError && <p className="mb-2 text-sm font-medium text-red-600">{deleteError}</p>}
+
+        <div className="flex flex-wrap gap-2 border-t border-slate-100 pt-4">
+          {(report.photos.length > 0 || report.documents.length > 0) && (
+            <button
+              onClick={async () => {
+                setZipping(true);
+                try {
+                  await downloadAllAsZip(report);
+                } finally {
+                  setZipping(false);
+                }
+              }}
+              disabled={zipping}
+              className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 disabled:opacity-50"
+            >
+              {zipping ? "กำลังรวมไฟล์..." : "⬇ ดาวน์โหลดทั้งหมด (.zip)"}
+            </button>
+          )}
+          {canModify && (
+            <>
+              <button
+                onClick={() => setEditing(true)}
+                className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100"
+              >
+                ✏️ แก้ไข
+              </button>
+              <button
+                onClick={deleteReport}
+                disabled={deleting}
+                className="rounded-md border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+              >
+                {deleting ? "กำลังลบ..." : "🗑️ ลบรายงาน"}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {lightboxIndex !== null && (
+        <div
+          onClick={() => setLightboxIndex(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative flex max-h-full max-w-full flex-col items-center gap-3"
+          >
+            {report.photos.length > 1 && (
+              <button
+                onClick={() =>
+                  setLightboxIndex((i) =>
+                    i === null ? i : (i - 1 + report.photos.length) % report.photos.length
+                  )
+                }
+                aria-label="รูปก่อนหน้า"
+                className="absolute left-0 top-1/2 z-10 -translate-y-1/2 -translate-x-2 rounded-full bg-black/50 p-3 text-2xl text-white hover:bg-black/70 sm:-translate-x-14"
+              >
+                ‹
+              </button>
+            )}
+
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={report.photos[lightboxIndex]}
+              alt="รูปงาน"
+              className="max-h-[75vh] max-w-full rounded-md object-contain"
+            />
+
+            {report.photos.length > 1 && (
+              <button
+                onClick={() =>
+                  setLightboxIndex((i) => (i === null ? i : (i + 1) % report.photos.length))
+                }
+                aria-label="รูปถัดไป"
+                className="absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-2 rounded-full bg-black/50 p-3 text-2xl text-white hover:bg-black/70 sm:translate-x-14"
+              >
+                ›
+              </button>
+            )}
+
+            {report.photos.length > 1 && (
+              <span className="text-sm text-slate-300">
+                {lightboxIndex + 1} / {report.photos.length}
+              </span>
+            )}
+
+            <div className="flex gap-2">
+              <a
+                href={report.photos[lightboxIndex]}
+                download={report.photos[lightboxIndex].split("/").pop()}
+                className="rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
+              >
+                ⬇ ดาวน์โหลด
+              </a>
+              <button
+                onClick={() => setLightboxIndex(null)}
+                className="rounded-md border border-slate-400 px-4 py-2 text-sm font-medium text-white hover:bg-white/10"
+              >
+                ปิด
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}

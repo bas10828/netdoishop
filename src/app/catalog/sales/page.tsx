@@ -93,8 +93,6 @@ export default async function SalesPage({
       <SalesClient
         totals={totals}
         reports={reports}
-        currentStaffId={session.user?.id ?? ""}
-        role={session.user?.role ?? "staff"}
         filters={{ q, staffId: staffFilter, from, to }}
         pagination={{ page, pageSize: PAGE_SIZE, totalCount }}
       />
