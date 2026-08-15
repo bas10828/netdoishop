@@ -386,6 +386,12 @@ export default function CatalogClient({
           >
             🧾 รายงานการขาย
           </Link>
+          <Link
+            href="/catalog/sites"
+            className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
+          >
+            📡 สถานที่ติดตั้ง (SI)
+          </Link>
           {role === "admin" && (
             <Link
               href="/catalog/users"
