@@ -245,39 +245,41 @@ export default function SalesDetailClient({
 
         {deleteError && <p className="mb-2 text-sm font-medium text-red-600">{deleteError}</p>}
 
-        <div className="flex flex-wrap gap-2 border-t border-slate-100 pt-4">
-          {(report.photos.length > 0 || report.documents.length > 0) && (
-            <button
-              onClick={async () => {
-                setZipping(true);
-                try {
-                  await downloadAllAsZip(report);
-                } finally {
-                  setZipping(false);
-                }
-              }}
-              disabled={zipping}
-              className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 disabled:opacity-50"
-            >
-              {zipping ? "กำลังรวมไฟล์..." : "⬇ ดาวน์โหลดทั้งหมด (.zip)"}
-            </button>
-          )}
-          {canModify && (
-            <>
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4">
+          <div className="flex flex-wrap gap-2">
+            {canModify && (
               <button
                 onClick={() => setEditing(true)}
-                className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100"
+                className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-700"
               >
-                ✏️ แก้ไข
+                ✏️ แก้ไขรายงาน
               </button>
+            )}
+            {(report.photos.length > 0 || report.documents.length > 0) && (
               <button
-                onClick={deleteReport}
-                disabled={deleting}
-                className="rounded-md border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+                onClick={async () => {
+                  setZipping(true);
+                  try {
+                    await downloadAllAsZip(report);
+                  } finally {
+                    setZipping(false);
+                  }
+                }}
+                disabled={zipping}
+                className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-50"
               >
-                {deleting ? "กำลังลบ..." : "🗑️ ลบรายงาน"}
+                {zipping ? "กำลังรวมไฟล์..." : "⬇ ดาวน์โหลดรูป/เอกสาร (.zip)"}
               </button>
-            </>
+            )}
+          </div>
+          {canModify && (
+            <button
+              onClick={deleteReport}
+              disabled={deleting}
+              className="rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+            >
+              {deleting ? "กำลังลบ..." : "🗑️ ลบรายงานนี้"}
+            </button>
           )}
         </div>
       </div>
