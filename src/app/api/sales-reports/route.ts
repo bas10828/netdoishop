@@ -36,7 +36,8 @@ export async function POST(req: Request) {
   const jobDescription = String(form.get("jobDescription") ?? "").trim();
   const note = String(form.get("note") ?? "").trim();
   const amount = Number(form.get("amount"));
-  if (!Number.isFinite(amount) || !Number.isInteger(amount) || amount <= 0) {
+  // 0 is allowed — the price isn't always known yet when the job is logged
+  if (!Number.isFinite(amount) || !Number.isInteger(amount) || amount < 0) {
     return NextResponse.json({ error: "bad amount" }, { status: 400 });
   }
 

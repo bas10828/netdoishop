@@ -108,8 +108,10 @@ export default function EditSalesReportForm({
         <input value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} className={inputCls} />
       </div>
       <div>
-        <label className="mb-1 block text-xs font-semibold text-slate-700">ยอดขาย (บาท)</label>
-        <input type="number" min={1} value={amount} onChange={(e) => setAmount(e.target.value)} className={inputCls} />
+        <label className="mb-1 block text-xs font-semibold text-slate-700">
+          ยอดขาย (บาท) <span className="font-normal text-slate-400">— ใส่ 0 ได้ถ้ายังไม่ทราบราคา</span>
+        </label>
+        <input type="number" min={0} value={amount} onChange={(e) => setAmount(e.target.value)} className={inputCls} />
       </div>
       <div>
         <label className="mb-1 block text-xs font-semibold text-slate-700">หมายเหตุ</label>
