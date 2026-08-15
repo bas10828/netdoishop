@@ -44,6 +44,14 @@ function channelsFromName(name: string): number | null {
   return m ? Number(m[1]) : null;
 }
 
+// extract MP from an IP camera's name, e.g. "IP bullet 4MP 2.8mm ColorVu" -> 4.
+// dual-lens models list two ("dual 6MP (3MP+3MP)") — first match is the
+// combined/primary spec, which is what a resolution picker means anyway.
+function mpFromName(name: string): number | null {
+  const m = name.match(/(\d+)\s*MP/i);
+  return m ? Number(m[1]) : null;
+}
+
 // Common camera bitrate presets — cameras typically run at max bitrate setting.
 // Both Mbps and Kbps equivalents shown since camera UIs use either unit.
 const BITRATE_PRESETS: { mbps: number; label: string; sub: string }[] = [
@@ -139,6 +147,23 @@ export default function StorageCalculatorClient({
       .sort((a, b) => (a.channels ?? 999) - (b.channels ?? 999) || a.price - b.price)
       .slice(0, 6);
   }, [products, cameras]);
+
+  // IP cameras matched to the selected resolution — cheapest per brand so
+  // the customer sees a spread of options, not one brand's whole lineup
+  const cameraProducts = useMemo(() => {
+    const targetMp = parseInt(resolution, 10);
+    const matches = products
+      .filter((p) => p.category === "camera-ip")
+      .map((p) => ({ ...p, mp: mpFromName(p.name) }))
+      .filter((p) => p.mp === targetMp);
+    const cheapestByBrand = new Map<string, (typeof matches)[number]>();
+    for (const p of matches) {
+      const existing = cheapestByBrand.get(p.brand);
+      if (!existing || p.price < existing.price) cheapestByBrand.set(p.brand, p);
+    }
+    return [...cheapestByBrand.values()].sort((a, b) => a.price - b.price);
+  }, [products, resolution]);
+
   const fps = fpsMode === "custom" ? Math.max(1, customFps) : Number(fpsMode);
   const hours = hoursMode === "custom" ? Math.max(1, Math.min(24, customHours)) : Number(hoursMode);
   const codecFactor = CODEC_FACTORS[codec] ?? 1;
@@ -333,6 +358,27 @@ export default function StorageCalculatorClient({
               <p className="mt-1.5 text-xs text-slate-400">
                 * เลือกความละเอียดจะตั้ง Bitrate เริ่มต้นให้อัตโนมัติ — ถ้ารู้ค่าจริงจากกล้อง ปรับที่ช่อง Bitrate ด้านล่างได้เลย
               </p>
+              {cameraProducts.length > 0 && (
+                <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+                  {cameraProducts.map((p) => (
+                    <Link
+                      key={p.id}
+                      href={`/product/${p.slug}`}
+                      target="_blank"
+                      rel="noopener"
+                      className="flex shrink-0 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 p-2 transition hover:border-sky-300"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p.image} alt={p.model} className="h-10 w-10 shrink-0 rounded bg-white p-0.5 object-contain" />
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold text-sky-700">{p.brand}</div>
+                        <div className="max-w-[9rem] truncate text-xs font-bold text-slate-800">{p.model}</div>
+                        <div className="text-xs font-bold text-emerald-600">฿{baht(p.price)}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* hours per day */}
