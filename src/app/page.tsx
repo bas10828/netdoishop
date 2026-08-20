@@ -42,8 +42,6 @@ export default async function ShopHome() {
   const rows = await prisma.product.findMany({
     where: {
       status: { not: "SOLD OUT" },
-      onlineMin: { not: null },
-      onlineMax: { not: null },
     },
     // select ONLY public-safe fields. priceMember is never selected.
     select: {
@@ -62,7 +60,9 @@ export default async function ShopHome() {
     },
   });
 
-  // collapse min/max into a single public price server-side; do NOT ship the range
+  // collapse min/max into a single public price server-side; do NOT ship the
+  // range. price is null for "coming soon" items (no cost quote yet) — those
+  // still render, just without a price / add-to-cart control.
   const products = rows
     .map((r) => ({
       id: r.id,
@@ -79,8 +79,12 @@ export default async function ShopHome() {
       slug: productSlug(r),
       viewCount: r.viewCount,
     }))
-    .filter((p): p is typeof p & { price: number } => p.price !== null)
     .sort((a, b) => {
+      // Cisco pinned to the very top of the grid (new partner brand, 2026-08 —
+      // push it above the normal category order regardless of what it is).
+      const pinA = a.brand === "Cisco" ? 0 : 1;
+      const pinB = b.brand === "Cisco" ? 0 : 1;
+      if (pinA !== pinB) return pinA - pinB;
       const ca = CATEGORY_ORDER.indexOf(a.category);
       const cb = CATEGORY_ORDER.indexOf(b.category);
       if (ca !== cb) return ca - cb;

@@ -8812,6 +8812,124 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ช่อง Micro-SD (แถมการ์ด 64GB), เชื่อมต่อ Ethernet 10/100Mbps",
     ],
   },
+
+  // ───────────────── Cisco — Switches (Catalyst 1200 / 1300) ─────────────────
+  "Cisco|C1200-8T-D": {
+    tagline: "สวิตช์ Smart 8 พอร์ต Gigabit ไม่มี PoE ตัวเล็กติดโต๊ะ",
+    body:
+      "C1200-8T-D สวิตช์ Smart Switch 8 พอร์ต Gigabit จาก Cisco Catalyst 1200 Series ตัวถังเล็กติดตั้งบนโต๊ะ (Desktop) ไม่มี PoE จ่ายไฟออก เหมาะเพิ่มจุดต่อ LAN ความเร็วเต็ม 1000Mbps ให้ออฟฟิศเล็กหรือมุมทำงาน จัดการผ่านเว็บหรือแอป Cisco Business ได้",
+    specs: [
+      "8 พอร์ต Gigabit Ethernet (10/100/1000)",
+      "Switching capacity 16 Gbps, forwarding rate 11.90 Mpps",
+      "ไม่มี PoE จ่ายไฟออก (รับไฟเข้าได้ผ่าน PoE 802.3af 1 พอร์ต หรือ adapter)",
+      "จัดการผ่านเว็บ / แอป Cisco Business",
+      "ตัวถังขนาดเล็กติดตั้งบนโต๊ะ (Desktop)",
+      "รับประกันตลอดอายุการใช้งาน (Limited Lifetime Warranty)",
+    ],
+  },
+  "Cisco|C1200-24T-4G": {
+    tagline: "สวิตช์ Smart 24 พอร์ต Gigabit + 4 SFP uplink ไม่มี PoE",
+    body:
+      "C1200-24T-4G สวิตช์ Smart Switch 24 พอร์ต Gigabit พร้อม 4 พอร์ต SFP สำหรับอัปลิงก์ไฟเบอร์ จาก Cisco Catalyst 1200 Series เหมาะขยายจุดต่อ LAN ให้ออฟฟิศขนาดกลางที่ต้องการพอร์ตเยอะแต่ไม่ต้องใช้ PoE จัดการผ่านเว็บหรือแอป Cisco Business ได้",
+    specs: [
+      "24 พอร์ต Gigabit Ethernet + 4 พอร์ต SFP uplink",
+      "Switching capacity 56 Gbps, forwarding rate 41.66 Mpps",
+      "ไม่มี PoE จ่ายไฟออก",
+      "จัดการผ่านเว็บ / แอป Cisco Business",
+      "ตัวถังโลหะติดแร็คได้ (Rack-mountable)",
+      "รับประกันตลอดอายุการใช้งาน (Limited Lifetime Warranty)",
+    ],
+  },
+  "Cisco|C1200-24P-4G": {
+    tagline: "สวิตช์ Smart PoE+ 24 พอร์ต งบไฟ 195W + 4 SFP uplink",
+    body:
+      "C1200-24P-4G สวิตช์ Smart Switch PoE+ 24 พอร์ต งบไฟรวม 195W พร้อม 4 พอร์ต SFP อัปลิงก์ไฟเบอร์ จาก Cisco Catalyst 1200 Series จ่ายไฟเลี้ยงกล้องวงจรปิดหรือ Access Point ผ่านสาย LAN เส้นเดียวได้พร้อมกันหลายจุด เหมาะติดตั้งงานเครือข่ายกล้อง/WiFi ขนาดกลางถึงใหญ่ จัดการผ่านเว็บหรือแอป Cisco Business",
+    specs: [
+      "24 พอร์ต Gigabit PoE+ + 4 พอร์ต SFP uplink",
+      "งบไฟ PoE รวม 195W, มาตรฐาน 802.3af/at",
+      "Switching capacity 56 Gbps, forwarding rate 41.66 Mpps",
+      "จัดการผ่านเว็บ / แอป Cisco Business",
+      "ตัวถังโลหะติดแร็คได้ (Rack-mountable)",
+      "รับประกันตลอดอายุการใช้งาน (Limited Lifetime Warranty)",
+    ],
+  },
+  "Cisco|C1300-8P-E-2G": {
+    tagline: "สวิตช์ Managed PoE+ 8 พอร์ต งบไฟ 67W + 2 พอร์ต Gigabit/SFP combo",
+    body:
+      "C1300-8P-E-2G สวิตช์ Managed Switch PoE+ 8 พอร์ต จาก Cisco Catalyst 1300 Series งบไฟรวม 67W จ่ายไฟกล้องหรือ Access Point ได้สูงสุด 30W ต่อพอร์ต มี 2 พอร์ต Gigabit/SFP combo สำหรับอัปลิงก์สายทองแดงหรือไฟเบอร์ รองรับฟีเจอร์ระดับองค์กรอย่าง VLAN, QoS, dynamic Layer 3 routing เหมาะร้านค้าหรือสำนักงานขนาดเล็กที่ต้องการสวิตช์บริหารจัดการได้เต็มรูปแบบ",
+    specs: [
+      "8 พอร์ต Gigabit PoE+ + 2 พอร์ต Gigabit RJ45/SFP combo",
+      "งบไฟ PoE รวม 67W, สูงสุด 30W ต่อพอร์ต",
+      "Switching capacity 20 Gbps, forwarding rate 14.88 Mpps",
+      "Managed switch: VLAN, QoS, dynamic Layer 3 routing, IPv6",
+      "ตัวถังโลหะติดแร็คได้ (Rack-mountable)",
+      "รับประกันตลอดอายุการใช้งาน (Limited Lifetime Warranty)",
+    ],
+  },
+  "Cisco|C1300-24P-4X": {
+    tagline: "สวิตช์ Managed PoE+ 24 พอร์ต งบไฟ 195W + 4x10G SFP+ uplink รองรับ Stacking",
+    body:
+      "C1300-24P-4X สวิตช์ Managed Switch PoE+ 24 พอร์ต จาก Cisco Catalyst 1300 Series งบไฟรวม 195W พร้อม 4 พอร์ต SFP+ 10G สำหรับอัปลิงก์ความเร็วสูง รองรับ Front Panel Stacking รวมหลายตัวบริหารจัดการเป็น IP เดียว เหมาะงานเครือข่ายองค์กรที่มีกล้องวงจรปิดหรือ Access Point จำนวนมาก รองรับ VLAN, QoS, dynamic Layer 3 routing",
+    specs: [
+      "24 พอร์ต Gigabit PoE+ + 4 พอร์ต SFP+ 10G uplink",
+      "งบไฟ PoE รวม 195W",
+      "Switching capacity 128 Gbps, forwarding rate 95.23 Mpps",
+      "Front Panel Stacking รวมหลายตัวจัดการเป็น IP เดียว",
+      "Managed switch: VLAN, QoS, dynamic Layer 3 routing, IPv6",
+      "รับประกันตลอดอายุการใช้งาน (Limited Lifetime Warranty)",
+    ],
+  },
+  "Cisco|C1300-48P-4X": {
+    tagline: "สวิตช์ Managed PoE+ 48 พอร์ต งบไฟ 375W + 4x10G SFP+ uplink รองรับ Stacking 8 ตัว",
+    body:
+      "C1300-48P-4X สวิตช์ Managed Switch PoE+ 48 พอร์ต จาก Cisco Catalyst 1300 Series งบไฟรวม 375W พร้อม 4 พอร์ต SFP+ 10G อัปลิงก์ รองรับ Front Panel Stacking เชื่อมได้สูงสุด 8 ตัวบริหารจัดการเป็น IP เดียว เหมาะงานเครือข่ายองค์กรขนาดใหญ่ อาคารสำนักงาน หรือระบบกล้องวงจรปิดจำนวนมาก",
+    specs: [
+      "48 พอร์ต Gigabit PoE+ + 4 พอร์ต SFP+ 10G uplink",
+      "งบไฟ PoE รวม 375W",
+      "Switching capacity 176 Gbps, forwarding rate 130.94 Mpps",
+      "Front Panel Stacking เชื่อมได้สูงสุด 8 ตัว",
+      "Managed switch: VLAN, QoS, dynamic Layer 3 routing, IPv6",
+      "รับประกันตลอดอายุการใช้งาน (Limited Lifetime Warranty)",
+    ],
+  },
+
+  // ───────────────── Cisco — Access Points (Catalyst 9100 / WiFi 6) ─────────────────
+  "Cisco|C9105AXI-S": {
+    tagline: "Access Point WiFi 6 2x2 MIMO ในร่ม อัปลิงก์ Gigabit ความเร็วรวม 1.5Gbps",
+    body:
+      "C9105AXI-S แอคเซสพอยต์ WiFi 6 (802.11ax) จาก Cisco Catalyst 9100 Series เสาในตัวแบบ 2x2 MU-MIMO ดีไซน์กะทัดรัดติดเพดานหรือผนังในอาคาร อัปลิงก์ Gigabit Ethernet 1 พอร์ต จ่ายไฟผ่าน PoE ความเร็วรวมสูงสุด 1.5Gbps เหมาะสำนักงานหรือร้านค้าขนาดเล็กถึงกลางที่ต้องการ WiFi 6 คุณภาพระดับองค์กรในราคาย่อมเยา บริหารจัดการผ่าน Cisco DNA Center / Cisco Business Dashboard",
+    specs: [
+      "WiFi 6 (802.11ax) Dual-Band 2x2 MU-MIMO",
+      "ความเร็วรวมสูงสุด 1.5Gbps (PHY 1.488Gbps)",
+      "อัปลิงก์ 1x Gigabit Ethernet (10/100/1000), จ่ายไฟ PoE",
+      "เสาสัญญาณในตัว (Internal Antenna) ติดตั้งในอาคาร",
+      "บริหารจัดการผ่าน Cisco DNA Center / Cisco Business Dashboard",
+    ],
+  },
+  "Cisco|C9115AXI-S": {
+    tagline: "Access Point WiFi 6 4x4 MIMO ในร่ม อัปลิงก์ 2.5G mGig ความเร็วรวมสูงสุด 5.2Gbps",
+    body:
+      "C9115AXI-S แอคเซสพอยต์ WiFi 6 (802.11ax) จาก Cisco Catalyst 9100 Series เสาในตัวแบบ 4x4 MU-MIMO 2 เรดิโอ ความเร็วรวมสูงสุด 5.2Gbps รองรับพอร์ตอัปลิงก์ 2.5G Multigigabit เต็มความเร็วไฟเบอร์/สาย LAN รุ่นใหม่ เหมาะสำนักงาน โรงแรม หรือพื้นที่มีผู้ใช้งานพร้อมกันจำนวนมาก บริหารจัดการผ่าน Cisco DNA Center / Cisco Business Dashboard",
+    specs: [
+      "WiFi 6 (802.11ax) Dual-Band 4x4 MU-MIMO (2 เรดิโอ)",
+      "ความเร็วรวมสูงสุด 5.2Gbps",
+      "อัปลิงก์ 2.5G Multigigabit Ethernet + พอร์ต 1G passthrough, จ่ายไฟ PoE+",
+      "เสาสัญญาณในตัว (Internal Antenna) ติดตั้งในอาคาร",
+      "บริหารจัดการผ่าน Cisco DNA Center / Cisco Business Dashboard",
+    ],
+  },
+  "Cisco|C9120AXI-S": {
+    tagline: "Access Point WiFi 6 4x4 MIMO high-density ในร่ม อัปลิงก์ 2.5G mGig ความเร็วรวมสูงสุด 5.38Gbps",
+    body:
+      "C9120AXI-S แอคเซสพอยต์ WiFi 6 (802.11ax) จาก Cisco Catalyst 9100 Series รุ่นระดับ high-density เสาในตัวแบบ 4x4 MU-MIMO 4 สตรีม ความเร็วรวมสูงสุด 5.38Gbps รองรับพอร์ตอัปลิงก์ 2.5G Multigigabit เหมาะพื้นที่มีผู้ใช้งานหนาแน่น เช่น ห้องประชุมใหญ่ ห้องเรียน หรือพื้นที่ค้าปลีก บริหารจัดการผ่าน Cisco DNA Center / Cisco Business Dashboard",
+    specs: [
+      "WiFi 6 (802.11ax) Dual-Band 4x4 MU-MIMO 4 spatial streams",
+      "ความเร็วรวมสูงสุด 5.38Gbps",
+      "อัปลิงก์ 2.5G Multigigabit Ethernet, จ่ายไฟ PoE+",
+      "เสาสัญญาณในตัว (Internal Antenna) ออกแบบสำหรับพื้นที่ผู้ใช้งานหนาแน่น (High-Density)",
+      "บริหารจัดการผ่าน Cisco DNA Center / Cisco Business Dashboard",
+    ],
+  },
 };
 
 export function productDoc(brand: string, model: string): ProductDoc | null {

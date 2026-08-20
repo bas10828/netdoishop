@@ -47,14 +47,13 @@ async function getProduct(slug: string) {
     select: PUBLIC_SELECT,
   });
   if (!r) return null;
-  if (r.status === "SOLD OUT" || r.onlineMin === null || r.onlineMax === null) {
-    return null;
-  }
+  if (r.status === "SOLD OUT") return null;
+  // price is null for "coming soon" items (no cost quote yet) — render the
+  // page anyway, just without a price / add-to-cart control.
   const price = resolvePublicPrice({
     ...r,
     supplierCosts: r.supplierCosts as Record<string, number> | null,
   });
-  if (price === null) return null;
   return {
     id: r.id,
     brand: r.brand,
@@ -73,11 +72,7 @@ async function getProduct(slug: string) {
 export async function generateStaticParams() {
   try {
     const rows = await prisma.product.findMany({
-      where: {
-        status: { not: "SOLD OUT" },
-        onlineMin: { not: null },
-        onlineMax: { not: null },
-      },
+      where: { status: { not: "SOLD OUT" } },
       select: { id: true, brand: true, model: true },
     });
     return rows.map((r) => ({ slug: productSlug(r) }));
@@ -96,11 +91,15 @@ export async function generateMetadata({
 
   const canonical = `/product/${productSlug(p)}`;
   const title = `${p.brand} ${p.model} — ${p.name}`;
-  const description = `${p.brand} ${p.model} ${p.name} ราคา ฿${baht(p.price)} | NETDOI อุปกรณ์เน็ตเวิร์ก & กล้องวงจรปิด ส่งทั่วไทย ติดตั้งแม่สาย เชียงราย`;
+  const priceText = p.price !== null ? `ราคา ฿${baht(p.price)}` : "เร็วๆ นี้ (Coming Soon)";
+  const description = `${p.brand} ${p.model} ${p.name} ${priceText} | NETDOI อุปกรณ์เน็ตเวิร์ก & กล้องวงจรปิด ส่งทั่วไทย ติดตั้งแม่สาย เชียงราย`;
 
   return {
     title,
     description,
+    // coming-soon pages (no price yet) aren't in the sitemap either — keep
+    // them out of the index until there's a real price to show.
+    ...(p.price === null && { robots: { index: false, follow: true } }),
     alternates: { canonical },
     openGraph: {
       type: "website",
@@ -137,14 +136,18 @@ export default async function ProductPage({
     category: p.categoryLabel,
     brand: { "@type": "Brand", name: p.brand },
     image: p.images.map((i) => `${SITE_URL}${i}`),
-    offers: {
-      "@type": "Offer",
-      url: canonicalUrl,
-      priceCurrency: "THB",
-      price: p.price,
-      availability: "https://schema.org/InStock",
-      seller: { "@type": "Organization", name: SITE_NAME },
-    },
+    // "coming soon" items have no price yet — omit offers rather than
+    // emit a fake ฿0 price into structured data.
+    ...(p.price !== null && {
+      offers: {
+        "@type": "Offer",
+        url: canonicalUrl,
+        priceCurrency: "THB",
+        price: p.price,
+        availability: "https://schema.org/InStock",
+        seller: { "@type": "Organization", name: SITE_NAME },
+      },
+    }),
   };
 
   const breadcrumbLd = {
@@ -234,22 +237,46 @@ export default async function ProductPage({
               <ViewCounter productId={p.id} initial={p.viewCount} />
             </div>
 
-            <div className="my-5 text-3xl font-bold text-emerald-600">
-              ฿{baht(p.price)}
-            </div>
-            <MemberPriceLine productId={p.id} />
+            {p.price !== null ? (
+              <>
+                <div className="my-5 text-3xl font-bold text-emerald-600">
+                  ฿{baht(p.price)}
+                </div>
+                <MemberPriceLine productId={p.id} />
 
-            <ProductActions
-              product={{
-                id: p.id,
-                brand: p.brand,
-                model: p.model,
-                name: p.name,
-                price: p.price,
-                image: p.image,
-              }}
-              shareUrl={canonicalUrl}
-            />
+                <ProductActions
+                  product={{
+                    id: p.id,
+                    brand: p.brand,
+                    model: p.model,
+                    name: p.name,
+                    price: p.price,
+                    image: p.image,
+                  }}
+                  shareUrl={canonicalUrl}
+                />
+              </>
+            ) : (
+              <div className="my-5 flex flex-wrap items-center gap-3">
+                <span className="rounded-md bg-amber-100 px-3 py-1.5 text-lg font-bold text-amber-700">
+                  🔜 เร็วๆ นี้ (Coming Soon)
+                </span>
+                <a
+                  href="https://line.me/R/ti/p/%40ndtech"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md bg-[#06C755] px-4 py-2 font-medium text-white hover:brightness-110"
+                >
+                  💬 สอบถามราคาทาง LINE
+                </a>
+                <a
+                  href="tel:052029550"
+                  className="rounded-md bg-emerald-500 px-4 py-2 font-medium text-white hover:brightness-110"
+                >
+                  📞 โทรสอบถาม
+                </a>
+              </div>
+            )}
 
             <div className="mt-6 border-t border-slate-200 pt-4 text-sm text-slate-500">
               สอบถาม / สั่งซื้อ:{" "}

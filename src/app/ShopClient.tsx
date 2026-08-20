@@ -16,7 +16,7 @@ type PublicProduct = {
   categoryLabel: string;
   model: string;
   name: string;
-  price: number;
+  price: number | null; // null = "coming soon" (no cost quote yet)
   image: string;
   slug: string;
   viewCount: number;
@@ -38,6 +38,7 @@ const POPULAR_BRANDS = [
   "EZVIZ",
   "Huawei",
   "UNV",
+  "Cisco",
 ];
 
 const FB_URL = "https://www.facebook.com/profile.php?id=100087740514812";
@@ -73,7 +74,8 @@ export default function ShopClient({
     setQtys((prev) => ({ ...prev, [id]: Math.max(1, Math.floor(v) || 1) }));
 
   const handleAdd = (p: PublicProduct) => {
-    addToCart(p, qtyOf(p.id));
+    if (p.price === null) return; // coming soon — no cart button shown for these anyway
+    addToCart({ ...p, price: p.price }, qtyOf(p.id));
     setJustAdded(p.id);
     setQtys((prev) => ({ ...prev, [p.id]: 1 })); // reset chooser after adding
     setTimeout(() => setJustAdded((cur) => (cur === p.id ? null : cur)), 1500);
@@ -377,55 +379,79 @@ export default function ShopClient({
                 👁 เข้าชม {baht(p.viewCount)} ครั้ง
               </div>
               <div className="mb-3 mt-1 flex-1" />
-              <span className="text-xl font-bold text-emerald-600">
-                ฿{baht(p.price)}
-              </span>
-              {memberPrices[p.id] !== undefined && (
-                <span className="text-sm font-medium text-sky-700">
-                  🔧 ราคาช่าง: ฿{baht(memberPrices[p.id])}
-                </span>
+              {p.price !== null ? (
+                <>
+                  <span className="text-xl font-bold text-emerald-600">
+                    ฿{baht(p.price)}
+                  </span>
+                  {memberPrices[p.id] !== undefined && (
+                    <span className="text-sm font-medium text-sky-700">
+                      🔧 ราคาช่าง: ฿{baht(memberPrices[p.id])}
+                    </span>
+                  )}
+                  <div className="mt-2 flex items-center gap-2">
+                    {/* quantity chooser */}
+                    <div className="flex items-center rounded-md border border-slate-300">
+                      <button
+                        onClick={() => setQtyOf(p.id, qtyOf(p.id) - 1)}
+                        className="h-9 w-9 text-lg font-bold text-slate-600 hover:bg-slate-100"
+                        aria-label="ลดจำนวน"
+                      >
+                        −
+                      </button>
+                      <input
+                        type="number"
+                        min={1}
+                        value={qtyOf(p.id)}
+                        onChange={(e) => setQtyOf(p.id, Number(e.target.value))}
+                        className="h-9 w-10 border-x border-slate-300 text-center text-base outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                        aria-label="จำนวน"
+                      />
+                      <button
+                        onClick={() => setQtyOf(p.id, qtyOf(p.id) + 1)}
+                        className="h-9 w-9 text-lg font-bold text-slate-600 hover:bg-slate-100"
+                        aria-label="เพิ่มจำนวน"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => handleAdd(p)}
+                      className={`h-9 flex-1 rounded-md text-sm font-semibold text-white hover:brightness-110 ${
+                        justAdded === p.id ? "bg-emerald-600" : "bg-amber-500"
+                      }`}
+                    >
+                      {justAdded === p.id ? "✓ เพิ่มแล้ว" : "🛒 ใส่ตะกร้า"}
+                    </button>
+                    <ShareButton
+                      url={`${siteUrl}/product/${p.slug}`}
+                      title={`${p.brand} ${p.model}`}
+                      text={`${p.brand} ${p.model} — ${p.name}`}
+                      size="sm"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span className="w-fit rounded-md bg-amber-100 px-2 py-1 text-sm font-bold text-amber-700">
+                    🔜 เร็วๆ นี้ (Coming Soon)
+                  </span>
+                  <div className="mt-2 flex items-center gap-2">
+                    <button
+                      onClick={() => setShowLine(true)}
+                      className="h-9 flex-1 rounded-md bg-[#06C755] text-sm font-semibold text-white hover:brightness-110"
+                    >
+                      💬 สอบถามราคา
+                    </button>
+                    <ShareButton
+                      url={`${siteUrl}/product/${p.slug}`}
+                      title={`${p.brand} ${p.model}`}
+                      text={`${p.brand} ${p.model} — ${p.name}`}
+                      size="sm"
+                    />
+                  </div>
+                </>
               )}
-              <div className="mt-2 flex items-center gap-2">
-                {/* quantity chooser */}
-                <div className="flex items-center rounded-md border border-slate-300">
-                  <button
-                    onClick={() => setQtyOf(p.id, qtyOf(p.id) - 1)}
-                    className="h-9 w-9 text-lg font-bold text-slate-600 hover:bg-slate-100"
-                    aria-label="ลดจำนวน"
-                  >
-                    −
-                  </button>
-                  <input
-                    type="number"
-                    min={1}
-                    value={qtyOf(p.id)}
-                    onChange={(e) => setQtyOf(p.id, Number(e.target.value))}
-                    className="h-9 w-10 border-x border-slate-300 text-center text-base outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-                    aria-label="จำนวน"
-                  />
-                  <button
-                    onClick={() => setQtyOf(p.id, qtyOf(p.id) + 1)}
-                    className="h-9 w-9 text-lg font-bold text-slate-600 hover:bg-slate-100"
-                    aria-label="เพิ่มจำนวน"
-                  >
-                    +
-                  </button>
-                </div>
-                <button
-                  onClick={() => handleAdd(p)}
-                  className={`h-9 flex-1 rounded-md text-sm font-semibold text-white hover:brightness-110 ${
-                    justAdded === p.id ? "bg-emerald-600" : "bg-amber-500"
-                  }`}
-                >
-                  {justAdded === p.id ? "✓ เพิ่มแล้ว" : "🛒 ใส่ตะกร้า"}
-                </button>
-                <ShareButton
-                  url={`${siteUrl}/product/${p.slug}`}
-                  title={`${p.brand} ${p.model}`}
-                  text={`${p.brand} ${p.model} — ${p.name}`}
-                  size="sm"
-                />
-              </div>
             </div>
           ))}
           {filtered.length === 0 && (
