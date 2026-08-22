@@ -19,9 +19,20 @@ export interface ProposalItem {
   // we have both a CMIT and a SiS sheet for the same model).
   cost: number | null;
   costSupplier: string;
+  qty: number;
   imageBuffer: Buffer;
   imageExt: "png" | "jpg";
   doc: ProductDoc | null;
+}
+
+// Ad-hoc service line (e.g. labor) added to a single proposal document —
+// never a Product row, never persisted; just label/qty/unit price for this
+// PDF/PNG. costSupplier/cost don't apply since there's no distributor quote.
+export interface CustomLineItem {
+  label: string;
+  unit: string;
+  qty: number;
+  unitPrice: number;
 }
 
 export interface PriceOverrides {
@@ -29,6 +40,28 @@ export interface PriceOverrides {
   public?: Record<number, number>;
   cost?: Record<number, number>;
   costSupplier?: Record<number, string>;
+  qty?: Record<number, number>;
+}
+
+// Grand total across product line items (qty × unit price) plus any custom
+// service lines — computed once here so the modal preview, PDF, and PNG all
+// agree on the same number.
+export function computeTotals(
+  items: ProposalItem[],
+  customItems: CustomLineItem[]
+): { member: number; public: number } {
+  let member = 0;
+  let pub = 0;
+  for (const item of items) {
+    member += (item.priceMember ?? 0) * item.qty;
+    pub += (item.pricePublic ?? 0) * item.qty;
+  }
+  for (const c of customItems) {
+    const line = c.unitPrice * c.qty;
+    member += line;
+    pub += line;
+  }
+  return { member, public: pub };
 }
 
 function extOf(devicePath: string): "png" | "jpg" {
@@ -70,6 +103,7 @@ export async function buildProposalItems(
         pricePublic: overrides.public?.[p.id] ?? resolvePublicPrice({ ...p, supplierCosts }),
         cost: overrides.cost?.[p.id] ?? supplierCosts?.[p.supplier] ?? p.priceMember,
         costSupplier: overrides.costSupplier?.[p.id] ?? p.supplier,
+        qty: overrides.qty?.[p.id] ?? 1,
         imageBuffer,
         imageExt: extOf(devicePath),
         doc: productDoc(p.brand, p.model),

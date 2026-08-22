@@ -54,6 +54,26 @@ type EditField = "cost" | "public";
 const baht = (n: number | null) =>
   n === null ? "-" : n.toLocaleString("th-TH");
 
+// Ad-hoc service line added to a proposal document only (no Product row).
+// unitPrice here is just the prefill default for a new row — staff can
+// still edit it per document; bump DEFAULT_PRICE below to raise the
+// baseline for every future proposal.
+type CustomItem = { key: string; label: string; unit: string; qty: string; unitPrice: string };
+const LABOR_PRESETS: { label: string; unit: string; defaultPrice: number }[] = [
+  { label: "เดินสายร้อยท่อสีขาวสำหรับทำปลั๊กไฟ", unit: "จุด", defaultPrice: 800 },
+];
+let customItemSeq = 0;
+function newCustomItem(preset: { label: string; unit: string; defaultPrice: number }): CustomItem {
+  customItemSeq += 1;
+  return {
+    key: `custom-${customItemSeq}`,
+    label: preset.label,
+    unit: preset.unit,
+    qty: "1",
+    unitPrice: String(preset.defaultPrice),
+  };
+}
+
 export default function CatalogClient({
   products,
   categories,
@@ -105,6 +125,10 @@ export default function CatalogClient({
   // with the real ราคาช่าง/ราคาหน้าร้าน — never saved back to the Product row
   const [draftMember, setDraftMember] = useState<Record<number, string>>({});
   const [draftPublic, setDraftPublic] = useState<Record<number, string>>({});
+  // จำนวน per item for THIS document only — defaults to 1, never saved back.
+  const [qty, setQty] = useState<Record<number, string>>({});
+  // ad-hoc service lines (e.g. labor) added to this document only.
+  const [customItems, setCustomItems] = useState<CustomItem[]>([]);
   // which distributor's cost quote to base ต้นทุน/ราคาช่าง on for THIS document
   // — only relevant for items with more than one entry in supplierCosts
   // (e.g. we've received both a CMIT and a SiS sheet for the same model).
@@ -127,6 +151,42 @@ export default function CatalogClient({
       setDraftMember((prev) => ({ ...prev, [p.id]: String(sellPrice(raw, supplier)) }));
     }
   }
+
+  function qtyOf(p: Product): number {
+    const n = Number(qty[p.id] ?? "1");
+    return Number.isFinite(n) && n > 0 ? Math.floor(n) : 1;
+  }
+
+  function addCustomItem(preset: { label: string; unit: string; defaultPrice: number }) {
+    setCustomItems((prev) => [...prev, newCustomItem(preset)]);
+  }
+
+  function updateCustomItem(key: string, patch: Partial<CustomItem>) {
+    setCustomItems((prev) => prev.map((c) => (c.key === key ? { ...c, ...patch } : c)));
+  }
+
+  function removeCustomItem(key: string) {
+    setCustomItems((prev) => prev.filter((c) => c.key !== key));
+  }
+
+  // Grand total for the summary modal — mirrors what the generated PDF/PNG
+  // will show (see computeTotals in src/lib/proposal/data.ts).
+  const proposalTotals = useMemo(() => {
+    let member = 0;
+    let pub = 0;
+    for (const p of items) {
+      if (!selected.has(p.id)) continue;
+      const n = qtyOf(p);
+      member += Number(draftMember[p.id] ?? p.priceMember ?? 0) * n;
+      pub += Number(draftPublic[p.id] ?? p.publicPrice ?? 0) * n;
+    }
+    for (const c of customItems) {
+      const line = Number(c.unitPrice || 0) * Number(c.qty || 0);
+      member += line;
+      pub += line;
+    }
+    return { member, public: pub };
+  }, [items, selected, qty, draftMember, draftPublic, customItems]);
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -176,9 +236,11 @@ export default function CatalogClient({
         public: Record<number, number>;
         cost: Record<number, number>;
         costSupplier: Record<number, string>;
-      } = { member: {}, public: {}, cost: {}, costSupplier: {} };
+        qty: Record<number, number>;
+      } = { member: {}, public: {}, cost: {}, costSupplier: {}, qty: {} };
       for (const p of items) {
         if (!selected.has(p.id)) continue;
+        overrides.qty[p.id] = qtyOf(p);
         if (priceDisplay === "member" || priceDisplay === "both") {
           const v = Number(draftMember[p.id] ?? p.priceMember ?? 0);
           if (Number.isFinite(v)) overrides.member[p.id] = v;
@@ -195,10 +257,22 @@ export default function CatalogClient({
           if (Number.isFinite(v)) overrides.public[p.id] = v;
         }
       }
+      const customItemsPayload = customItems.map((c) => ({
+        label: c.label,
+        unit: c.unit,
+        qty: Math.max(1, Math.floor(Number(c.qty) || 1)),
+        unitPrice: Math.max(0, Number(c.unitPrice) || 0),
+      }));
       const res = await fetch("/api/proposal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productIds: [...selected], priceDisplay, format, overrides }),
+        body: JSON.stringify({
+          productIds: [...selected],
+          priceDisplay,
+          format,
+          overrides,
+          customItems: customItemsPayload,
+        }),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
@@ -768,6 +842,16 @@ export default function CatalogClient({
                       <div className="flex-1 text-sm font-medium">{p.brand} {p.model}</div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
+                      <label className="flex items-center gap-1 text-xs text-slate-500">
+                        จำนวน
+                        <input
+                          type="number"
+                          min={1}
+                          value={qty[p.id] ?? "1"}
+                          onChange={(e) => setQty((prev) => ({ ...prev, [p.id]: e.target.value }))}
+                          className="w-14 rounded border border-slate-300 px-2 py-1 text-right text-sm outline-none focus:border-slate-500"
+                        />
+                      </label>
                       {(priceDisplay === "member" || priceDisplay === "both") && (
                         <>
                           {supplierOptions(p).length > 1 && (
@@ -812,6 +896,71 @@ export default function CatalogClient({
                     </div>
                   </div>
                 ))}
+
+              {customItems.length > 0 && (
+                <div className="mt-2 border-t border-slate-100 pt-2">
+                  <div className="mb-1 text-xs font-semibold text-slate-500">
+                    รายการเพิ่มเติม (ค่าแรง/บริการ)
+                  </div>
+                  {customItems.map((c) => (
+                    <div key={c.key} className="flex flex-wrap items-center gap-2 py-1">
+                      <input
+                        type="text"
+                        value={c.label}
+                        onChange={(e) => updateCustomItem(c.key, { label: e.target.value })}
+                        className="flex-1 rounded border border-slate-300 px-2 py-1 text-sm outline-none focus:border-slate-500"
+                      />
+                      <input
+                        type="number"
+                        min={1}
+                        value={c.qty}
+                        onChange={(e) => updateCustomItem(c.key, { qty: e.target.value })}
+                        title="จำนวน"
+                        className="w-16 rounded border border-slate-300 px-2 py-1 text-right text-sm outline-none focus:border-slate-500"
+                      />
+                      <span className="text-xs text-slate-400">{c.unit} ×</span>
+                      <input
+                        type="number"
+                        min={0}
+                        value={c.unitPrice}
+                        onChange={(e) => updateCustomItem(c.key, { unitPrice: e.target.value })}
+                        title="ราคาต่อหน่วย — แก้ตรงนี้เพื่อขึ้นราคาสำหรับใบนี้"
+                        className="w-24 rounded border border-slate-300 px-2 py-1 text-right text-sm outline-none focus:border-slate-500"
+                      />
+                      <button
+                        onClick={() => removeCustomItem(c.key)}
+                        className="text-slate-400 hover:text-rose-600"
+                        title="ลบรายการนี้"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="mt-2 flex flex-wrap gap-2">
+                {LABOR_PRESETS.map((preset) => (
+                  <button
+                    key={preset.label}
+                    onClick={() => addCustomItem(preset)}
+                    className="rounded border border-dashed border-slate-300 px-2 py-1 text-xs text-slate-600 hover:border-indigo-400 hover:text-indigo-700"
+                  >
+                    ＋ {preset.label} ({preset.defaultPrice} บาท/{preset.unit})
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 border-t border-slate-200 px-4 py-2 text-sm">
+              {(priceDisplay === "member" || priceDisplay === "both") && (
+                <span className="font-semibold text-rose-600">
+                  รวมราคาช่าง: {baht(proposalTotals.member)} บาท
+                </span>
+              )}
+              {(priceDisplay === "public" || priceDisplay === "both") && (
+                <span className="font-semibold text-emerald-700">
+                  รวมราคาหน้าร้าน: {baht(proposalTotals.public)} บาท
+                </span>
+              )}
             </div>
             <div className="flex flex-wrap items-center gap-3 border-t border-slate-200 px-4 py-3">
               <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">

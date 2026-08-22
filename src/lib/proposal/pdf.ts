@@ -1,12 +1,14 @@
 import { withBrowser } from "./browser";
 import { buildProposalHtml, type PriceDisplay } from "./template";
-import type { ProposalItem } from "./data";
+import { computeTotals, type ProposalItem, type CustomLineItem } from "./data";
 
 export async function renderProposalPdf(
   items: ProposalItem[],
-  priceDisplay: PriceDisplay = "both"
+  priceDisplay: PriceDisplay = "both",
+  customItems: CustomLineItem[] = []
 ): Promise<Buffer> {
-  const html = await buildProposalHtml(items, priceDisplay);
+  const totals = computeTotals(items, customItems);
+  const html = await buildProposalHtml(items, priceDisplay, { customItems, totals });
   return withBrowser(async (browser) => {
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: "load" });

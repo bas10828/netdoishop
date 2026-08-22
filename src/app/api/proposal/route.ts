@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { buildProposalItems, MAX_PROPOSAL_ITEMS, type PriceOverrides } from "@/lib/proposal/data";
+import { buildProposalItems, MAX_PROPOSAL_ITEMS, type PriceOverrides, type CustomLineItem } from "@/lib/proposal/data";
 import { renderProposalPdf } from "@/lib/proposal/pdf";
 import { renderProposalPng } from "@/lib/proposal/png";
 import type { PriceDisplay } from "@/lib/proposal/template";
@@ -14,8 +14,10 @@ export const runtime = "nodejs";
 //     productIds: number[],
 //     priceDisplay?: "member" | "public" | "both",
 //     format?: "pdf" | "png",
-//     overrides?: { member?: Record<string, number>, public?: Record<string, number> }
-//       -- one-off per-item price for this document only, never written back to the Product row
+//     overrides?: { member?, public?, cost?, costSupplier?, qty?: Record<string, number> }
+//       -- one-off per-item price/qty for this document only, never written back to the Product row
+//     customItems?: { label, unit, qty, unitPrice }[]
+//       -- ad-hoc service lines (e.g. labor) with no backing Product row
 //   }
 
 function parseProductIds(raw: unknown): number[] | undefined {
@@ -52,6 +54,21 @@ function parseSupplierMap(raw: unknown): Record<number, string> | undefined {
   return out;
 }
 
+const MAX_QTY = 9999;
+
+function parseQtyMap(raw: unknown): Record<number, number> | undefined {
+  if (raw === undefined) return {};
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return undefined;
+  const out: Record<number, number> = {};
+  for (const [key, val] of Object.entries(raw)) {
+    const id = Number(key);
+    if (!Number.isInteger(id) || id <= 0) return undefined;
+    if (!Number.isInteger(val) || (val as number) < 1 || (val as number) > MAX_QTY) return undefined;
+    out[id] = val as number;
+  }
+  return out;
+}
+
 function parseOverrides(raw: unknown): PriceOverrides | undefined {
   if (raw === undefined) return {};
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return undefined;
@@ -60,8 +77,31 @@ function parseOverrides(raw: unknown): PriceOverrides | undefined {
   const pub = parseOverrideMap(r.public);
   const cost = parseOverrideMap(r.cost);
   const costSupplier = parseSupplierMap(r.costSupplier);
-  if (!member || !pub || !cost || !costSupplier) return undefined;
-  return { member, public: pub, cost, costSupplier };
+  const qty = parseQtyMap(r.qty);
+  if (!member || !pub || !cost || !costSupplier || !qty) return undefined;
+  return { member, public: pub, cost, costSupplier, qty };
+}
+
+const MAX_CUSTOM_ITEMS = 20;
+const MAX_LABEL_LEN = 80;
+const MAX_UNIT_LEN = 20;
+
+// Ad-hoc service lines (e.g. labor) — never a Product, one-off per document.
+function parseCustomItems(raw: unknown): CustomLineItem[] | undefined {
+  if (raw === undefined) return [];
+  if (!Array.isArray(raw) || raw.length > MAX_CUSTOM_ITEMS) return undefined;
+  const out: CustomLineItem[] = [];
+  for (const entry of raw) {
+    if (typeof entry !== "object" || entry === null) return undefined;
+    const e = entry as Record<string, unknown>;
+    const { label, unit, qty, unitPrice } = e;
+    if (typeof label !== "string" || label.length === 0 || label.length > MAX_LABEL_LEN) return undefined;
+    if (typeof unit !== "string" || unit.length === 0 || unit.length > MAX_UNIT_LEN) return undefined;
+    if (!Number.isInteger(qty) || (qty as number) < 1 || (qty as number) > MAX_QTY) return undefined;
+    if (typeof unitPrice !== "number" || !Number.isFinite(unitPrice) || unitPrice < 0) return undefined;
+    out.push({ label, unit, qty: qty as number, unitPrice: Math.round(unitPrice) });
+  }
+  return out;
 }
 
 export async function POST(req: Request) {
@@ -91,6 +131,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "bad overrides" }, { status: 400 });
   }
 
+  const customItems = parseCustomItems(b.customItems);
+  if (!customItems) {
+    return NextResponse.json({ error: "bad customItems" }, { status: 400 });
+  }
+
   const priceDisplay = ((): PriceDisplay => {
     return b.priceDisplay === "member" || b.priceDisplay === "public" ? b.priceDisplay : "both";
   })();
@@ -101,7 +146,7 @@ export async function POST(req: Request) {
     const today = new Date().toISOString().slice(0, 10);
 
     if (format === "png") {
-      const { buffer, isZip } = await renderProposalPng(items, priceDisplay);
+      const { buffer, isZip } = await renderProposalPng(items, priceDisplay, customItems);
       return new NextResponse(new Uint8Array(buffer), {
         headers: {
           "Content-Type": isZip ? "application/zip" : "image/png",
@@ -110,7 +155,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const buffer = await renderProposalPdf(items, priceDisplay);
+    const buffer = await renderProposalPdf(items, priceDisplay, customItems);
     return new NextResponse(new Uint8Array(buffer), {
       headers: {
         "Content-Type": "application/pdf",
