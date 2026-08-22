@@ -41,7 +41,9 @@ export const dynamic = "force-dynamic";
 export default async function ShopHome() {
   const rows = await prisma.product.findMany({
     where: {
-      status: { not: "SOLD OUT" },
+      // "hidden" = staff-only, never shown on the storefront. SOLD OUT still
+      // renders (badge, no price/cart) so customers know the item exists.
+      status: { not: "hidden" },
     },
     // select ONLY public-safe fields. priceMember is never selected.
     select: {
@@ -56,12 +58,14 @@ export default async function ShopHome() {
       publicPriceOverride: true,
       publicPriceSupplier: true,
       supplierCosts: true,
+      status: true,
       viewCount: true,
     },
   });
 
   // collapse min/max into a single public price server-side; do NOT ship the
-  // range. price is null for "coming soon" items (no cost quote yet) — those
+  // range. price is null for "coming soon" items (no cost quote yet) AND for
+  // SOLD OUT items (never show a price for something you can't sell) — those
   // still render, just without a price / add-to-cart control.
   const products = rows
     .map((r) => ({
@@ -71,10 +75,14 @@ export default async function ShopHome() {
       categoryLabel: r.categoryLabel,
       model: r.model,
       name: r.name,
-      price: resolvePublicPrice({
-        ...r,
-        supplierCosts: r.supplierCosts as Record<string, number> | null,
-      }),
+      price:
+        r.status === "SOLD OUT"
+          ? null
+          : resolvePublicPrice({
+              ...r,
+              supplierCosts: r.supplierCosts as Record<string, number> | null,
+            }),
+      soldOut: r.status === "SOLD OUT",
       image: deviceImage(r.model, r.brand),
       slug: productSlug(r),
       viewCount: r.viewCount,

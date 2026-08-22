@@ -36,9 +36,8 @@ const PUBLIC_SELECT = {
 
 const baht = (n: number) => n.toLocaleString("th-TH");
 
-// Resolve a slug to a public-safe product, or null. Applies the SAME gate as
-// the home page (in stock + has a cost-derived range) so SOLD OUT / no-price
-// items 404 instead of rendering an indexable page with an empty price.
+// Resolve a slug to a public-safe product, or null. "hidden" 404s (staff-only,
+// never a public page); SOLD OUT still renders — badge, no price/cart.
 async function getProduct(slug: string) {
   const id = idFromSlug(slug);
   if (id === null) return null;
@@ -47,13 +46,17 @@ async function getProduct(slug: string) {
     select: PUBLIC_SELECT,
   });
   if (!r) return null;
-  if (r.status === "SOLD OUT") return null;
-  // price is null for "coming soon" items (no cost quote yet) — render the
-  // page anyway, just without a price / add-to-cart control.
-  const price = resolvePublicPrice({
-    ...r,
-    supplierCosts: r.supplierCosts as Record<string, number> | null,
-  });
+  if (r.status === "hidden") return null;
+  const soldOut = r.status === "SOLD OUT";
+  // price is null for "coming soon" items (no cost quote yet) and for SOLD
+  // OUT items (never show a price for something you can't sell) — render
+  // the page anyway, just without a price / add-to-cart control.
+  const price = soldOut
+    ? null
+    : resolvePublicPrice({
+        ...r,
+        supplierCosts: r.supplierCosts as Record<string, number> | null,
+      });
   return {
     id: r.id,
     brand: r.brand,
@@ -62,6 +65,7 @@ async function getProduct(slug: string) {
     model: r.model,
     name: r.name,
     price, // the ONLY price that may reach the client / structured data
+    soldOut,
     image: deviceImage(r.model, r.brand),
     images: deviceImages(r.model, r.brand),
     viewCount: r.viewCount,
@@ -72,7 +76,7 @@ async function getProduct(slug: string) {
 export async function generateStaticParams() {
   try {
     const rows = await prisma.product.findMany({
-      where: { status: { not: "SOLD OUT" } },
+      where: { status: { not: "hidden" } },
       select: { id: true, brand: true, model: true },
     });
     return rows.map((r) => ({ slug: productSlug(r) }));
@@ -91,7 +95,8 @@ export async function generateMetadata({
 
   const canonical = `/product/${productSlug(p)}`;
   const title = `${p.brand} ${p.model} — ${p.name}`;
-  const priceText = p.price !== null ? `ราคา ฿${baht(p.price)}` : "เร็วๆ นี้ (Coming Soon)";
+  const priceText =
+    p.price !== null ? `ราคา ฿${baht(p.price)}` : p.soldOut ? "สินค้าหมด (SOLD OUT)" : "เร็วๆ นี้ (Coming Soon)";
   const description = `${p.brand} ${p.model} ${p.name} ${priceText} | NETDOI อุปกรณ์เน็ตเวิร์ก & กล้องวงจรปิด ส่งทั่วไทย ติดตั้งแม่สาย เชียงราย`;
 
   return {
@@ -256,6 +261,12 @@ export default async function ProductPage({
                   shareUrl={canonicalUrl}
                 />
               </>
+            ) : p.soldOut ? (
+              <div className="my-5 flex flex-wrap items-center gap-3">
+                <span className="rounded-md bg-slate-200 px-3 py-1.5 text-lg font-bold text-slate-600">
+                  ❌ สินค้าหมด (SOLD OUT)
+                </span>
+              </div>
             ) : (
               <div className="my-5 flex flex-wrap items-center gap-3">
                 <span className="rounded-md bg-amber-100 px-3 py-1.5 text-lg font-bold text-amber-700">

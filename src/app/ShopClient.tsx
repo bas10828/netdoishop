@@ -16,7 +16,8 @@ type PublicProduct = {
   categoryLabel: string;
   model: string;
   name: string;
-  price: number | null; // null = "coming soon" (no cost quote yet)
+  price: number | null; // null = "coming soon" (no cost quote yet) OR sold out — see soldOut
+  soldOut: boolean;
   image: string;
   slug: string;
   viewCount: number;
@@ -423,6 +424,20 @@ export default function ShopClient({
                     >
                       {justAdded === p.id ? "✓ เพิ่มแล้ว" : "🛒 ใส่ตะกร้า"}
                     </button>
+                    <ShareButton
+                      url={`${siteUrl}/product/${p.slug}`}
+                      title={`${p.brand} ${p.model}`}
+                      text={`${p.brand} ${p.model} — ${p.name}`}
+                      size="sm"
+                    />
+                  </div>
+                </>
+              ) : p.soldOut ? (
+                <>
+                  <span className="w-fit rounded-md bg-slate-200 px-2 py-1 text-sm font-bold text-slate-600">
+                    ❌ สินค้าหมด (SOLD OUT)
+                  </span>
+                  <div className="mt-2 flex items-center gap-2">
                     <ShareButton
                       url={`${siteUrl}/product/${p.slug}`}
                       title={`${p.brand} ${p.model}`}

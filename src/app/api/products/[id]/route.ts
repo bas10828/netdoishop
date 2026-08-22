@@ -94,9 +94,10 @@ export async function PATCH(
   }
 
   if ("status" in b) {
-    // staff toggles stock state when restocking / selling out.
-    // Only the two known states are allowed.
-    if (b.status !== "in stock" && b.status !== "SOLD OUT") {
+    // staff sets stock/visibility state. "in stock" = normal, "SOLD OUT" =
+    // still shown on the storefront (badge, no price/cart), "hidden" =
+    // excluded from the storefront entirely (staff-only, never public).
+    if (b.status !== "in stock" && b.status !== "SOLD OUT" && b.status !== "hidden") {
       return NextResponse.json({ error: "bad status" }, { status: 400 });
     }
     data.status = b.status;

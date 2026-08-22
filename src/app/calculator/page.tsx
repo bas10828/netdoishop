@@ -9,7 +9,10 @@ export const dynamic = "force-dynamic";
 export default async function CalculatorPage() {
   const rows = await prisma.product.findMany({
     where: {
-      status: { not: "SOLD OUT" },
+      // storage calculator recommends what to buy — still exclude SOLD OUT
+      // here (not just "hidden") even though the main storefront now shows
+      // SOLD OUT items with a badge.
+      status: { notIn: ["SOLD OUT", "hidden"] },
       onlineMin: { not: null },
       onlineMax: { not: null },
       category: { in: ["nvr", "dvr", "harddisk", "sd-card", "camera-ip"] },
@@ -51,7 +54,7 @@ export default async function CalculatorPage() {
   // OUT models (e.g. C200) since staff still need to advise customers who
   // already own one, even if we can't sell it right now.
   const tapoCamRows = await prisma.product.findMany({
-    where: { brand: "TP-Link Tapo", category: "camera-wifi" },
+    where: { brand: "TP-Link Tapo", category: "camera-wifi", status: { not: "hidden" } },
     select: {
       id: true,
       brand: true,

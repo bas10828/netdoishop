@@ -10,11 +10,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const latest = await prisma.product.aggregate({ _max: { updatedAt: true } });
   const lastModified = latest._max.updatedAt ?? new Date();
 
-  // Per-product pages — same public gate as the home page / detail route:
-  // in stock and has a cost-derived online range.
+  // Per-product pages — has a cost-derived online range and isn't noindexed.
+  // SOLD OUT pages still render (badge, no price) but generateMetadata marks
+  // them robots:noindex same as "coming soon", so skip them here too rather
+  // than list a noindex page in the sitemap. "hidden" is a real 404.
   const rows = await prisma.product.findMany({
     where: {
-      status: { not: "SOLD OUT" },
+      status: { notIn: ["SOLD OUT", "hidden"] },
       onlineMin: { not: null },
       onlineMax: { not: null },
     },

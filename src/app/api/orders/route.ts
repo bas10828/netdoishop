@@ -38,11 +38,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "empty order" }, { status: 400 });
   }
 
-  // Only sellable products (same gate as the public shop).
+  // Only sellable products — SOLD OUT now renders on the storefront (badge,
+  // no price) but is still not orderable, same as "hidden".
   const rows = await prisma.product.findMany({
     where: {
       id: { in: [...qtyById.keys()] },
-      status: { not: "SOLD OUT" },
+      status: { notIn: ["SOLD OUT", "hidden"] },
       onlineMin: { not: null },
       onlineMax: { not: null },
     },

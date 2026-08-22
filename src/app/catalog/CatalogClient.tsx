@@ -366,9 +366,10 @@ export default function CatalogClient({
     }
   }
 
-  // toggle stock state (พร้อมขาย <-> SOLD OUT) when restocking / selling out
-  async function toggleStatus(p: Product) {
-    const next = p.status === "SOLD OUT" ? "in stock" : "SOLD OUT";
+  // stock/visibility state: "in stock" (พร้อมขาย, normal) · "SOLD OUT" (still
+  // shown on the storefront — badge, no price/cart) · "hidden" (excluded from
+  // the storefront entirely).
+  async function setStatus(p: Product, next: string) {
     setTogglingId(p.id);
     setError("");
     try {
@@ -520,7 +521,7 @@ export default function CatalogClient({
       </div>
       <p className="mb-3 text-xs text-slate-400">
         💡 คลิกราคาทุนเพื่อแก้ (ออนไลน์คำนวณใหม่อัตโนมัติ) · คลิกราคาหน้าร้านเพื่อตั้งราคาเอง
-        (เว้นว่าง = กลับไปใช้ราคาอัตโนมัติ) · คลิกป้ายสถานะเพื่อสลับ พร้อมขาย ⇄ SOLD OUT · คลิกรูปเพื่อขยาย
+        (เว้นว่าง = กลับไปใช้ราคาอัตโนมัติ) · เลือกสถานะ พร้อมขาย/SOLD OUT/ไม่แสดงหน้าร้าน ได้จาก dropdown · คลิกรูปเพื่อขยาย
       </p>
       {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
 
@@ -725,23 +726,24 @@ export default function CatalogClient({
                   👁 {baht(p.viewCount)}
                 </td>
                 <td className="px-3 py-2">
-                  <button
-                    onClick={() => toggleStatus(p)}
+                  <select
+                    value={p.status}
+                    onChange={(e) => setStatus(p, e.target.value)}
                     disabled={togglingId === p.id}
-                    title="คลิกเพื่อสลับสถานะ (พร้อมขาย ↔ SOLD OUT)"
+                    title="พร้อมขาย = ปกติ · SOLD OUT = ยังโชว์หน้าร้านแต่ไม่มีราคา/ซื้อไม่ได้ · ไม่แสดงหน้าร้าน = หายจากหน้าร้านเลย"
                     className={
-                      "rounded px-2 py-0.5 text-xs hover:ring-2 hover:ring-offset-1 disabled:opacity-50 " +
+                      "rounded border-none px-2 py-0.5 text-xs outline-none disabled:opacity-50 " +
                       (p.status === "SOLD OUT"
-                        ? "bg-red-100 text-red-700 hover:ring-red-300"
-                        : "bg-emerald-100 text-emerald-700 hover:ring-emerald-300")
+                        ? "bg-red-100 text-red-700"
+                        : p.status === "hidden"
+                        ? "bg-slate-200 text-slate-600"
+                        : "bg-emerald-100 text-emerald-700")
                     }
                   >
-                    {togglingId === p.id
-                      ? "…"
-                      : p.status === "SOLD OUT"
-                      ? "SOLD OUT ⇄"
-                      : "พร้อมขาย ⇄"}
-                  </button>
+                    <option value="in stock">พร้อมขาย</option>
+                    <option value="SOLD OUT">SOLD OUT</option>
+                    <option value="hidden">ไม่แสดงหน้าร้าน</option>
+                  </select>
                 </td>
                 <td className="px-3 py-2 text-xs">
                   {p.sourceFile.toLowerCase().endsWith(".jpg") ? (
