@@ -175,7 +175,7 @@ export default function SalesDetailClient({
 
   if (editing) {
     return (
-      <main className="mx-auto max-w-2xl p-4">
+      <main className="mx-auto p-4">
         <EditSalesReportForm
           report={report}
           onCancel={() => setEditing(false)}
@@ -189,7 +189,7 @@ export default function SalesDetailClient({
   }
 
   return (
-    <main className="mx-auto max-w-2xl p-4">
+    <main className="mx-auto p-4">
       <div className="mb-4 flex items-center justify-between">
         <Link href="/catalog/sales" className="text-sm text-sky-700 hover:underline">
           ← กลับรายการทั้งหมด
