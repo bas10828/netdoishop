@@ -61,6 +61,25 @@ model Product {
 
   @@unique([brand, model])
   @@index([category])
+
+  costHistory CostHistory[]
+}
+
+// Append-only log of raw supplier cost observations, one row per (product,
+// supplier, pricelist) whenever the parsed cost differs from the last
+// recorded value for that supplier — lets staff compare suppliers' cost
+// trends over time before deciding who to order from, rather than only
+// seeing the current supplierCosts snapshot on Product.
+model CostHistory {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  supplier   String
+  cost       Int
+  sourceFile String
+  recordedAt DateTime @default(now())
+
+  @@index([productId, supplier])
 }
 
 // Customer order submitted from the public shop. Prices/total are recomputed
