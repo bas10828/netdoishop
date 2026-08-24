@@ -41,6 +41,9 @@ function tokenMatches(haystack: string, token: string): boolean {
   if (haystack.includes(token)) return true;
   return (RESOLUTION_SYNONYMS[token] ?? []).some((alt) => haystack.includes(alt));
 }
+// customers type brand names without the dash ("tplink", "dlink") — strip
+// "-" from both the haystack and the query so it doesn't matter.
+const dashless = (s: string) => s.toLowerCase().replace(/-/g, "");
 
 // brands shown first in the filter row (best sellers). Names must match the
 // brand strings in the catalog exactly. Any not present are skipped.
@@ -109,7 +112,7 @@ export default function ShopClient({
   }, [products]);
 
   const filtered = useMemo(() => {
-    const term = q.trim().toLowerCase();
+    const term = dashless(q.trim());
     return products.filter((p) => {
       if (cat !== "all" && p.category !== cat) return false;
       if (brand !== "all" && p.brand !== brand) return false;
@@ -127,10 +130,10 @@ export default function ShopClient({
         p.name,
         doc ? `${doc.tagline} ${doc.body} ${doc.specs.join(" ")}` : "",
       ]
-        .join(" ")
-        .toLowerCase();
+        .join(" ");
+      const haystackNorm = dashless(haystack);
       const tokens = term.split(/\s+/).filter(Boolean);
-      return tokens.every((t) => tokenMatches(haystack, t));
+      return tokens.every((t) => tokenMatches(haystackNorm, t));
     });
   }, [products, q, cat, brand]);
 

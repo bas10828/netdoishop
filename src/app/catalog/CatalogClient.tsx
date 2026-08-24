@@ -70,6 +70,9 @@ function tokenMatches(haystack: string, token: string): boolean {
   if (haystack.includes(token)) return true;
   return (RESOLUTION_SYNONYMS[token] ?? []).some((alt) => haystack.includes(alt));
 }
+// staff/customers type brand names without the dash ("tplink", "dlink") —
+// strip "-" from both the haystack and the query so it doesn't matter.
+const dashless = (s: string) => s.toLowerCase().replace(/-/g, "");
 
 // Ad-hoc service line added to a proposal document only (no Product row).
 // unitPrice here is just the prefill default for a new row — staff can
@@ -239,7 +242,7 @@ export default function CatalogClient({
   }, [items, selected, qty, draftMember, draftPublic, customItems]);
 
   const filtered = useMemo(() => {
-    const term = q.trim().toLowerCase();
+    const term = dashless(q.trim());
     return items.filter((p) => {
       if (cat !== "all" && p.category !== cat) return false;
       if (supplierFilter !== "all") {
@@ -263,10 +266,10 @@ export default function CatalogClient({
         p.name,
         doc ? `${doc.tagline} ${doc.body} ${doc.specs.join(" ")}` : "",
       ]
-        .join(" ")
-        .toLowerCase();
+        .join(" ");
+      const haystackNorm = dashless(haystack);
       const tokens = term.split(/\s+/).filter(Boolean);
-      return tokens.every((t) => tokenMatches(haystack, t));
+      return tokens.every((t) => tokenMatches(haystackNorm, t));
     });
   }, [items, q, cat, supplierFilter, statusFilter, contentFilter]);
 
