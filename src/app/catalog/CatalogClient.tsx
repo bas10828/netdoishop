@@ -545,6 +545,42 @@ export default function CatalogClient({
     }
   }
 
+  // bulk status change for every currently-selected item (the "เลือก N
+  // รายการ" bar) — same PATCH as the per-row status dropdown, just fired for
+  // each id. Selection is left as-is afterward so staff can see what changed.
+  const [bulkStatusUpdating, setBulkStatusUpdating] = useState(false);
+  async function bulkSetStatus(next: string) {
+    setBulkStatusUpdating(true);
+    setError("");
+    try {
+      const ids = [...selected];
+      const results = await Promise.all(
+        ids.map(async (id) => {
+          const res = await fetch(`/api/products/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: next }),
+          });
+          return res.ok ? ((await res.json()) as Product) : null;
+        })
+      );
+      const byId = new Map(results.filter((r): r is Product => r !== null).map((r) => [r.id, r]));
+      if (byId.size < ids.length) {
+        setError(`เปลี่ยนสถานะไม่สำเร็จ ${ids.length - byId.size} รายการ`);
+      }
+      setItems((prev) =>
+        prev.map((x) => {
+          const updated = byId.get(x.id);
+          return updated ? { ...updated, image: x.image } : x;
+        })
+      );
+    } catch {
+      setError("เชื่อมต่อไม่ได้");
+    } finally {
+      setBulkStatusUpdating(false);
+    }
+  }
+
   // shared inline number-editor (used by both price columns)
   function priceEditor(p: Product) {
     return (
@@ -1230,6 +1266,25 @@ export default function CatalogClient({
           >
             📝 ดูสรุปก่อนสร้าง
           </button>
+          <label className="flex items-center gap-1 text-sm text-slate-500">
+            เปลี่ยนสถานะ
+            <select
+              value=""
+              disabled={bulkStatusUpdating}
+              onChange={(e) => {
+                if (e.target.value) bulkSetStatus(e.target.value);
+                e.target.value = "";
+              }}
+              className="rounded-md border border-slate-300 px-2 py-1.5 text-sm outline-none focus:border-slate-500 disabled:opacity-50"
+            >
+              <option value="" disabled>
+                {bulkStatusUpdating ? "กำลังบันทึก…" : "เลือก…"}
+              </option>
+              <option value="in stock">พร้อมขาย</option>
+              <option value="SOLD OUT">SOLD OUT</option>
+              <option value="hidden">ไม่แสดงหน้าร้าน</option>
+            </select>
+          </label>
           <button
             onClick={() => setSelected(new Set())}
             className="rounded-md border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100"
