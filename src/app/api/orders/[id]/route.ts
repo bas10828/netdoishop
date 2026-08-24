@@ -12,7 +12,7 @@ const ORDER_STATUSES = [
   "CANCELLED",
 ] as const;
 
-// PATCH /api/orders/:id  { status } — ADMIN. Move order through the workflow.
+// PATCH /api/orders/:id  { status } — any logged-in staff. Move order through the workflow.
 export async function PATCH(
   req: Request,
   { params }: { params: { id: string } }
