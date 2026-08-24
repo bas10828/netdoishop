@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { productDoc } from "@/data/descriptions";
@@ -54,6 +54,23 @@ type EditField = "cost" | "public";
 const baht = (n: number | null) =>
   n === null ? "-" : n.toLocaleString("th-TH");
 
+// Camera resolution is written inconsistently across brands/catalog text —
+// TP-Link's own taglines pair these terms together ("2K/3MP", "3K/5MP"), and
+// "1080p"/"2MP" are the same industry-standard equivalence — so a search for
+// one should also find products only labeled with the other.
+const RESOLUTION_SYNONYMS: Record<string, string[]> = {
+  "2mp": ["1080p"],
+  "1080p": ["2mp"],
+  "3mp": ["2k"],
+  "2k": ["3mp"],
+  "5mp": ["3k"],
+  "3k": ["5mp"],
+};
+function tokenMatches(haystack: string, token: string): boolean {
+  if (haystack.includes(token)) return true;
+  return (RESOLUTION_SYNONYMS[token] ?? []).some((alt) => haystack.includes(alt));
+}
+
 // Ad-hoc service line added to a proposal document only (no Product row).
 // unitPrice here is just the prefill default for a new row — staff can
 // still edit it per document; bump DEFAULT_PRICE below to raise the
@@ -88,12 +105,33 @@ export default function CatalogClient({
   pendingCount: number;
 }) {
   const [items, setItems] = useState<Product[]>(products);
+
+  // which product list to mount: rendering both the mobile card list and the
+  // desktop table (just CSS-hiding one) forced React to reconcile ~900 rows
+  // twice on every keystroke/filter change — this only ever mounts one.
+  // Defaults to the desktop table for the SSR/pre-hydration paint since that
+  // matches most staff sessions; matchMedia flips it right after mount on phones.
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    setIsMobile(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string>("all");
   // filter by cost source (CMIT/SiS/TP-Link/...) — matches either the item's
   // active supplier OR any extra distributor quote on file (supplierCosts),
   // so "หา tplink/sis" finds a product even when CMIT is still the live default.
   const [supplierFilter, setSupplierFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  // finds products still missing storefront content — "no-photo" = falling
+  // back to /devices/default.png, "no-desc" = productDoc() has nothing.
+  const [contentFilter, setContentFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("default");
+  const [showMoreFilters, setShowMoreFilters] = useState(false);
 
   const suppliers = useMemo(() => {
     const present = new Set<string>();
@@ -111,6 +149,18 @@ export default function CatalogClient({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [togglingId, setTogglingId] = useState<number | null>(null);
+
+  // row expand — ต้นทุนดิบ/เข้าชม/ใบราคา are reference info, not needed at a
+  // glance; tucked behind a per-row toggle to keep the default table scannable.
+  const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
+  function toggleExpanded(id: number) {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   // image popup (price sheet OR product photo)
   const [sheetSrc, setSheetSrc] = useState<string | null>(null);
@@ -197,19 +247,112 @@ export default function CatalogClient({
           (p.supplierCosts ? supplierFilter in p.supplierCosts : false);
         if (!has) return false;
       }
+      if (statusFilter !== "all" && p.status !== statusFilter) return false;
+      if (contentFilter === "no-photo" && p.image !== "/devices/default.png") return false;
+      if (contentFilter === "no-desc" && productDoc(p.brand, p.model)) return false;
       if (!term) return true;
+      // multi-word search is AND-across-words over ALL fields combined, not
+      // "does any single field contain the whole typed phrase" — otherwise
+      // "dahua 2mp" never matches (brand="Dahua", the "2MP" is only in name)
+      // even though "vigi 2mp" happens to work by accident (VIGI is repeated
+      // inside that brand's own name field).
       const doc = productDoc(p.brand, p.model);
-      const docText = doc
-        ? `${doc.tagline} ${doc.body} ${doc.specs.join(" ")}`.toLowerCase()
-        : "";
-      return (
-        p.brand.toLowerCase().includes(term) ||
-        p.model.toLowerCase().includes(term) ||
-        p.name.toLowerCase().includes(term) ||
-        docText.includes(term)
-      );
+      const haystack = [
+        p.brand,
+        p.model,
+        p.name,
+        doc ? `${doc.tagline} ${doc.body} ${doc.specs.join(" ")}` : "",
+      ]
+        .join(" ")
+        .toLowerCase();
+      const tokens = term.split(/\s+/).filter(Boolean);
+      return tokens.every((t) => tokenMatches(haystack, t));
     });
-  }, [items, q, cat, supplierFilter]);
+  }, [items, q, cat, supplierFilter, statusFilter, contentFilter]);
+
+  // sort is applied on top of filtering, kept as a separate step so "default"
+  // can just reuse filtered's category/brand/model order untouched.
+  const sorted = useMemo(() => {
+    if (sortBy === "default") return filtered;
+    const arr = [...filtered];
+    switch (sortBy) {
+      case "price-asc":
+        arr.sort((a, b) => (a.publicPrice ?? Infinity) - (b.publicPrice ?? Infinity));
+        break;
+      case "price-desc":
+        arr.sort((a, b) => (b.publicPrice ?? -Infinity) - (a.publicPrice ?? -Infinity));
+        break;
+      case "views-desc":
+        arr.sort((a, b) => b.viewCount - a.viewCount);
+        break;
+      case "brand-az":
+        arr.sort((a, b) => a.brand.localeCompare(b.brand) || a.model.localeCompare(b.model));
+        break;
+    }
+    return arr;
+  }, [filtered, sortBy]);
+
+  // pagination — same pattern as the public shop (ShopClient.tsx): rendering
+  // all ~900 rows at once was the real reason typing in search / flipping a
+  // filter felt sluggish, since every keystroke re-reconciled the whole list.
+  const [pageSize, setPageSize] = useState(20);
+  const [page, setPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
+  const curPage = Math.min(page, totalPages);
+  const paged = useMemo(
+    () => sorted.slice((curPage - 1) * pageSize, curPage * pageSize),
+    [sorted, curPage, pageSize]
+  );
+  const listTopRef = useRef<HTMLDivElement>(null);
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    listTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [curPage]);
+  function goToPage(n: number) {
+    setPage(Math.min(Math.max(1, n), totalPages));
+  }
+  function renderPager() {
+    if (totalPages <= 1) return null;
+    return (
+      <div className="my-3 flex flex-wrap items-center justify-center gap-2 text-sm">
+        <button
+          onClick={() => goToPage(1)}
+          disabled={curPage === 1}
+          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
+        >
+          « แรก
+        </button>
+        <button
+          onClick={() => goToPage(curPage - 1)}
+          disabled={curPage === 1}
+          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
+        >
+          ‹ ก่อนหน้า
+        </button>
+        <span className="px-2">
+          หน้า {curPage} / {totalPages}
+        </span>
+        <button
+          onClick={() => goToPage(curPage + 1)}
+          disabled={curPage === totalPages}
+          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
+        >
+          ถัดไป ›
+        </button>
+        <button
+          onClick={() => goToPage(totalPages)}
+          disabled={curPage === totalPages}
+          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
+        >
+          สุดท้าย »
+        </button>
+      </div>
+    );
+  }
 
   function toggleSelected(id: number) {
     setSelected((prev) => {
@@ -220,10 +363,16 @@ export default function CatalogClient({
     });
   }
 
+  // "visible" = current page, matching what the checkbox column can actually see
   function toggleSelectAllVisible() {
     setSelected((prev) => {
-      const allSelected = filtered.length > 0 && filtered.every((p) => prev.has(p.id));
-      return allSelected ? new Set() : new Set(filtered.map((p) => p.id));
+      const allSelected = paged.length > 0 && paged.every((p) => prev.has(p.id));
+      if (allSelected) {
+        const next = new Set(prev);
+        for (const p of paged) next.delete(p.id);
+        return next;
+      }
+      return new Set([...prev, ...paged.map((p) => p.id)]);
     });
   }
 
@@ -443,10 +592,10 @@ export default function CatalogClient({
             </p>
           </div>
         </Link>
-        <div className="flex items-center gap-3 text-sm">
+        <div className="flex flex-wrap items-center gap-2 text-sm">
           <Link
             href="/catalog/orders"
-            className="relative rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
+            className="relative shrink-0 whitespace-nowrap rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
           >
             📋 ออเดอร์
             {pendingCount > 0 && (
@@ -457,45 +606,54 @@ export default function CatalogClient({
           </Link>
           <Link
             href="/catalog/sales"
-            className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
+            className="shrink-0 whitespace-nowrap rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
           >
             🧾 รายงานการขาย
           </Link>
           {role === "admin" && (
             <Link
               href="/catalog/users"
-              className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
+              className="shrink-0 whitespace-nowrap rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
             >
               👤 จัดการผู้ใช้
             </Link>
           )}
           <Link
             href="/"
-            className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
+            className="shrink-0 whitespace-nowrap rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
           >
             🏠 หน้าร้าน
           </Link>
-          <span className="text-slate-500">ผู้ใช้: {username}</span>
+          <span className="shrink-0 whitespace-nowrap text-slate-500">ผู้ใช้: {username}</span>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
+            className="shrink-0 whitespace-nowrap rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
           >
             ออกจากระบบ
           </button>
         </div>
       </header>
 
-      <div className="mb-2 flex flex-wrap items-center gap-2">
+      {/* sticky on mobile only — the primary use case is scanning a long list
+          on-site with no computer, and scrolling back up to re-search every
+          time is the kind of friction that makes staff give up and call in. */}
+      <div className="sticky top-0 z-20 -mx-4 mb-2 flex flex-wrap items-center gap-2 bg-slate-100 px-4 pb-2 pt-2 sm:static sm:mx-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0">
         <input
           placeholder="ค้นหา แบรนด์ / รุ่น / ชื่อ / รายละเอียด..."
           value={q}
-          onChange={(e) => setQ(e.target.value)}
-          className="w-64 rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
+          onChange={(e) => {
+            setQ(e.target.value);
+            setPage(1);
+          }}
+          className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500 sm:w-64"
         />
         <select
           value={cat}
-          onChange={(e) => setCat(e.target.value)}
-          className="rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
+          onChange={(e) => {
+            setCat(e.target.value);
+            setPage(1);
+          }}
+          className="min-w-0 flex-1 rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500 sm:flex-initial"
         >
           <option value="all">ทุกหมวด</option>
           {categories.map((c) => (
@@ -505,26 +663,274 @@ export default function CatalogClient({
           ))}
         </select>
         <select
-          value={supplierFilter}
-          onChange={(e) => setSupplierFilter(e.target.value)}
-          className="rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
-          title="กรองตามแหล่งต้นทุน (ใบราคาที่ใช้คำนวณราคาทุน)"
+          value={sortBy}
+          onChange={(e) => {
+            setSortBy(e.target.value);
+            setPage(1);
+          }}
+          className="min-w-0 flex-1 rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500 sm:flex-initial"
         >
-          <option value="all">ทุกแหล่งต้นทุน</option>
-          {suppliers.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
+          <option value="default">เรียง: ค่าเริ่มต้น</option>
+          <option value="price-asc">ราคาหน้าร้าน: ต่ำ→สูง</option>
+          <option value="price-desc">ราคาหน้าร้าน: สูง→ต่ำ</option>
+          <option value="views-desc">เข้าชมมากสุด</option>
+          <option value="brand-az">แบรนด์ A-Z</option>
         </select>
-        <span className="text-sm text-slate-500">{filtered.length} รายการ</span>
+        <label className="hidden items-center gap-1 text-sm text-slate-500 sm:flex">
+          แสดง
+          <select
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              setPage(1);
+            }}
+            className="rounded-md border border-slate-300 px-2 py-2 outline-none focus:border-slate-500"
+          >
+            {[10, 20, 50, 100].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
+          /หน้า
+        </label>
+        <span className="text-sm text-slate-500">{sorted.length} รายการ</span>
+        <button
+          onClick={() => setShowMoreFilters((v) => !v)}
+          className={
+            "rounded-md border px-3 py-2 text-sm " +
+            (supplierFilter !== "all" || statusFilter !== "all" || contentFilter !== "all"
+              ? "border-indigo-400 bg-indigo-50 text-indigo-700"
+              : "border-slate-300 text-slate-600 hover:bg-slate-200")
+          }
+        >
+          ตัวกรองเพิ่มเติม {showMoreFilters ? "▴" : "▾"}
+        </button>
       </div>
+
+      {showMoreFilters && (
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <select
+            value={supplierFilter}
+            onChange={(e) => {
+              setSupplierFilter(e.target.value);
+              setPage(1);
+            }}
+            className="min-w-0 flex-1 rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500 sm:flex-initial"
+            title="กรองตามแหล่งต้นทุน (ใบราคาที่ใช้คำนวณราคาทุน)"
+          >
+            <option value="all">ทุกแหล่งต้นทุน</option>
+            {suppliers.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(1);
+            }}
+            className="min-w-0 flex-1 rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500 sm:flex-initial"
+          >
+            <option value="all">ทุกสถานะ</option>
+            <option value="in stock">พร้อมขาย</option>
+            <option value="SOLD OUT">SOLD OUT</option>
+            <option value="hidden">ไม่แสดงหน้าร้าน</option>
+          </select>
+          <select
+            value={contentFilter}
+            onChange={(e) => {
+              setContentFilter(e.target.value);
+              setPage(1);
+            }}
+            className="min-w-0 flex-1 rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-500 sm:flex-initial"
+            title="หารายการที่ยังไม่มีรูป/รายละเอียดหน้าร้าน เพื่อตามไปทำต่อ"
+          >
+            <option value="all">ข้อมูลหน้าร้าน: ทั้งหมด</option>
+            <option value="no-photo">ไม่มีรูป</option>
+            <option value="no-desc">ไม่มีรายละเอียด</option>
+          </select>
+        </div>
+      )}
+
       <p className="mb-3 text-xs text-slate-400">
         💡 คลิกราคาทุนเพื่อแก้ (ออนไลน์คำนวณใหม่อัตโนมัติ) · คลิกราคาหน้าร้านเพื่อตั้งราคาเอง
         (เว้นว่าง = กลับไปใช้ราคาอัตโนมัติ) · เลือกสถานะ พร้อมขาย/SOLD OUT/ไม่แสดงหน้าร้าน ได้จาก dropdown · คลิกรูปเพื่อขยาย
       </p>
       {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
 
+      {sorted.length === 0 && (
+        <p className="rounded-lg border border-slate-200 bg-white px-3 py-8 text-center text-slate-400">
+          ไม่พบรายการ
+        </p>
+      )}
+
+      <div ref={listTopRef} className="scroll-mt-24" />
+      {renderPager()}
+
+      {/* mobile card list — the table below scrolls horizontally and doesn't
+          work as a thumb-scannable list on a phone, which is the primary way
+          staff build a price proposal on-site with no computer. Only one of
+          this list / the table is ever mounted (see isMobile above). */}
+      {isMobile && paged.length > 0 && (
+        <div className="divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white">
+          {paged.map((p) => (
+            <div key={p.id} className="flex gap-2 p-3">
+              <label className="flex h-11 w-8 shrink-0 items-start justify-center pt-2">
+                <input
+                  type="checkbox"
+                  checked={selected.has(p.id)}
+                  onChange={() => toggleSelected(p.id)}
+                  className="h-6 w-6"
+                />
+              </label>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={p.image}
+                alt={p.model}
+                loading="lazy"
+                onClick={() => {
+                  setSheetSrc(p.image);
+                  setSheetName(`${p.brand} ${p.model}`);
+                }}
+                className="h-14 w-14 shrink-0 cursor-zoom-in rounded border border-slate-200 bg-white object-contain"
+              />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="truncate font-medium">
+                      {p.brand} <span className="text-slate-500">{p.model}</span>
+                    </div>
+                    <div className="text-xs text-slate-400">{p.categoryLabel}</div>
+                  </div>
+                  <button
+                    onClick={() => toggleExpanded(p.id)}
+                    title="ต้นทุนดิบ / ยอดเข้าชม / ใบราคา"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded text-slate-400 hover:bg-slate-200 hover:text-slate-700"
+                  >
+                    {expandedIds.has(p.id) ? "▴" : "▾"}
+                  </button>
+                </div>
+
+                <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                  <div>
+                    <div className="text-[10px] text-slate-400">ราคาช่าง</div>
+                    {editId === p.id && editField === "cost" ? (
+                      priceEditor(p)
+                    ) : (
+                      <button
+                        onClick={() => startEdit(p, "cost")}
+                        title={supplierTooltip(p.supplier)}
+                        className="rounded px-1.5 py-1 font-medium hover:bg-amber-100"
+                      >
+                        {baht(p.priceMember)} ✏️
+                      </button>
+                    )}
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-slate-400">ราคาหน้าร้าน</div>
+                    {editId === p.id && editField === "public" ? (
+                      priceEditor(p)
+                    ) : (
+                      <button
+                        onClick={() => startEdit(p, "public")}
+                        title={
+                          p.publicPriceOverride === null
+                            ? "ราคาอัตโนมัติ — คลิกเพื่อตั้งราคาเอง"
+                            : "ตั้งราคาเอง — คลิกเพื่อแก้ (เว้นว่าง = อัตโนมัติ)"
+                        }
+                        className={
+                          "rounded px-1.5 py-1 font-semibold hover:bg-sky-100 " +
+                          (p.publicPriceOverride !== null ? "text-sky-700" : "text-slate-700")
+                        }
+                      >
+                        {baht(p.publicPrice)} ✏️
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-1.5">
+                  <select
+                    value={p.status}
+                    onChange={(e) => setStatus(p, e.target.value)}
+                    disabled={togglingId === p.id}
+                    title="พร้อมขาย = ปกติ · SOLD OUT = ยังโชว์หน้าร้านแต่ไม่มีราคา/ซื้อไม่ได้ · ไม่แสดงหน้าร้าน = หายจากหน้าร้านเลย"
+                    className={
+                      "rounded border-none px-2 py-1 text-xs outline-none disabled:opacity-50 " +
+                      (p.status === "SOLD OUT"
+                        ? "bg-red-100 text-red-700"
+                        : p.status === "hidden"
+                        ? "bg-slate-200 text-slate-600"
+                        : "bg-emerald-100 text-emerald-700")
+                    }
+                  >
+                    <option value="in stock">พร้อมขาย</option>
+                    <option value="SOLD OUT">SOLD OUT</option>
+                    <option value="hidden">ไม่แสดงหน้าร้าน</option>
+                  </select>
+                </div>
+
+                {expandedIds.has(p.id) && (
+                  <div className="mt-2 space-y-1 border-t border-slate-100 pt-2 text-xs text-slate-500">
+                    <div
+                      title={`ต้นทุนดิบจากใบราคา ${p.supplier} (ก่อน markup) — ไม่ใช่ราคาช่าง แก้ไม่ได้ตรงนี้ ตามใบราคาจริง`}
+                    >
+                      ต้นทุนดิบ:{" "}
+                      <span className={`mx-1 rounded px-1 text-[10px] ${supplierBadgeClass(p.supplier)}`}>
+                        {p.supplier}
+                      </span>
+                      {baht(rawCostFor(p, p.supplier))}
+                    </div>
+                    <div>ช่วงราคาออนไลน์: {baht(p.onlineMin)}–{baht(p.onlineMax)}</div>
+                    <div>👁 เข้าชม {baht(p.viewCount)}</div>
+                    <div className="flex items-center gap-1">
+                      {p.sourceFile.toLowerCase().endsWith(".jpg") ? (
+                        <button
+                          onClick={() => {
+                            setSheetSrc(`/api/sheets/${p.sourceFile}`);
+                            setSheetName(`${p.sourceFile} — ${p.sheetDate}`);
+                          }}
+                          title="คลิกดูใบราคา (มีวันที่ในรูป)"
+                          className="text-sky-600 underline hover:text-sky-800"
+                        >
+                          🧾 ดูใบ
+                        </button>
+                      ) : (
+                        <span title="ที่มา: ไฟล์ pricelist ของผู้แทนจำหน่าย ไม่มีรูปใบราคา" className="text-slate-400">
+                          🧾 {p.sourceFile}
+                        </span>
+                      )}
+                      <span className="text-slate-400">({p.sheetDate})</span>
+                    </div>
+                  </div>
+                )}
+
+                {(() => {
+                  const doc = productDoc(p.brand, p.model);
+                  if (!doc) return null;
+                  return (
+                    <details className="mt-1.5">
+                      <summary className="cursor-pointer text-xs text-sky-600 hover:text-sky-800">
+                        {doc.tagline}
+                      </summary>
+                      <ul className="mt-1 list-disc space-y-0.5 pl-4 text-xs text-slate-500">
+                        {doc.specs.map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  );
+                })()}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!isMobile && (
       <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
         <table className="w-full border-collapse text-sm">
           <thead className="bg-slate-800 text-white">
@@ -532,9 +938,9 @@ export default function CatalogClient({
               <th className="px-2 py-2 text-center">
                 <input
                   type="checkbox"
-                  checked={filtered.length > 0 && filtered.every((p) => selected.has(p.id))}
+                  checked={paged.length > 0 && paged.every((p) => selected.has(p.id))}
                   onChange={toggleSelectAllVisible}
-                  title="เลือกทั้งหมดที่แสดง"
+                  title="เลือกทั้งหมดในหน้านี้"
                 />
               </th>
               <th className="px-3 py-2 text-left">รูป</th>
@@ -543,24 +949,21 @@ export default function CatalogClient({
               <th className="px-3 py-2 text-left">รุ่น</th>
               <th className="px-3 py-2 text-left">รายละเอียด</th>
               <th className="px-3 py-2 text-right">
-                ต้นทุน
-                <div className="text-[10px] font-normal text-slate-400">ราคาที่ซัพพลายเออร์คิดเรา</div>
-              </th>
-              <th className="px-3 py-2 text-right">
                 ราคาช่าง
                 <div className="text-[10px] font-normal text-slate-400">ต้นทุน + markup = ราคาขายช่าง</div>
               </th>
-              <th className="px-3 py-2 text-right">ออนไลน์ min</th>
-              <th className="px-3 py-2 text-right">ออนไลน์ max</th>
+              <th className="px-3 py-2 text-right">ช่วงราคาออนไลน์</th>
               <th className="px-3 py-2 text-right">ราคาหน้าร้าน</th>
-              <th className="px-3 py-2 text-right">เข้าชม</th>
               <th className="px-3 py-2 text-left">สถานะ</th>
-              <th className="px-3 py-2 text-left">ใบราคา</th>
+              <th className="px-2 py-2 text-center">
+                <span className="sr-only">รายละเอียดเพิ่มเติม</span>
+              </th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((p) => (
-              <tr key={p.id} className="border-t border-slate-100 hover:bg-slate-50">
+            {paged.map((p) => (
+              <Fragment key={p.id}>
+              <tr className="border-t border-slate-100 hover:bg-slate-50">
                 <td className="px-2 py-1 text-center">
                   <input
                     type="checkbox"
@@ -615,16 +1018,6 @@ export default function CatalogClient({
                   })()}
                 </td>
                 <td className="px-3 py-2 text-right">
-                  <span
-                    title={`ต้นทุนดิบจากใบราคา ${p.supplier} (ก่อน markup) — ไม่ใช่ราคาช่าง แก้ไม่ได้ตรงนี้ ตามใบราคาจริง`}
-                  >
-                    <span className={`mr-1 rounded px-1 text-[10px] ${supplierBadgeClass(p.supplier)}`}>
-                      {p.supplier}
-                    </span>
-                    {baht(rawCostFor(p, p.supplier))}
-                  </span>
-                </td>
-                <td className="px-3 py-2 text-right">
                   {editId === p.id && editField === "cost" ? (
                     priceEditor(p)
                   ) : (
@@ -670,10 +1063,7 @@ export default function CatalogClient({
                   )}
                 </td>
                 <td className="px-3 py-2 text-right text-emerald-700">
-                  {baht(p.onlineMin)}
-                </td>
-                <td className="px-3 py-2 text-right text-emerald-700">
-                  {baht(p.onlineMax)}
+                  {baht(p.onlineMin)}–{baht(p.onlineMax)}
                 </td>
                 <td className="px-3 py-2 text-right">
                   {editId === p.id && editField === "public" ? (
@@ -722,9 +1112,6 @@ export default function CatalogClient({
                     </div>
                   )}
                 </td>
-                <td className="px-3 py-2 text-right text-slate-500">
-                  👁 {baht(p.viewCount)}
-                </td>
                 <td className="px-3 py-2">
                   <select
                     value={p.status}
@@ -745,40 +1132,65 @@ export default function CatalogClient({
                     <option value="hidden">ไม่แสดงหน้าร้าน</option>
                   </select>
                 </td>
-                <td className="px-3 py-2 text-xs">
-                  {p.sourceFile.toLowerCase().endsWith(".jpg") ? (
-                    <button
-                      onClick={() => {
-                        setSheetSrc(`/api/sheets/${p.sourceFile}`);
-                        setSheetName(`${p.sourceFile} — ${p.sheetDate}`);
-                      }}
-                      title="คลิกดูใบราคา (มีวันที่ในรูป)"
-                      className="text-sky-600 underline hover:text-sky-800"
-                    >
-                      🧾 ดูใบ
-                    </button>
-                  ) : (
-                    <span
-                      title="ที่มา: ไฟล์ pricelist ของผู้แทนจำหน่าย ไม่มีรูปใบราคา"
-                      className="text-slate-400"
-                    >
-                      🧾 {p.sourceFile}
-                    </span>
-                  )}
-                  <div className="text-slate-400">{p.sheetDate}</div>
+                <td className="px-2 py-1 text-center">
+                  <button
+                    onClick={() => toggleExpanded(p.id)}
+                    title="ต้นทุนดิบ / ยอดเข้าชม / ใบราคา"
+                    className="rounded px-1.5 py-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700"
+                  >
+                    {expandedIds.has(p.id) ? "▴" : "▾"}
+                  </button>
                 </td>
               </tr>
+              {expandedIds.has(p.id) && (
+                <tr className="border-t border-slate-100 bg-slate-50 text-xs text-slate-500">
+                  <td />
+                  <td colSpan={10} className="px-3 py-2">
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
+                      <span
+                        title={`ต้นทุนดิบจากใบราคา ${p.supplier} (ก่อน markup) — ไม่ใช่ราคาช่าง แก้ไม่ได้ตรงนี้ ตามใบราคาจริง`}
+                      >
+                        ต้นทุนดิบ:{" "}
+                        <span className={`mx-1 rounded px-1 text-[10px] ${supplierBadgeClass(p.supplier)}`}>
+                          {p.supplier}
+                        </span>
+                        {baht(rawCostFor(p, p.supplier))}
+                      </span>
+                      <span>👁 เข้าชม {baht(p.viewCount)}</span>
+                      <span className="flex items-center gap-1">
+                        {p.sourceFile.toLowerCase().endsWith(".jpg") ? (
+                          <button
+                            onClick={() => {
+                              setSheetSrc(`/api/sheets/${p.sourceFile}`);
+                              setSheetName(`${p.sourceFile} — ${p.sheetDate}`);
+                            }}
+                            title="คลิกดูใบราคา (มีวันที่ในรูป)"
+                            className="text-sky-600 underline hover:text-sky-800"
+                          >
+                            🧾 ดูใบ
+                          </button>
+                        ) : (
+                          <span
+                            title="ที่มา: ไฟล์ pricelist ของผู้แทนจำหน่าย ไม่มีรูปใบราคา"
+                            className="text-slate-400"
+                          >
+                            🧾 {p.sourceFile}
+                          </span>
+                        )}
+                        <span className="text-slate-400">({p.sheetDate})</span>
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              )}
+              </Fragment>
             ))}
-            {filtered.length === 0 && (
-              <tr>
-                <td colSpan={13} className="px-3 py-8 text-center text-slate-400">
-                  ไม่พบรายการ
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
+      )}
+
+      {renderPager()}
 
       {sheetSrc && (
         <div

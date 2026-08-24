@@ -25,6 +25,23 @@ type PublicProduct = {
 
 const baht = (n: number) => n.toLocaleString("th-TH");
 
+// Camera resolution is written inconsistently across brands/catalog text —
+// TP-Link's own taglines pair these terms together ("2K/3MP", "3K/5MP"), and
+// "1080p"/"2MP" are the same industry-standard equivalence — so a search for
+// one should also find products only labeled with the other.
+const RESOLUTION_SYNONYMS: Record<string, string[]> = {
+  "2mp": ["1080p"],
+  "1080p": ["2mp"],
+  "3mp": ["2k"],
+  "2k": ["3mp"],
+  "5mp": ["3k"],
+  "3k": ["5mp"],
+};
+function tokenMatches(haystack: string, token: string): boolean {
+  if (haystack.includes(token)) return true;
+  return (RESOLUTION_SYNONYMS[token] ?? []).some((alt) => haystack.includes(alt));
+}
+
 // brands shown first in the filter row (best sellers). Names must match the
 // brand strings in the catalog exactly. Any not present are skipped.
 const POPULAR_BRANDS = [
@@ -97,20 +114,23 @@ export default function ShopClient({
       if (cat !== "all" && p.category !== cat) return false;
       if (brand !== "all" && p.brand !== brand) return false;
       if (!term) return true;
-      if (
-        p.brand.toLowerCase().includes(term) ||
-        p.model.toLowerCase().includes(term) ||
-        p.name.toLowerCase().includes(term)
-      ) {
-        return true;
-      }
-      // also search the Thai product description (tagline/body/specs) so
+      // multi-word search is AND-across-words over ALL fields combined, not
+      // "does any single field contain the whole typed phrase" — otherwise
+      // "dahua 2mp" never matches (brand="Dahua", the "2MP" is only in name).
+      // Also searches the Thai product description (tagline/body/specs) so
       // customers can find things by everyday words ("กล้องกันน้ำ", "PoE
       // 24 พอร์ต") that don't appear in the short catalog name/model.
       const doc = productDoc(p.brand, p.model);
-      if (!doc) return false;
-      const docText = `${doc.tagline} ${doc.body} ${doc.specs.join(" ")}`.toLowerCase();
-      return docText.includes(term);
+      const haystack = [
+        p.brand,
+        p.model,
+        p.name,
+        doc ? `${doc.tagline} ${doc.body} ${doc.specs.join(" ")}` : "",
+      ]
+        .join(" ")
+        .toLowerCase();
+      const tokens = term.split(/\s+/).filter(Boolean);
+      return tokens.every((t) => tokenMatches(haystack, t));
     });
   }, [products, q, cat, brand]);
 
