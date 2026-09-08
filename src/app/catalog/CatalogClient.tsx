@@ -115,6 +115,10 @@ export default function CatalogClient({
   // Defaults to the desktop table for the SSR/pre-hydration paint since that
   // matches most staff sessions; matchMedia flips it right after mount on phones.
   const [isMobile, setIsMobile] = useState(false);
+  // header nav collapses into a dropdown below sm: 6 whitespace-nowrap
+  // buttons in a flex-wrap row broke into 3 rows of clutter on a phone,
+  // pushing the actual catalog down below the fold.
+  const [navOpen, setNavOpen] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 639px)");
     setIsMobile(mq.matches);
@@ -631,7 +635,8 @@ export default function CatalogClient({
             </p>
           </div>
         </Link>
-        <div className="flex flex-wrap items-center gap-2 text-sm">
+        {/* desktop: full inline row */}
+        <div className="hidden flex-wrap items-center gap-2 text-sm sm:flex">
           <Link
             href="/catalog/orders"
             className="relative shrink-0 whitespace-nowrap rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
@@ -671,7 +676,69 @@ export default function CatalogClient({
             ออกจากระบบ
           </button>
         </div>
+
+        {/* mobile: ออเดอร์ (has the pending badge, most time-critical) stays
+            visible; everything else collapses behind a hamburger so the
+            catalog itself isn't pushed below 3 rows of nav buttons. */}
+        <div className="flex items-center gap-2 text-sm sm:hidden">
+          <Link
+            href="/catalog/orders"
+            className="relative shrink-0 whitespace-nowrap rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-200"
+          >
+            📋 ออเดอร์
+            {pendingCount > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">
+                {pendingCount}
+              </span>
+            )}
+          </Link>
+          <button
+            onClick={() => setNavOpen((v) => !v)}
+            aria-label="เมนู"
+            aria-expanded={navOpen}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slate-300 text-lg hover:bg-slate-200"
+          >
+            {navOpen ? "✕" : "☰"}
+          </button>
+        </div>
       </header>
+
+      {navOpen && (
+        <div className="mb-4 -mt-2 flex flex-col gap-1 rounded-md border border-slate-200 bg-white p-2 text-sm shadow-sm sm:hidden">
+          <Link
+            href="/catalog/sales"
+            onClick={() => setNavOpen(false)}
+            className="rounded-md px-3 py-2.5 hover:bg-slate-100"
+          >
+            🧾 รายงานการขาย
+          </Link>
+          {role === "admin" && (
+            <Link
+              href="/catalog/users"
+              onClick={() => setNavOpen(false)}
+              className="rounded-md px-3 py-2.5 hover:bg-slate-100"
+            >
+              👤 จัดการผู้ใช้
+            </Link>
+          )}
+          <Link
+            href="/"
+            onClick={() => setNavOpen(false)}
+            className="rounded-md px-3 py-2.5 hover:bg-slate-100"
+          >
+            🏠 หน้าร้าน
+          </Link>
+          <div className="border-t border-slate-100 pt-1">
+            <span className="block px-3 py-1.5 text-slate-500">ผู้ใช้: {username}</span>
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="w-full rounded-md px-3 py-2.5 text-left hover:bg-slate-100"
+            >
+              ออกจากระบบ
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* sticky on mobile only — the primary use case is scanning a long list
           on-site with no computer, and scrolling back up to re-search every
