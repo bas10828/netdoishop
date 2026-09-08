@@ -1,12 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import EditSalesReportForm from "../EditSalesReportForm";
 import type { SalesReportDeviceRow, SalesReportRow } from "../SalesClient";
 
 const baht = (n: number) => n.toLocaleString("th-TH");
+
+type SortKey = "brand" | "model" | "serialNumber" | "macAddress" | "deviceName";
+const SORT_COLS: { key: SortKey; label: string }[] = [
+  { key: "brand", label: "Brand" },
+  { key: "model", label: "Model" },
+  { key: "serialNumber", label: "Serial" },
+  { key: "macAddress", label: "MAC" },
+  { key: "deviceName", label: "Device" },
+];
 
 type DeviceDraft = {
   brand: string;
@@ -80,15 +89,40 @@ export default function SalesDetailClient({
   const [addingDevice, setAddingDevice] = useState(false);
   const [newDevice, setNewDevice] = useState<DeviceDraft>(emptyDeviceDraft());
   const [savingNewDevice, setSavingNewDevice] = useState(false);
+  // local copy so add/edit/delete update the table in place instead of a
+  // full router.refresh() (a server round-trip that re-fetches and
+  // re-renders the whole page) for every single row action
+  const [devices, setDevices] = useState<SalesReportDeviceRow[]>(report.devices);
+  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   const canModify = report.staffId === currentStaffId || role === "admin";
+
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  }
+
+  const sortedDevices = useMemo(() => {
+    if (!sortKey) return devices;
+    const dir = sortDir === "asc" ? 1 : -1;
+    return [...devices].sort((a, b) => {
+      const av = a[sortKey] ?? "";
+      const bv = b[sortKey] ?? "";
+      return av.localeCompare(bv, "th") * dir;
+    });
+  }, [devices, sortKey, sortDir]);
 
   async function deleteDevice(deviceId: number) {
     if (!window.confirm("ลบรายการ Inventory นี้?")) return;
     setDeletingDeviceId(deviceId);
     try {
       const res = await fetch(`/api/sales-report-devices/${deviceId}`, { method: "DELETE" });
-      if (res.ok) router.refresh();
+      if (res.ok) setDevices((ds) => ds.filter((d) => d.id !== deviceId));
     } finally {
       setDeletingDeviceId(null);
     }
@@ -109,8 +143,9 @@ export default function SalesDetailClient({
         body: JSON.stringify(editDraft),
       });
       if (res.ok) {
+        const updated: SalesReportDeviceRow = await res.json();
+        setDevices((ds) => ds.map((d) => (d.id === updated.id ? updated : d)));
         setEditingDeviceId(null);
-        router.refresh();
       }
     } finally {
       setSavingEdit(false);
@@ -129,9 +164,10 @@ export default function SalesDetailClient({
         body: JSON.stringify({ salesReportId: report.id, ...newDevice }),
       });
       if (res.ok) {
+        const created: SalesReportDeviceRow = await res.json();
+        setDevices((ds) => [...ds, created]);
         setNewDevice(emptyDeviceDraft());
         setAddingDevice(false);
-        router.refresh();
       }
     } finally {
       setSavingNewDevice(false);
@@ -273,26 +309,35 @@ export default function SalesDetailClient({
           </div>
         )}
 
-        {(report.devices.length > 0 || canModify) && (
+        {(devices.length > 0 || canModify) && (
           <div className="mb-4">
             <h2 className="mb-2 text-xs font-semibold text-slate-500">
-              📦 Inventory ที่ใช้ในงานนี้ {report.devices.length > 0 && `(${report.devices.length})`}
+              📦 Inventory ที่ใช้ในงานนี้ {devices.length > 0 && `(${devices.length})`}
             </h2>
-            {report.devices.length > 0 && (
+            {devices.length > 0 && (
               <div className="max-h-96 overflow-y-auto overflow-x-auto rounded-md border border-slate-200">
                 <table className="w-full text-xs">
                   <thead className="sticky top-0">
                     <tr className="bg-slate-50 text-left text-slate-500">
-                      <th className="px-2 py-1.5">Brand</th>
-                      <th className="px-2 py-1.5">Model</th>
-                      <th className="px-2 py-1.5">Serial</th>
-                      <th className="px-2 py-1.5">MAC</th>
-                      <th className="px-2 py-1.5">Device</th>
+                      {SORT_COLS.map((c) => (
+                        <th key={c.key} className="px-2 py-1.5">
+                          <button
+                            type="button"
+                            onClick={() => toggleSort(c.key)}
+                            className="inline-flex items-center gap-0.5 font-semibold hover:text-slate-800"
+                          >
+                            {c.label}
+                            <span className="w-2.5 text-slate-400">
+                              {sortKey === c.key ? (sortDir === "asc" ? "▲" : "▼") : ""}
+                            </span>
+                          </button>
+                        </th>
+                      ))}
                       {canModify && <th className="px-2 py-1.5" />}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {report.devices.map((d) =>
+                    {sortedDevices.map((d) =>
                       editingDeviceId === d.id ? (
                         <tr key={d.id} className="bg-emerald-50/50">
                           <td className="px-1.5 py-1">
