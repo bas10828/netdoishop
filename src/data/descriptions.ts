@@ -115,6 +115,134 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
     ],
   },
 
+  // ───────────────── Reyee — Business / Load Balancing Routers (EG Series) ─────────────────
+  "Reyee|RG-EG105GW(T)": {
+    tagline: "เราเตอร์ WiFi 5 AC1300 All-in-One สำหรับธุรกิจ ครบจบตัวเดียว รองรับ 150 อุปกรณ์",
+    body:
+      "RG-EG105GW(T) เราเตอร์ไร้สาย WiFi 5 AC1300 (1267Mbps) แบบ All-in-One สำหรับร้านค้า/ธุรกิจขนาดเล็ก รวมเราเตอร์+AP ในตัวเดียว มีพอร์ต Gigabit 5 ช่อง (ยืดหยุ่นเลือก LAN/WAN ได้ 3 พอร์ต) รองรับ Reyee Mesh ขยายสัญญาณเพิ่มทีหลังได้ด้วยปุ่มเดียว\n\n" +
+      "เหมาะร้านอาหาร คาเฟ่ โรงแรมขนาดเล็ก ดูภาพกล้อง/NVR/เซิร์ฟเวอร์ในองค์กรจากนอกสถานที่ได้ผ่าน Ruijie Cloud",
+    specs: [
+      "WiFi 5 (802.11ac) AC1300 สูงสุด 1267Mbps",
+      "พอร์ต Gigabit 5 ช่อง (3 พอร์ตเลือก LAN/WAN ได้)",
+      "รองรับอุปกรณ์เชื่อมต่อพร้อมกันสูงสุด 150 เครื่อง",
+      "Reyee Mesh ขยายสัญญาณด้วยปุ่มเดียว",
+      "Multi-WAN Load Balancing + VPN, จัดการผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-EG105GW-X": {
+    tagline: "เราเตอร์ WiFi 6 AX3000 All-in-One ธุรกิจ เร็ว 2,976Mbps รองรับ 180 อุปกรณ์",
+    body:
+      "RG-EG105GW-X เราเตอร์ไร้สาย WiFi 6 AX3000 ความเร็วรวมสูงสุด 2,976Mbps ด้วยเทคโนโลยี OFDMA และ 1024QAM แบบ All-in-One รวมเราเตอร์+AP+VPN Gateway ในตัวเดียว มีเสาสัญญาณภายนอก 5 ต้น กระจายสัญญาณครอบคลุม รองรับอุปกรณ์เชื่อมต่อพร้อมกันสูงสุด 180 เครื่อง\n\n" +
+      "เหมาะธุรกิจที่ต้องการความเร็วสูงและความปลอดภัยระดับองค์กร รองรับ Reyee Mesh ขยายสัญญาณด้วยปุ่มเดียว จัดการ/มอนิเตอร์ผ่าน Ruijie Cloud",
+    specs: [
+      "WiFi 6 (802.11ax) AX3000 สูงสุด 2,976Mbps (OFDMA, 1024QAM, 160MHz)",
+      "พอร์ต Gigabit 5 ช่อง, เสาสัญญาณภายนอก 5 ต้น",
+      "รองรับอุปกรณ์เชื่อมต่อพร้อมกันสูงสุด 180 เครื่อง",
+      "Reyee Mesh ขยายสัญญาณด้วยปุ่มเดียว",
+      "VPN Gateway, จัดการผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-EG105G-V3": {
+    tagline: "เราเตอร์ Cloud Managed 5 พอร์ต Gigabit Dual-WAN โหลดบาลานซ์ มี VPN",
+    body:
+      "RG-EG105G-V3 เราเตอร์ Cloud Managed 5 พอร์ต Gigabit ทำ Dual-WAN Load Balancing รวมความเร็วเน็ต 2 เส้นหรือสำรองกันได้ รองรับ VPN หลายมาตรฐาน (IPSec, OpenVPN, PPTP, L2TP) เหมาะสำนักงาน ร้านค้า โรงแรมขนาดเล็กที่ต้องการเน็ตเสถียร\n\n" +
+      "รองรับอุปกรณ์เชื่อมต่อพร้อมกันสูงสุด 100 เครื่อง จัดการ/มอนิเตอร์ระยะไกลผ่าน Ruijie Cloud",
+    specs: [
+      "5 พอร์ต Gigabit (3 LAN คงที่ + 1 WAN คงที่ + 1 เลือก LAN/WAN ได้)",
+      "Dual-WAN Load Balancing",
+      "รองรับ VPN: IPSec, OpenVPN, PPTP, L2TP",
+      "Throughput 600Mbps (ปกติ) / 1,000Mbps (Turbo Mode)",
+      "รองรับผู้ใช้พร้อมกันสูงสุด 100 คน, จัดการผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-EG105G-P-V3": {
+    tagline: "เราเตอร์ Cloud Managed 5 พอร์ต + PoE+ 4 พอร์ต 54W จ่ายไฟ AP ในตัว",
+    body:
+      "RG-EG105G-P-V3 เราเตอร์ Cloud Managed 5 พอร์ต Gigabit มีพอร์ต PoE+ ในตัว 4 ช่อง งบไฟรวม 54W จ่ายไฟ Access Point หรือกล้องได้โดยไม่ต้องซื้อสวิตช์ PoE แยก ทำ Dual-WAN Load Balancing และรองรับ VPN\n\n" +
+      "เหมาะติดตั้ง AP กระจาย WiFi หลายจุดในสำนักงาน/ร้านค้าที่ไม่อยากเดินสายไฟเพิ่ม จัดการผ่าน Ruijie Cloud",
+    specs: [
+      "5 พอร์ต Gigabit, มี PoE+ ในตัว 4 พอร์ต งบไฟรวม 54W",
+      "Dual-WAN Load Balancing",
+      "รองรับ VPN: IPSec, OpenVPN, PPTP, L2TP",
+      "จ่ายไฟ AP/กล้องได้โดยตรง ไม่ต้องมีสวิตช์ PoE แยก",
+      "จัดการผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-EG210G-P-V3": {
+    tagline: "เราเตอร์ Cloud Managed 10 พอร์ต + PoE+ 8 พอร์ต 110W จ่ายไฟ AP/กล้องได้เยอะ",
+    body:
+      "RG-EG210G-P-V3 เราเตอร์ Cloud Managed 10 พอร์ต Gigabit มีพอร์ต PoE+ ในตัว 8 ช่อง งบไฟรวม 110W จ่ายไฟ AP หรือกล้องได้พร้อมกันหลายตัวโดยไม่ต้องมีสวิตช์ PoE แยก ทำ Load Balancing หลาย WAN\n\n" +
+      "เหมาะสำนักงาน/ร้านสาขาที่ต้องติดตั้ง AP หรือกล้องหลายจุด จัดการรวมศูนย์ผ่าน Ruijie Cloud",
+    specs: [
+      "10 พอร์ต Gigabit, มี PoE+ ในตัว 8 พอร์ต งบไฟรวม 110W",
+      "Multi-WAN Load Balancing",
+      "รองรับ VPN: IPSec, OpenVPN, PPTP, L2TP",
+      "จ่ายไฟ AP/กล้องได้พร้อมกันหลายตัว ไม่ต้องมีสวิตช์ PoE แยก",
+      "จัดการผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-EG209GS": {
+    tagline: "เราเตอร์ Cloud Managed 9 พอร์ต มีพอร์ต SFP ไฟเบอร์ Quad-WAN โหลดบาลานซ์",
+    body:
+      "RG-EG209GS เราเตอร์ Cloud Managed 9 พอร์ต Gigabit (8 RJ45 + 1 SFP) พอร์ต SFP สลับใช้เป็น LAN หรือ WAN ได้ตามต้องการ เชื่อมไฟเบอร์ขึ้นเครือข่ายหลักได้โดยตรง ทำ Load Balancing ได้สูงสุด 4 เส้น WAN พร้อมสำรองลิงก์อัตโนมัติ\n\n" +
+      "เหมาะสำนักงาน/ไซต์งานที่มีสายไฟเบอร์เข้าอาคาร หรือใช้เน็ตหลายเส้นพร้อมกัน จัดการผ่าน Ruijie Cloud",
+    specs: [
+      "9 พอร์ต Gigabit (8 RJ45 + 1 SFP สลับ LAN/WAN ได้)",
+      "Load Balancing สูงสุด 4 เส้น WAN พร้อมสำรองลิงก์อัตโนมัติ (Failover)",
+      "พอร์ต SFP ต่อไฟเบอร์ขึ้นเครือข่ายหลักได้โดยตรง",
+      "จัดการผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-EG2100-P V2": {
+    tagline: "Security Gateway 8 พอร์ต PoE/PoE+ 7 ช่อง คุมทั้ง AP และไฟกล้องในตัวเดียว",
+    body:
+      "RG-EG2100-P V2 เกตเวย์รักษาความปลอดภัยเครือข่าย (Unified Security Gateway) 8 พอร์ต Gigabit มีพอร์ต PoE/PoE+ ในตัวถึง 7 ช่อง จ่ายไฟ AP หรือกล้องได้เกือบทุกพอร์ตโดยไม่ต้องมีสวิตช์แยก ทำหน้าที่เป็น AP Controller คุมการตั้งค่า AP หลายตัวจากจุดเดียวได้ด้วย\n\n" +
+      "เหมาะสำนักงาน/ร้านสาขาขนาดกลางที่มี AP และกล้องหลายจุด ต้องการรวมศูนย์บริหารเครือข่ายทั้งระบบ จัดการผ่าน Ruijie Cloud (มาพร้อม Cloud license)",
+    specs: [
+      "8 พอร์ต Gigabit, มี PoE/PoE+ ในตัวสูงสุด 7 พอร์ต",
+      "AP Controller ในตัว คุมการตั้งค่า AP หลายจุดจากศูนย์เดียว",
+      "Unified Security Gateway — ไฟร์วอลล์ + VPN + Load Balancing",
+      "จัดการผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-EG305GH-P-E": {
+    tagline: "เราเตอร์ Cloud Managed ประสิทธิภาพสูง 5 พอร์ต + PoE 4 ช่อง 60W ทะลุ 1.5Gbps",
+    body:
+      "RG-EG305GH-P-E เราเตอร์สำนักงาน Cloud Managed ประสิทธิภาพสูง 5 พอร์ต Gigabit (1 WAN + 1 LAN คงที่ + 3 พอร์ตเลือก LAN/WAN ได้) มีพอร์ต PoE/PoE+ ในตัว 4 ช่อง งบไฟรวม 60W ทำความเร็วรวมได้ถึง 1.5Gbps รองรับ Multi-WAN Load Balancing\n\n" +
+      "เหมาะสำนักงาน/ร้านค้าที่เน็ตความเร็วสูงและต้องจ่ายไฟ AP/กล้องในตัวเดียวกัน จัดการระยะไกลผ่าน Ruijie Cloud",
+    specs: [
+      "5 พอร์ต Gigabit (1 WAN + 1 LAN คงที่ + 3 พอร์ตเลือก LAN/WAN ได้), มี PoE/PoE+ 4 พอร์ต งบไฟรวม 60W",
+      "Throughput สูงสุด 1.5Gbps",
+      "Multi-WAN Load Balancing + สำรองลิงก์อัตโนมัติ",
+      "จัดการผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-EG310GH-P-E": {
+    tagline: "เราเตอร์ Cloud Managed ประสิทธิภาพสูง 10 พอร์ต + PoE 8 ช่อง 110W",
+    body:
+      "RG-EG310GH-P-E เราเตอร์สำนักงาน Cloud Managed ประสิทธิภาพสูง 10 พอร์ต Gigabit มีพอร์ต PoE/PoE+ ในตัว 8 ช่อง งบไฟรวม 110W จ่ายไฟ AP/กล้องได้หลายตัวพร้อมกัน รองรับ Load Balancing, สำรองลิงก์อัตโนมัติ และตั้งเส้นทางตาม Policy-Based Routing\n\n" +
+      "เหมาะสำนักงานขนาดกลาง-ใหญ่ที่มี AP/กล้องหลายจุดและใช้เน็ตหลายเส้น จัดการรวมศูนย์ผ่าน Ruijie Cloud",
+    specs: [
+      "10 พอร์ต Gigabit, มี PoE/PoE+ ในตัว 8 พอร์ต งบไฟรวม 110W",
+      "Multi-WAN Load Balancing + สำรองลิงก์อัตโนมัติ (Redundancy)",
+      "รองรับ Policy-Based Routing (PBR) เลือกเส้นทางตามแหล่งที่มา",
+      "จัดการผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-EG310GH-E": {
+    tagline: "เราเตอร์ Cloud Managed ประสิทธิภาพสูง 10 พอร์ต 4 WAN สลับได้ รองรับ 300 ผู้ใช้",
+    body:
+      "RG-EG310GH-E เราเตอร์สำนักงาน Cloud Managed ประสิทธิภาพสูง 10 พอร์ต Gigabit เลือกใช้เป็น WAN ได้สูงสุด 4 พอร์ต ทำ Multi-WAN Load Balancing อัจฉริยะ รองรับ VPN สูงสุด 64 Tunnel ต่อ VPN สาขา/พนักงานนอกสถานที่เข้าเครือข่ายบริษัทได้พร้อมกันหลายจุด\n\n" +
+      "รองรับผู้ใช้งานพร้อมกันสูงสุด 300 คน เหมาะสำนักงานขนาดกลางที่มีเน็ตหลายเส้นและต้องการดูภาพรวมการใช้งานเครือข่าย จัดการผ่าน Ruijie Cloud",
+    specs: [
+      "10 พอร์ต Gigabit, เลือกใช้เป็น WAN ได้สูงสุด 4 พอร์ต",
+      "Throughput สูงสุด 1.5Gbps, รองรับผู้ใช้พร้อมกันสูงสุด 300 คน",
+      "Multi-WAN Load Balancing อัจฉริยะ",
+      "รองรับ VPN สูงสุด 64 Tunnel",
+      "จัดการผ่าน Ruijie Cloud",
+    ],
+  },
+
   // ───────────────── Switches ─────────────────
   "Reyee|RG-ES118FGS-LP": {
     tagline: "สวิตช์ PoE+ 16 พอร์ต งบไฟ 120W + 2 พอร์ต Gigabit/SFP combo ขึ้น Cloud ได้",
@@ -253,6 +381,241 @@ export const PRODUCT_DOCS: Record<string, ProductDoc> = {
       "ดีไซน์ตั้งโต๊ะ (Desktop)",
       "Plug-and-Play เสียบใช้งานได้เลย",
       "เหมาะบ้าน ออฟฟิศ ที่ใช้เน็ตความเร็วสูง",
+    ],
+  },
+
+  // ───────────────── Reyee — Cloud Managed Switches (Non-PoE) ─────────────────
+  "Reyee|RG-ES205GC-V2": {
+    tagline: "สวิตช์ Cloud Managed 5 พอร์ต Gigabit ไม่มี PoE บอดี้เหล็กไม่มีพัดลม",
+    body:
+      "RG-ES205GC-V2 สวิตช์ Gigabit 5 พอร์ต Cloud Managed มองเห็นสถานะ/ตั้งค่าผ่าน Ruijie Cloud ได้จากทางไกล ตัวถังโลหะ ไม่มีพัดลม ทำงานเงียบต่อเนื่อง 24 ชม. กันไฟกระชาก 6kV\n\n" +
+      "เหมาะเพิ่มจุดต่อ LAN Gigabit ในบ้าน/ออฟฟิศที่อยากมองเห็นสถานะอุปกรณ์จากระยะไกล",
+    specs: [
+      "5 พอร์ต Gigabit 10/100/1000BASE-T (ไม่มี PoE)",
+      "Cloud Managed ผ่าน Ruijie Cloud",
+      "ตัวถังโลหะ ไม่มีพัดลม (Fanless)",
+      "กันไฟกระชาก 6kV",
+    ],
+  },
+  "Reyee|RG-ES208GC-V2": {
+    tagline: "สวิตช์ Cloud Managed 8 พอร์ต Gigabit ไม่มี PoE ราคาประหยัด มองเห็นสถานะออนไลน์",
+    body:
+      "RG-ES208GC-V2 สวิตช์ Gigabit 8 พอร์ต Cloud Managed ราคาประหยัด มองเห็นสถานะ/ตั้งค่าผ่าน Ruijie Cloud ได้จากทางไกล รองรับ ZTP (Zero-Touch Provisioning) เสียบปุ๊บขึ้นระบบอัตโนมัติผ่านแอป Reyee หรือ Ruijie Cloud ตัวถังโลหะ ไม่มีพัดลม\n\n" +
+      "เหมาะออฟฟิศ/ร้านค้าที่มีหลายสาขาและอยากบริหารสวิตช์รวมศูนย์จากที่เดียว",
+    specs: [
+      "8 พอร์ต Gigabit 10/100/1000BASE-T (ไม่มี PoE)",
+      "Cloud Managed ผ่าน Ruijie Cloud, รองรับ ZTP",
+      "Switching capacity 16Gbps",
+      "ตัวถังโลหะ ไม่มีพัดลม (Fanless)",
+    ],
+  },
+  "Reyee|RG-ES216GC-V2": {
+    tagline: "สวิตช์ Cloud Managed 16 พอร์ต Gigabit ไม่มี PoE งานเครือข่ายขนาดกลาง",
+    body:
+      "RG-ES216GC-V2 สวิตช์ Gigabit 16 พอร์ต Cloud Managed สำหรับเครือข่ายขนาดกลาง มองเห็นสถานะ/ตั้งค่าผ่าน Ruijie Cloud ได้จากทางไกล ตัวถังโลหะติดแร็คได้ ไม่มีพัดลม เหมาะออฟฟิศ โรงแรม โรงงาน ที่ต้องต่อสาย LAN Gigabit หลายจุด",
+    specs: [
+      "16 พอร์ต Gigabit 10/100/1000BASE-T (ไม่มี PoE)",
+      "Cloud Managed ผ่าน Ruijie Cloud",
+      "Switching capacity 32Gbps",
+      "ตัวถังโลหะ ติดแร็คได้ ไม่มีพัดลม",
+    ],
+  },
+  "Reyee|RG-ES224GC-V2": {
+    tagline: "สวิตช์ Cloud Managed 24 พอร์ต Gigabit ไม่มี PoE งานเครือข่ายขนาดใหญ่",
+    body:
+      "RG-ES224GC-V2 สวิตช์ Gigabit 24 พอร์ต Cloud Managed สำหรับเครือข่ายขนาดใหญ่ มองเห็นสถานะ/ตั้งค่าผ่าน Ruijie Cloud ได้จากทางไกล ตัวถังโลหะติดแร็คได้ ไม่มีพัดลม ระบายความร้อนดี เหมาะออฟฟิศใหญ่ โรงงาน อาคาร ที่ต้องต่อสาย LAN Gigabit จำนวนมาก",
+    specs: [
+      "24 พอร์ต Gigabit 10/100/1000BASE-T (ไม่มี PoE)",
+      "Cloud Managed ผ่าน Ruijie Cloud",
+      "Switching capacity 48Gbps",
+      "ตัวถังโลหะ ติดแร็คได้ ไม่มีพัดลม",
+    ],
+  },
+  "Reyee|RG-NBS3100-24GT4SFP-V2": {
+    tagline: "สวิตช์ L2+ Cloud Managed 24 พอร์ต Gigabit + 4 SFP ไฟเบอร์ ไม่มี PoE",
+    body:
+      "RG-NBS3100-24GT4SFP-V2 สวิตช์ Layer 2+ Cloud Managed รวม 28 พอร์ต — 24 พอร์ต Gigabit RJ45 สำหรับต่ออุปกรณ์ปลายทาง และ 4 พอร์ต SFP สำหรับต่อไฟเบอร์อัพลิงก์ขึ้นเครือข่ายหลัก เหมาะเป็นสวิตช์แกนกลาง (Core/Distribution) ของระบบที่มีการเดินไฟเบอร์ระหว่างอาคาร\n\n" +
+      "จัดการ/มองเห็นสถานะผ่าน Ruijie Cloud ตัวถังโลหะติดแร็ค 1U",
+    specs: [
+      "24 พอร์ต Gigabit RJ45 + 4 พอร์ต SFP (1G) (ไม่มี PoE)",
+      "Layer 2+ Cloud Managed ผ่าน Ruijie Cloud",
+      "Switching capacity 56Gbps",
+      "ตัวถังโลหะ ติดแร็ค 1U",
+    ],
+  },
+  "Reyee|RG-NBS3200-24GT4XS": {
+    tagline: "สวิตช์ L2+ Cloud Managed 24 พอร์ต Gigabit + 4 พอร์ต 10G SFP+ ไม่มี PoE",
+    body:
+      "RG-NBS3200-24GT4XS สวิตช์ Layer 2+ Cloud Managed 24 พอร์ต Gigabit RJ45 พร้อมพอร์ตอัพลิงก์ SFP+ ความเร็ว 10G ถึง 4 ช่อง รองรับปริมาณข้อมูลสูง เหมาะเป็นสวิตช์แกนกลางที่ต้องการันตีความเร็วอัพลิงก์สูงระหว่างอาคาร/ระหว่างชั้น\n\n" +
+      "จัดการ/มองเห็นสถานะผ่าน Ruijie Cloud ตัวถังโลหะติดแร็ค 1U",
+    specs: [
+      "24 พอร์ต Gigabit RJ45 + 4 พอร์ต SFP+ 10G (ไม่มี PoE)",
+      "Layer 2+ Cloud Managed ผ่าน Ruijie Cloud",
+      "Switching capacity 128Gbps",
+      "ตัวถังโลหะ ติดแร็ค 1U",
+    ],
+  },
+  "Reyee|RG-CS83-24GT4XS": {
+    tagline: "สวิตช์ Layer 3 24 พอร์ต Gigabit + 4 พอร์ต 10GE SFP+ มีพอร์ต USB จัดการเอง",
+    body:
+      "RG-CS83-24GT4XS สวิตช์ Layer 3 ระดับองค์กร 24 พอร์ต Gigabit RJ45 พร้อมอัพลิงก์ 10GE SFP+ 4 ช่อง รองรับ RGOS ปรับแต่งการทำงานแบบ Routing/VLAN ขั้นสูง มีพอร์ต Console จัดการและพอร์ต USB 2.0 สำหรับสำรอง/อัพเดตไฟล์คอนฟิก\n\n" +
+      "เหมาะงานเครือข่ายองค์กรที่ต้องแบ่ง Subnet/VLAN ซับซ้อน หรือเป็นแกนกลางเชื่อมหลายสวิตช์ในตึกใหญ่",
+    specs: [
+      "24 พอร์ต Gigabit RJ45 + 4 พอร์ต 10GE SFP+ (ไม่มี PoE)",
+      "Layer 3 Managed Switch, รองรับ RGOS",
+      "มีพอร์ต Console (จัดการ) และ USB 2.0",
+      "ตัวถังโลหะ ติดแร็ค 1U ไม่มีพัดลม",
+    ],
+  },
+
+  // ───────────────── Reyee — Cloud Managed PoE Switches ─────────────────
+  "Reyee|RG-ES205GC-P": {
+    tagline: "สวิตช์ PoE+ Cloud Managed 5 พอร์ต งบไฟ 54W จ่ายไฟกล้อง/AP 4 ตัว",
+    body:
+      "RG-ES205GC-P สวิตช์ Gigabit PoE+ 5 พอร์ต (4 พอร์ตจ่ายไฟ PoE+) งบไฟรวม 54W Cloud Managed มองเห็นสถานะ/ตั้งค่าผ่าน Ruijie Cloud ได้จากทางไกล มีระบบจดจำกล้อง IP (IP Camera Recognition) และป้องกันลูป (Loop Prevention) อัตโนมัติ\n\n" +
+      "เหมาะงานกล้องวงจรปิดชุดเล็ก 4 ตัว ตัวถังโลหะ ไม่มีพัดลม",
+    specs: [
+      "5 พอร์ต Gigabit — 4 พอร์ต PoE+ + 1 พอร์ต Uplink",
+      "งบไฟ PoE รวม 54W",
+      "Cloud Managed ผ่าน Ruijie Cloud",
+      "จดจำกล้อง IP อัตโนมัติ (IP Camera Recognition), ป้องกันลูปอัตโนมัติ",
+      "ตัวถังโลหะ ไม่มีพัดลม",
+    ],
+  },
+  "Reyee|RG-ES209GC-P": {
+    tagline: "สวิตช์ PoE+ Cloud Managed 9 พอร์ต งบไฟ 120W จ่ายไฟกล้อง/AP 8 ตัว",
+    body:
+      "RG-ES209GC-P สวิตช์ Gigabit PoE+ 9 พอร์ต (8 พอร์ตจ่ายไฟ PoE+) งบไฟรวม 120W Cloud Managed มองเห็นสถานะ/ตั้งค่าผ่าน Ruijie Cloud ได้จากทางไกล มีระบบจดจำกล้อง IP และป้องกันลูปอัตโนมัติ ตัวถังกะทัดรัด ไม่มีพัดลม เงียบ\n\n" +
+      "เหมาะงานกล้องวงจรปิดชุดกลาง 8 ตัว หรือกระจาย AP หลายจุด",
+    specs: [
+      "9 พอร์ต Gigabit — 8 พอร์ต PoE+ + 1 พอร์ต Uplink",
+      "งบไฟ PoE รวม 120W (802.3af/at)",
+      "Cloud Managed ผ่าน Ruijie Cloud",
+      "จดจำกล้อง IP อัตโนมัติ, ป้องกันลูปอัตโนมัติ",
+      "ตัวถังกะทัดรัด ไม่มีพัดลม",
+    ],
+  },
+  "Reyee|RG-ES206GS-P": {
+    tagline: "สวิตช์ PoE+ Cloud Managed 6 พอร์ต มีพอร์ต SFP ต่อไฟเบอร์ งบไฟ 54W",
+    body:
+      "RG-ES206GS-P สวิตช์ Gigabit PoE+ 6 พอร์ต (4 พอร์ตจ่ายไฟ PoE+) งบไฟรวม 54W มีพอร์ตอัพลิงก์ Combo ที่เลือกต่อ RJ45 หรือ SFP ไฟเบอร์ได้ เหมาะเชื่อมขึ้นเครือข่ายหลักระยะไกลด้วยไฟเบอร์ Cloud Managed ผ่าน Ruijie Cloud\n\n" +
+      "เหมาะงานกล้องวงจรปิดชุดเล็กที่ต้องลากสายไฟเบอร์ขึ้นตู้ Rack หลัก",
+    specs: [
+      "6 พอร์ต Gigabit — 4 พอร์ต PoE+ + 1 พอร์ต Uplink + 1 พอร์ต Combo (RJ45/SFP)",
+      "งบไฟ PoE รวม 54W",
+      "พอร์ต SFP ต่อไฟเบอร์อัพลิงก์ระยะไกล",
+      "Cloud Managed ผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-ES210GS-P": {
+    tagline: "สวิตช์ PoE+ Cloud Managed 10 พอร์ต มีพอร์ต SFP ต่อไฟเบอร์ งบไฟ 120W",
+    body:
+      "RG-ES210GS-P สวิตช์ Gigabit PoE+ 10 พอร์ต (8 พอร์ตจ่ายไฟ PoE+) งบไฟรวม 120W มีพอร์ตอัพลิงก์ Combo เลือกต่อ RJ45 หรือ SFP ไฟเบอร์ได้ Cloud Managed ผ่าน Ruijie Cloud มีระบบจดจำกล้อง IP และป้องกันลูปอัตโนมัติ\n\n" +
+      "เหมาะงานกล้องวงจรปิดชุดกลาง 8 ตัวที่ต้องลากสายไฟเบอร์ขึ้นตู้ Rack หลัก",
+    specs: [
+      "10 พอร์ต Gigabit — 8 พอร์ต PoE+ + 1 พอร์ต Uplink + 1 พอร์ต Combo (RJ45/SFP)",
+      "งบไฟ PoE รวม 120W",
+      "พอร์ต SFP ต่อไฟเบอร์อัพลิงก์ระยะไกล",
+      "Cloud Managed ผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-ES228GS-P": {
+    tagline: "สวิตช์ PoE+ Cloud Managed 28 พอร์ต งบไฟใหญ่ 370W จ่ายไฟกล้อง/AP ได้ 24 ตัว",
+    body:
+      "RG-ES228GS-P สวิตช์ Gigabit PoE+ 28 พอร์ต (24 พอร์ตจ่ายไฟ PoE+) งบไฟรวมสูงถึง 370W พร้อมพอร์ต Uplink Gigabit 2 ช่องและ SFP ไฟเบอร์ 2 ช่อง Cloud Managed ผ่าน Ruijie Cloud มี PoE Watchdog คอยเช็คอุปกรณ์ค้างแล้วรีบูตให้อัตโนมัติ\n\n" +
+      "เหมาะงานกล้องวงจรปิดชุดใหญ่ 24 ตัว หรือโครงการที่มี AP/กล้องจำนวนมาก ตัวถังโลหะติดแร็ค 1U",
+    specs: [
+      "28 พอร์ต Gigabit — 24 พอร์ต PoE+ + 2 พอร์ต Uplink + 2 พอร์ต SFP",
+      "งบไฟ PoE รวม 370W",
+      "PoE Watchdog รีบูตอุปกรณ์ค้างอัตโนมัติ",
+      "Cloud Managed ผ่าน Ruijie Cloud",
+      "ตัวถังโลหะ ติดแร็ค 1U",
+    ],
+  },
+
+  // ───────────────── Reyee — Industrial Switches ─────────────────
+  "Reyee|RG-NIS2100-4GT2SFP-HP": {
+    tagline: "สวิตช์อุตสาหกรรม PoE 6 พอร์ต ทนอุณหภูมิ -40~75°C กันไฟกระชาก 6kV",
+    body:
+      "RG-NIS2100-4GT2SFP-HP สวิตช์อุตสาหกรรม (Industrial Switch) Cloud Managed 6 พอร์ต — 4 พอร์ต Gigabit RJ45 (1 พอร์ต PoE++ + 3 พอร์ต PoE+) และ 2 พอร์ต SFP สำหรับไฟเบอร์อัพลิงก์ระยะไกล ตัวถังโลหะกันฝุ่น IP40 ทนอุณหภูมิ -40°C ถึง +75°C กันไฟกระชาก 6kV\n\n" +
+      "เหมาะติดตั้งในตู้ควบคุมกลางแจ้ง โรงงาน หรือพื้นที่สภาพแวดล้อมโหด ไม่มีพัดลม ไม่ต้องบำรุงรักษาบ่อย",
+    specs: [
+      "4 พอร์ต Gigabit RJ45 (1 พอร์ต PoE++ + 3 พอร์ต PoE+) + 2 พอร์ต SFP",
+      "กำลังไฟรวม 90W",
+      "ทนอุณหภูมิใช้งาน -40°C ถึง +75°C, กันฝุ่น IP40",
+      "กันไฟกระชาก 6kV, ไม่มีพัดลม",
+      "Cloud Managed ผ่าน Ruijie Cloud",
+    ],
+  },
+  "Reyee|RG-NIS3100-8GT4SFP-HP": {
+    tagline: "สวิตช์อุตสาหกรรม PoE+ 12 พอร์ต งบไฟ 240W ทนอุณหภูมิ -40~80°C",
+    body:
+      "RG-NIS3100-8GT4SFP-HP สวิตช์อุตสาหกรรม (Industrial Switch) Cloud Managed 12 พอร์ต — 8 พอร์ต Gigabit PoE+ งบไฟรวมสูงสุด 240W และ 4 พอร์ต SFP สำหรับไฟเบอร์อัพลิงก์ระยะไกล ตัวถังโลหะกันฝุ่นกันน้ำ ทนอุณหภูมิ -40°C ถึง +80°C\n\n" +
+      "เหมาะติดตั้งกลางแจ้ง ตู้ควบคุมโรงงาน หรือไซต์งานที่ต้องจ่ายไฟกล้อง/AP หลายตัวในสภาพแวดล้อมโหด ไม่มีพัดลม",
+    specs: [
+      "8 พอร์ต Gigabit PoE+ + 4 พอร์ต SFP",
+      "งบไฟ PoE รวมสูงสุด 240W",
+      "Switching capacity 24Gbps",
+      "ทนอุณหภูมิใช้งาน -40°C ถึง +80°C",
+      "Cloud Managed ผ่าน Ruijie Cloud, ไม่มีพัดลม",
+    ],
+  },
+
+  // ───────────────── Reyee — PoE Injectors / Power ─────────────────
+  "Reyee|RG-POE-AT30": {
+    tagline: "PoE Injector 1 พอร์ต Gigabit 31.2W มาตรฐาน 802.3at",
+    body:
+      "RG-POE-AT30 อุปกรณ์แปลงไฟ PoE Injector 1 พอร์ต Gigabit จ่ายไฟผ่านสาย LAN สูงสุด 31.2W ตามมาตรฐาน 802.3at ใช้แปลงสวิตช์ธรรมดาที่ไม่มี PoE ให้จ่ายไฟกล้อง/AP ได้ ส่งไฟผ่านสายได้ไกลถึง 100 เมตร มีระบบตรวจจับอุปกรณ์ PD อัตโนมัติป้องกันไฟช็อตอุปกรณ์ที่ไม่รองรับ PoE",
+    specs: [
+      "1 พอร์ต Gigabit (1000Base-T), จ่ายไฟสูงสุด 31.2W",
+      "มาตรฐาน IEEE 802.3at",
+      "แรงดันเอาต์พุต 52V DC",
+      "ส่งไฟผ่านสายได้ไกลสูงสุด 100 เมตร",
+      "ตรวจจับอุปกรณ์ PD อัตโนมัติ ป้องกันไฟช็อตอุปกรณ์ที่ไม่รองรับ PoE",
+    ],
+  },
+  "Reyee|RG-POE-50-60W-MG": {
+    tagline: "PoE Injector 1 พอร์ต 2.5G กำลังไฟสูง 60W สำหรับ AP/กล้องกินไฟเยอะ",
+    body:
+      "RG-POE-50-60W-MG อุปกรณ์แปลงไฟ PoE Injector 1 พอร์ต ความเร็ว 2.5G จ่ายไฟผ่านสาย LAN สูงสุด 60W สำหรับอุปกรณ์กินไฟสูงอย่าง AP WiFi 6/6E หรือกล้อง PTZ ส่งไฟผ่านสายได้ไกลถึง 100 เมตร มีระบบตรวจจับอุปกรณ์ PD อัตโนมัติ",
+    specs: [
+      "1 พอร์ต 2.5G (2500Base-T), จ่ายไฟสูงสุด 60W",
+      "แรงดันเอาต์พุต 56V DC",
+      "ส่งไฟผ่านสายได้ไกลสูงสุด 100 เมตร",
+      "เหมาะ AP WiFi 6/6E หรืออุปกรณ์กินไฟสูง",
+    ],
+  },
+  "Reyee|RG-E-120 (GE)": {
+    tagline: "PoE Injector 1 พอร์ต Gigabit 15.4W มาตรฐาน 802.3af",
+    body:
+      "RG-E-120(GE) อุปกรณ์แปลงไฟ PoE Injector 1 พอร์ต Gigabit จ่ายไฟผ่านสาย LAN สูงสุด 15.4W ตามมาตรฐาน 802.3af ใช้แปลงสวิตช์ธรรมดาที่ไม่มี PoE ให้จ่ายไฟกล้อง/AP/โทรศัพท์ IP ได้ ส่งไฟผ่านสายได้ไกลถึง 100 เมตร",
+    specs: [
+      "1 พอร์ต Gigabit (1000Base-T), จ่ายไฟสูงสุด 15.4W",
+      "มาตรฐาน IEEE 802.3af",
+      "ส่งไฟผ่านสายได้ไกลสูงสุด 100 เมตร",
+      "ตรวจจับอุปกรณ์ PD อัตโนมัติ",
+    ],
+  },
+  "Reyee|RG-E-130 (GE)": {
+    tagline: "PoE Injector 1 พอร์ต Gigabit 30W มาตรฐาน 802.3at",
+    body:
+      "RG-E-130(GE) อุปกรณ์แปลงไฟ PoE Injector 1 พอร์ต Gigabit จ่ายไฟผ่านสาย LAN สูงสุด 30W ตามมาตรฐาน 802.3at รองรับอุปกรณ์กินไฟสูงกว่ารุ่น 802.3af ทั่วไป เช่น AP หรือกล้อง PTZ ส่งไฟผ่านสายได้ไกลถึง 100 เมตร",
+    specs: [
+      "1 พอร์ต Gigabit (1000Base-T), จ่ายไฟสูงสุด 30W",
+      "มาตรฐาน IEEE 802.3at (2-event classification)",
+      "แรงดันเอาต์พุต 53V DC",
+      "ส่งไฟผ่านสายได้ไกลสูงสุด 100 เมตร",
+    ],
+  },
+  "Reyee|RG-NIS-PA120-54": {
+    tagline: "แหล่งจ่ายไฟ DIN-Rail 120W 54V สำหรับสวิตช์อุตสาหกรรม Reyee NIS",
+    body:
+      "RG-NIS-PA120-54 แหล่งจ่ายไฟ AC-DC แบบติดราง DIN-Rail กำลังไฟ 120W แรงดันเอาต์พุต 54V สำหรับจ่ายไฟสำรอง/เสริมให้สวิตช์อุตสาหกรรมตระกูล Reyee NIS รองรับไฟเข้า 100-240VAC ทนอุณหภูมิใช้งานกว้าง เหมาะติดตั้งในตู้คอนโทรลไฟฟ้าโรงงาน",
+    specs: [
+      "กำลังไฟ 120W, เอาต์พุต 54V DC / 2.2A",
+      "ไฟเข้า Universal 100-240VAC",
+      "ติดตั้งบนราง DIN-Rail",
+      "สำหรับสวิตช์อุตสาหกรรม Reyee NIS series",
     ],
   },
 
