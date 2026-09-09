@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { productDoc } from "@/data/descriptions";
 import { sellPrice, SUPPLIER_MARKUP } from "@/lib/supplierMarkup";
+import RagAssistant from "./RagAssistant";
 
 // per-supplier badge color so every row states its cost source at a glance —
 // CMIT included (was previously left unlabeled, which read as "no source").
@@ -624,6 +625,7 @@ export default function CatalogClient({
 
   return (
     <main className="mx-auto p-4">
+      <RagAssistant />
       <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" className="flex items-center gap-3" title="หน้าแรก">
           {/* eslint-disable-next-line @next/next/no-img-element */}

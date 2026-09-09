@@ -179,3 +179,17 @@ model AccountInvite {
 
   @@index([expiresAt])
 }
+
+// One row per question asked to the RAG prototype (src/app/api/rag) — kept
+// so real customer/staff phrasing can be reviewed later to tune retrieval
+// and prompts, not just whatever test queries came up during dev.
+model RagChatLog {
+  id               Int      @id @default(autoincrement())
+  message          String
+  answer           String
+  provider         String // "ollama" | "claude"
+  matchedProductIds Int[]  @default([])
+  createdAt        DateTime @default(now())
+
+  @@index([createdAt])
+}
