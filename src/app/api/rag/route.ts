@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import {
   retrieveProducts,
   isCatalogOverviewQuery,
+  isBundleQuery,
   getCatalogOverview,
   type RagProduct,
   type CategoryOverview,
@@ -33,7 +34,17 @@ const CLAUDE_MODEL = "claude-haiku-4-5";
 // Ollama (free, local) since that's the decided v1 path.
 const PROVIDER = process.env.RAG_LLM_PROVIDER === "claude" ? "claude" : "ollama";
 
-const SYSTEM_PROMPT = `คุณชื่อ "พี่เน็ตดอย" ผู้ช่วยขายอุปกรณ์ IT/กล้องวงจรปิดของร้าน NETDOI ตอบเป็นภาษาไทย กระชับ ใช้เฉพาะข้อมูลสินค้าที่ให้มาเท่านั้น ห้ามเดาหรือแต่งข้อมูลเพิ่ม — field "protocol" ของแต่ละสินค้าคือความจริง ห้ามเปลี่ยนหรือเดา protocol เอง ถ้า protocol ระบุว่า "ไม่ทราบ" หรือไม่ตรงกับที่ลูกค้าถาม ให้บอกลูกค้าตรงๆ ว่าตัวนี้ protocol อะไร (ห้ามเออออตามคำถามลูกค้าถ้าไม่ตรง)`;
+// gender locked to male (ผม/ครับ) to match the hardcoded template answers
+// elsewhere in this file (buildOverviewContent's flatList fallback, the
+// zero-match template) — those already say "ครับ", so a model-generated
+// answer switching to "ค่ะ"/"ผม" mid-conversation reads as broken, not just
+// stylistically off. The "ห้ามใช้ตัวอักษรภาษาอื่นปนคำไทย" line exists
+// because Haiku has been observed emitting stray Cyrillic/Japanese
+// characters mid-Thai-word (e.g. "บัджェต" instead of "งบประมาณ") — a
+// sampling glitch, not a prompt-following failure, so this can't fully
+// prevent it, but constrains the model's own script choice as far as
+// instruction-following can.
+const SYSTEM_PROMPT = `คุณชื่อ "พี่เน็ตดอย" ผู้ช่วยขายอุปกรณ์ IT/กล้องวงจรปิดของร้าน NETDOI เป็นผู้ชาย ใช้สรรพนาม "ผม" และลงท้ายด้วย "ครับ" เสมอ ห้ามใช้ "ค่ะ"/"ดิฉัน"/"นะคะ" ตอบเป็นภาษาไทยเท่านั้น (ยกเว้นชื่อรุ่น/ยี่ห้อ/ศัพท์เทคนิคภาษาอังกฤษที่จำเป็น) ห้ามใช้ตัวอักษรภาษาอื่นปนคำไทยเด็ดขาด (ห้ามใช้อักษรรัสเซีย จีน ญี่ปุ่น เกาหลี หรืออักษรอื่นใดที่ไม่ใช่ไทย/อังกฤษ/ตัวเลข) กระชับ ใช้เฉพาะข้อมูลสินค้าที่ให้มาเท่านั้น ห้ามเดาหรือแต่งข้อมูลเพิ่ม — field "protocol" ของแต่ละสินค้าคือความจริง ห้ามเปลี่ยนหรือเดา protocol เอง ถ้า protocol ระบุว่า "ไม่ทราบ" หรือไม่ตรงกับที่ลูกค้าถาม ให้บอกลูกค้าตรงๆ ว่าตัวนี้ protocol อะไร (ห้ามเออออตามคำถามลูกค้าถ้าไม่ตรง)`;
 
 // display-only alias so the LLM knows "turbo hd" IS the TVI protocol (just
 // Hikvision's brand name for it) instead of treating them as different
@@ -161,7 +172,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ answer, products: [], provider: PROVIDER });
   }
 
-  const products = await retrieveProducts(message);
+  // default limit (3) is too narrow for a "จัดชุด" bundle answer — it would
+  // cut off the NVR/switch picks retrieveProducts appends for bundle
+  // queries before the LLM ever sees them.
+  const products = await retrieveProducts(message, isBundleQuery(message) ? 8 : 3);
 
   // No retrieval match -> never call the LLM. It only ever proved it will
   // invent products (fake models, fake prices) rather than say "ไม่มี" when

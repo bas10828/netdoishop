@@ -34,6 +34,56 @@ const STOPWORDS = new Set([
   "analog", "อนาล็อก",
 ]);
 
+// query phrase -> text actually printed on the product (name/spec), for
+// camera features that don't have a bare-keyword match because the
+// customer describes the feature ("ภาพสี ตอนกลางคืน") rather than naming
+// the marketing term ("full-color"/"ColorVu"/"dual light") the vendor
+// actually writes. Same shape as SPECIFIC_PROTOCOL_SYNONYMS above — without
+// this, a real customer question like "กล้องกลางคืนเป็นภาพสี" only had the
+// bare-keyword blob-tokenizer to fall back on (see searchTerms below),
+// which can't produce a useful term from an unsegmented Thai sentence, so
+// retrieval silently dropped the one constraint that actually mattered and
+// (post camera-category-fallback) risked handing the LLM cameras that
+// don't have the feature at all.
+const FEATURE_SYNONYMS: Record<string, string[]> = {
+  ภาพสี: ["full-color", "full color", "colorvu", "dual light"],
+  กลางคืน: ["full-color", "full color", "colorvu", "dual light", "ir", "starlight"],
+};
+
+function featureSearchTerms(lower: string): string[] {
+  const terms = new Set<string>();
+  for (const [key, expansions] of Object.entries(FEATURE_SYNONYMS)) {
+    if (lower.includes(key)) expansions.forEach((e) => terms.add(e));
+  }
+  return [...terms];
+}
+
+// Thai number word immediately followed by "ล้าน" -> resolution in MP, e.g.
+// "กล้องสี่ล้าน" (a real customer question — "สี่ล้าน" is the everyday way
+// to say "4MP", nobody says "4MP" in Thai speech). Descriptions only ever
+// spell resolution as digits ("4MP"), never as a Thai number word, so
+// without this expansion "สี่ล้าน" tokenizes into an unmatched blob (see
+// searchTerms below) and retrieval silently drops the one spec that
+// mattered — the exact complaint "มันจะไม่มีได้ไงวะกล้องสี่ล้าน" when the
+// catalog actually has 10+ real 4MP SKUs (grep descriptions.ts for "4MP").
+// Checked as a contiguous "<word>ล้าน" substring (not word-then-ล้าน
+// anywhere in the sentence) so "สิบสองล้าน" (12) doesn't also register as
+// "สิบ" (10) — "สิบล้าน" is not a substring of "สิบสองล้าน".
+const THAI_NUMBER_WORDS: [string, number][] = [
+  ["หนึ่ง", 1], ["นึง", 1], ["สอง", 2], ["สาม", 3], ["สี่", 4], ["ห้า", 5],
+  ["หก", 6], ["เจ็ด", 7], ["แปด", 8], ["เก้า", 9], ["สิบเอ็ด", 11],
+  ["สิบสอง", 12], ["สิบ", 10],
+];
+
+function resolutionSearchTerms(lower: string): string[] {
+  const terms = new Set<string>();
+  for (const m of lower.matchAll(/(\d+)\s*(?:mp|ล้าน)/g)) terms.add(`${m[1]}mp`);
+  for (const [word, mp] of THAI_NUMBER_WORDS) {
+    if (lower.includes(`${word}ล้าน`) || lower.includes(`${word} ล้าน`)) terms.add(`${mp}mp`);
+  }
+  return [...terms];
+}
+
 function protocolSearchTerms(lower: string): string[] {
   const specific = new Set<string>();
   for (const [key, expansions] of Object.entries(SPECIFIC_PROTOCOL_SYNONYMS)) {
@@ -115,16 +165,34 @@ function detectCategory(lower: string): string | string[] | null {
     const camCategory = CATEGORY_KEYWORDS.find((c) => c.test(lower))?.category;
     if (camCategory) return camCategory;
   }
-  return (
+
+  const networkCategory =
     detectSwitchCategory(lower) ??
     NETWORK_CATEGORY_KEYWORDS.find((c) => c.test(lower))?.category ??
-    null
-  );
+    null;
+  if (networkCategory) return networkCategory;
+
+  // Bare "กล้อง" mention with no sub-type and no network device keyword
+  // either — real customer phrasing ("อยากติดกล้องที่บ้านสักสี่ตัว
+  // แนะนำหน่อย", "กล้องกลางคืนภาพสี") is a full Thai sentence with no
+  // spaces between words, so searchTerms() below tokenizes it into one
+  // giant blob that matches nothing — total dead end otherwise ("ไม่พบ
+  // สินค้า" for the single most common real-world question shape). Same
+  // fallback as bare "switch": scope to all camera categories instead of
+  // no category, so the price-sorted fallback in retrieveProducts still
+  // returns real recommendations.
+  if (mentionsCamera) return ["camera-ip", "camera-wifi", "camera-analog"];
+
+  return null;
 }
 
 function searchTerms(message: string): string[] {
   const lower = message.toLowerCase();
-  const terms = new Set(protocolSearchTerms(lower));
+  const terms = new Set([
+    ...protocolSearchTerms(lower),
+    ...featureSearchTerms(lower),
+    ...resolutionSearchTerms(lower),
+  ]);
 
   // generic fallback: bare keywords from the question (ILIKE v1 behavior),
   // so non-protocol questions still retrieve something.
@@ -268,6 +336,23 @@ export async function getCatalogOverview(): Promise<CategoryOverview[]> {
   return rows.map((r) => ({ categoryLabel: r.categoryLabel, count: r._count._all }));
 }
 
+// "จัดชุด"/"แพ็คเกจ" for a camera system means camera + NVR + PoE switch
+// together (this shop sells install-ready sets, not just bare cameras —
+// [[project_vigi_package]]: C320×4 + NVR1004H-4P is a real bundled SKU
+// combo) — a plain camera-only category filter structurally cannot answer
+// "จัดมาชุดหนึ่งสิ" since the recording/PoE half never even reaches the
+// LLM's context. This only widens which categories retrieval considers; it
+// does NOT size the bundle (matching camera count to NVR channel count /
+// switch port count is a separate, unimplemented feature — the LLM sees
+// options from all three categories but has to reason about quantity
+// itself from the product list, same as it does for anything else).
+const BUNDLE_KEYWORDS = ["ชุด", "แพ็คเกจ", "package", "เซ็ต"];
+
+export function isBundleQuery(message: string): boolean {
+  const lower = message.toLowerCase();
+  return BUNDLE_KEYWORDS.some((k) => lower.includes(k));
+}
+
 export async function retrieveProducts(message: string, limit = 3): Promise<RagProduct[]> {
   const lower = message.toLowerCase();
   const terms = searchTerms(message);
@@ -305,6 +390,7 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
   const matched = terms.length > 0 ? rows.filter((p) => keywordMatch(p, terms)) : [];
 
   const byPrice = (a: RagProduct, b: RagProduct) => a.price! - b.price!;
+  let result: RagProduct[];
   if (matched.length > 0) {
     // identifier hits (a named model/brand) rank ahead of plain description
     // hits, and among identifier hits more distinct term matches ranks
@@ -320,12 +406,46 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
       .sort((a, b) => b.score - a.score || a.product.price! - b.product.price!)
       .map((x) => x.product);
     const weakRanked = weak.map(toRagProduct).filter((p) => p.price !== null).sort(byPrice);
-    return [...strongRanked, ...weakRanked].slice(0, limit);
+    result = [...strongRanked, ...weakRanked];
+  } else if (category) {
+    result = rows.map(toRagProduct).filter((p) => p.price !== null).sort(byPrice);
+  } else {
+    result = [];
   }
 
-  if (category) {
-    return rows.map(toRagProduct).filter((p) => p.price !== null).sort(byPrice).slice(0, limit);
+  // Bundle intent ("จัดชุด") pulls in NVR + PoE switch options alongside
+  // cameras. Can't fold this into the keyword match above: camera-specific
+  // search terms (a resolution like "4mp", a protocol) never appear in an
+  // NVR/switch spec, so widening the category filter alone would still get
+  // filtered out by keywordMatch — these have to be fetched and appended
+  // separately, unranked by the camera-specific terms.
+  const categories = category ? (Array.isArray(category) ? category : [category]) : [];
+  if (isBundleQuery(lower) && categories.some((c) => c.startsWith("camera-")) && result.length > 0) {
+    // Reserve slots (up to 2 nvr + 2 sw-poe) so a full camera match list
+    // doesn't crowd the accessories past the final slice(0, limit). Clamped
+    // to half of limit so a small limit can't zero out the cameras entirely
+    // and return accessories-only.
+    const reservedSlots = Math.min(4, Math.floor(limit / 2));
+    result = result.slice(0, Math.max(0, limit - reservedSlots));
+
+    const accessoryRows = await prisma.product.findMany({
+      where: { status: { notIn: ["hidden", "SOLD OUT"] }, category: { in: ["nvr", "sw-poe"] } },
+      select: {
+        id: true, brand: true, model: true, name: true, category: true, categoryLabel: true,
+        onlineMin: true, onlineMax: true, publicPriceOverride: true, publicPriceSupplier: true,
+        supplierCosts: true, status: true,
+      },
+    });
+    for (const accCategory of ["nvr", "sw-poe"]) {
+      const picks = accessoryRows
+        .filter((a) => a.category === accCategory)
+        .map(toRagProduct)
+        .filter((p) => p.price !== null)
+        .sort(byPrice)
+        .slice(0, 2);
+      result.push(...picks);
+    }
   }
 
-  return [];
+  return result.slice(0, limit);
 }
