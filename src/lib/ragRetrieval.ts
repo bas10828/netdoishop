@@ -69,10 +69,57 @@ const CATEGORY_KEYWORDS: { category: string; test: (lower: string) => boolean }[
   },
 ];
 
-function detectCategory(lower: string): string | null {
+// Same shape as the camera fix above: "switch"/"router"/"nvr" etc. are
+// generic enough that plain keyword search let unrelated products (cable/
+// adapter accessories that also mention "poe") outrank the real category —
+// e.g. "switch 24 port poe" was matching accessories instead of the actual
+// 75-item sw-poe category. Hard-filtering to the real category at the DB
+// level fixes it the same way camera sub-type detection did.
+const NETWORK_CATEGORY_KEYWORDS: { category: string | string[]; test: (lower: string) => boolean }[] = [
+  { category: "router", test: (lower) => lower.includes("router") || lower.includes("เราเตอร์") },
+  {
+    category: "access-point",
+    test: (lower) =>
+      lower.includes("access point") ||
+      lower.includes("accesspoint") ||
+      lower.includes("แอคเซสพอยต์") ||
+      /\bap\b/.test(lower),
+  },
+  { category: "wireless-bridge", test: (lower) => lower.includes("bridge") || lower.includes("บริดจ์") },
+  { category: "nvr", test: (lower) => lower.includes("nvr") || lower.includes("เอ็นวีอาร์") },
+  { category: "dvr", test: (lower) => lower.includes("dvr") || lower.includes("ดีวีอาร์") },
+];
+
+// Switch has 3 real categories (sw-poe/sw-manage/sw-unmanage) under one
+// generic word, so it needs its own narrowing step instead of a flat
+// keyword->category map: a bare "สวิตช์"/"switch" mention searches all
+// three, but "poe"/"unmanage"/"manage" narrows to the specific one.
+function detectSwitchCategory(lower: string): string | string[] | null {
+  const mentionsSwitch = lower.includes("switch") || lower.includes("สวิตช์") || lower.includes("สวิช");
+  if (!mentionsSwitch) return null;
+  if (lower.includes("poe")) return "sw-poe";
+  if (lower.includes("unmanage")) return "sw-unmanage";
+  if (lower.includes("manage")) return "sw-manage";
+  return ["sw-poe", "sw-manage", "sw-unmanage"];
+}
+
+function detectCategory(lower: string): string | string[] | null {
+  // Only return early on an actual camera sub-type match. A bare "กล้อง"
+  // mention with no sub-type (e.g. "switch poe สำหรับกล้อง 8 ตัว", "ชุดกล้อง
+  // nvr 8 ช่อง") must fall through to network detection instead of returning
+  // null — otherwise a query that names both a camera and a network device
+  // loses the network category filter and reintroduces the exact
+  // accessory-outranks-sw-poe bug this function exists to fix.
   const mentionsCamera = lower.includes("กล้อง") || lower.includes("camera");
-  if (!mentionsCamera) return null;
-  return CATEGORY_KEYWORDS.find((c) => c.test(lower))?.category ?? null;
+  if (mentionsCamera) {
+    const camCategory = CATEGORY_KEYWORDS.find((c) => c.test(lower))?.category;
+    if (camCategory) return camCategory;
+  }
+  return (
+    detectSwitchCategory(lower) ??
+    NETWORK_CATEGORY_KEYWORDS.find((c) => c.test(lower))?.category ??
+    null
+  );
 }
 
 function searchTerms(message: string): string[] {
@@ -229,7 +276,9 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
   const rows = await prisma.product.findMany({
     where: {
       status: { notIn: ["hidden", "SOLD OUT"] },
-      ...(category ? { category } : {}),
+      ...(category
+        ? { category: Array.isArray(category) ? { in: category } : category }
+        : {}),
     },
     select: {
       id: true,
