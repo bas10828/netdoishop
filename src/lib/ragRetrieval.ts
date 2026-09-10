@@ -309,6 +309,38 @@ function identifierMatch(p: { model: string; brand: string }, terms: string[]): 
   return identifierMatchCount(p, terms) > 0;
 }
 
+// A bare "อยากติดกล้องที่บ้านสักสี่ตัว แนะนำหน่อย" with no subtype/feature
+// keyword has nothing for keywordMatch to narrow on, so it falls straight
+// to a flat brand+price sort across ALL camera categories combined — and
+// since TP-Link WiFi (Tapo) SKUs are both brand-priority AND cheap, they
+// alone filled every slot, so the shop's IP/PoE+NVR and analog systems
+// never came up even though it genuinely sells all three. Round-robins one
+// pick per category (each already brand+price sorted within its own lane)
+// so a generic question surfaces the actual range of system types instead
+// of whichever category happens to be cheapest.
+function diversifyByCategory(products: RagProduct[], categoryOrder: string[]): RagProduct[] {
+  const byCategory = new Map<string, RagProduct[]>();
+  for (const p of products) {
+    const list = byCategory.get(p.category) ?? [];
+    list.push(p);
+    byCategory.set(p.category, list);
+  }
+  const lanes = categoryOrder.filter((c) => byCategory.has(c));
+  const result: RagProduct[] = [];
+  for (let round = 0; result.length < products.length; round++) {
+    let addedAny = false;
+    for (const c of lanes) {
+      const item = byCategory.get(c)![round];
+      if (item) {
+        result.push(item);
+        addedAny = true;
+      }
+    }
+    if (!addedAny) break;
+  }
+  return result;
+}
+
 function specHaystack(p: { brand: string; model: string; name: string }): string {
   const doc = productDoc(p.brand, p.model);
   return [p.name, doc?.tagline, doc?.body, ...(doc?.specs ?? [])]
@@ -510,7 +542,10 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
     const weakRanked = weak.map(toRagProduct).filter((p) => p.price !== null).sort(byBrandThenPrice);
     result = [...strongRanked, ...weakRanked];
   } else if (category) {
-    result = scopedRows.map(toRagProduct).filter((p) => p.price !== null).sort(byBrandThenPrice);
+    const priced = scopedRows.map(toRagProduct).filter((p) => p.price !== null).sort(byBrandThenPrice);
+    result = Array.isArray(category) && category.length > 1
+      ? diversifyByCategory(priced, category)
+      : priced;
   } else {
     result = [];
   }
