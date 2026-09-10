@@ -1,6 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+// grows with the typed text (Messenger-style) up to this height, then locks
+// and scrolls internally instead of pushing the rest of the chat widget off
+// screen — the widget itself is a fixed-size floating box, not a full page.
+const INPUT_MAX_HEIGHT_PX = 120;
 
 type ChatMsg = { role: "user" | "assistant"; text: string; provider?: string };
 
@@ -19,6 +24,18 @@ export default function RagAssistant() {
   // a canned "ไม่พบสินค้า" reply mid-thread doesn't wipe out what the
   // customer was actually asking about for the next follow-up.
   const [lastProductIds, setLastProductIds] = useState<number[]>([]);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // re-measure on every value change (typing AND the programmatic clear
+  // after send) so the box grows while composing a long question and snaps
+  // back to one line once it's sent — a plain onChange handler alone would
+  // miss the post-send reset since that happens outside the input event.
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, INPUT_MAX_HEIGHT_PX) + "px";
+  }, [input]);
 
   async function send() {
     const text = input.trim();
@@ -98,13 +115,21 @@ export default function RagAssistant() {
               </div>
             )}
           </div>
-          <div className="flex gap-1 border-t border-slate-200 p-2">
-            <input
+          <div className="flex items-end gap-1 border-t border-slate-200 p-2">
+            <textarea
+              ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && send()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  send();
+                }
+              }}
               placeholder="พิมพ์คำถาม..."
-              className="flex-1 rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+              rows={1}
+              style={{ maxHeight: INPUT_MAX_HEIGHT_PX }}
+              className="flex-1 resize-none overflow-y-auto rounded-md border border-slate-300 px-2 py-1.5 text-sm"
             />
             <button
               onClick={send}
