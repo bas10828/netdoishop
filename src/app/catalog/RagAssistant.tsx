@@ -4,15 +4,26 @@ import { useState } from "react";
 
 type ChatMsg = { role: "user" | "assistant"; text: string; provider?: string };
 
+// history turns sent to the backend so a follow-up like "นั่นแหละมีรุ่น
+// ไหนบ้างล่ะ" resolves against the actual conversation instead of being
+// retrieved as an unrelated, context-free question — the API itself caps
+// this further, sending more here just wastes a request.
+const MAX_HISTORY_TURNS = 6;
+
 export default function RagAssistant() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  // last *non-empty* product set the assistant matched — carried forward so
+  // a canned "ไม่พบสินค้า" reply mid-thread doesn't wipe out what the
+  // customer was actually asking about for the next follow-up.
+  const [lastProductIds, setLastProductIds] = useState<number[]>([]);
 
   async function send() {
     const text = input.trim();
     if (!text || loading) return;
+    const history = messages.slice(-MAX_HISTORY_TURNS).map((m) => ({ role: m.role, text: m.text }));
     setInput("");
     setMessages((m) => [...m, { role: "user", text }]);
     setLoading(true);
@@ -20,13 +31,21 @@ export default function RagAssistant() {
       const res = await fetch("/api/rag", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ message: text, history, previousProductIds: lastProductIds }),
       });
-      const data = (await res.json()) as { answer?: string; error?: string; provider?: string };
+      const data = (await res.json()) as {
+        answer?: string;
+        error?: string;
+        provider?: string;
+        products?: { id: number }[];
+      };
       setMessages((m) => [
         ...m,
         { role: "assistant", text: data.answer ?? data.error ?? "ไม่มีคำตอบ", provider: data.provider },
       ]);
+      if (data.products && data.products.length > 0) {
+        setLastProductIds(data.products.map((p) => p.id));
+      }
     } catch {
       setMessages((m) => [...m, { role: "assistant", text: "เกิดข้อผิดพลาด ลองใหม่อีกครั้ง" }]);
     } finally {
