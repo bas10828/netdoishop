@@ -32,6 +32,13 @@ const STOPWORDS = new Set([
   "กล้อง", "ตัว", "ราคา", "ถูก", "แพง", "สุด", "มี", "ไหม", "ที่", "รองรับ",
   // handled explicitly via the protocol logic above, not as bare keywords
   "analog", "อนาล็อก",
+  // bare "wifi" as a generic OR-term matches nearly every router/AP/camera
+  // product (almost all mention WiFi somewhere in name/specs), so it adds
+  // no real narrowing — it only diluted the "wifi 6" case above into
+  // matching non-WiFi-6 stock too. Category filtering (camera-wifi,
+  // router, access-point) already does the coarse "has wifi" narrowing at
+  // the DB level; the specific generation synonyms above handle the rest.
+  "wifi",
 ]);
 
 // query phrase -> text actually printed on the product (name/spec), for
@@ -49,6 +56,29 @@ const FEATURE_SYNONYMS: Record<string, string[]> = {
   ภาพสี: ["full-color", "full color", "colorvu", "dual light"],
   กลางคืน: ["full-color", "full color", "colorvu", "dual light", "ir", "starlight"],
 };
+
+// "Access Point รองรับ WiFi 6 ไหม" — a plain OR-term (even a narrow one like
+// "802.11ax") doesn't fix this: within the access-point category, generic
+// bare words from the question ("access", "point") already substring-match
+// nearly every product's own tagline ("Access Point ติดผนัง...") regardless
+// of generation, so those non-WiFi-6 units still pass keywordMatch and the
+// LLM ends up telling the customer "no WiFi 6 here" from a sample that
+// never actually excluded older stock — a false claim, not just a weak
+// match, when the catalog genuinely has 20+ real WiFi 6 SKUs. This has to
+// be a hard AND-filter (only WiFi-6-spec'd products pass at all), not
+// another term thrown into the OR pool.
+const WIFI_GENERATION_REQUIRED_TERM: Record<string, string> = {
+  "wifi 6": "802.11ax",
+  wifi6: "802.11ax",
+  "ไวไฟ 6": "802.11ax",
+  ไวไฟ6: "802.11ax",
+};
+function wifiGenerationRequiredTerm(lower: string): string | null {
+  for (const [key, term] of Object.entries(WIFI_GENERATION_REQUIRED_TERM)) {
+    if (lower.includes(key)) return term;
+  }
+  return null;
+}
 
 function featureSearchTerms(lower: string): string[] {
   const terms = new Set<string>();
@@ -126,7 +156,20 @@ const CATEGORY_KEYWORDS: { category: string; test: (lower: string) => boolean }[
 // 75-item sw-poe category. Hard-filtering to the real category at the DB
 // level fixes it the same way camera sub-type detection did.
 const NETWORK_CATEGORY_KEYWORDS: { category: string | string[]; test: (lower: string) => boolean }[] = [
-  { category: "router", test: (lower) => lower.includes("router") || lower.includes("เราเตอร์") },
+  {
+    category: "router",
+    test: (lower) =>
+      lower.includes("router") ||
+      lower.includes("เราเตอร์") ||
+      // no distinct "mesh" category in the catalog — mesh WiFi kits are
+      // sold under router (e.g. Reyee RG-M18 2PK). Without this, a bare
+      // "mesh"/"เมช" query hits no category filter at all and keyword
+      // search on the whole catalog can match unrelated products whose
+      // spec text happens to contain "wifi" (e.g. a ZKTeco face-scanner
+      // model suffixed "/WIFI").
+      lower.includes("mesh") ||
+      lower.includes("เมช"),
+  },
   {
     category: "access-point",
     test: (lower) =>
@@ -164,6 +207,15 @@ function detectCategory(lower: string): string | string[] | null {
   if (mentionsCamera) {
     const camCategory = CATEGORY_KEYWORDS.find((c) => c.test(lower))?.category;
     if (camCategory) return camCategory;
+
+    // Bundle queries ("จัดชุดกล้อง 4 ตัวพร้อม NVR") name a camera AND an
+    // accessory (NVR/switch) together — the accessory half is supplied
+    // separately by the bundle accessory-append step in retrieveProducts,
+    // which only fires when this category list starts with "camera-".
+    // Without this, the network-category branch below would win outright
+    // (same as the switch case this function was already guarding against)
+    // and the bundle answer would come back with zero cameras.
+    if (isBundleQuery(lower)) return ["camera-ip", "camera-wifi", "camera-analog"];
   }
 
   const networkCategory =
@@ -257,18 +309,21 @@ function identifierMatch(p: { model: string; brand: string }, terms: string[]): 
   return identifierMatchCount(p, terms) > 0;
 }
 
+function specHaystack(p: { brand: string; model: string; name: string }): string {
+  const doc = productDoc(p.brand, p.model);
+  return [p.name, doc?.tagline, doc?.body, ...(doc?.specs ?? [])]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
 function keywordMatch(p: { model: string; brand: string; name: string }, terms: string[]): boolean {
   const prefixHit = PROTOCOL_PREFIX_MAP.some(
     (m) => m.pattern.test(p.model) && terms.includes(m.protocol)
   );
   if (prefixHit) return true;
   if (identifierMatch(p, terms)) return true;
-  const doc = productDoc(p.brand, p.model);
-  const haystack = [p.name, doc?.tagline, doc?.body, ...(doc?.specs ?? [])]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-  return terms.some((t) => haystack.includes(t));
+  return terms.some((t) => specHaystack(p).includes(t));
 }
 
 function toRagProduct(p: {
@@ -298,6 +353,36 @@ function toRagProduct(p: {
     protocol: protocolTag(p.model),
     specs: productDoc(p.brand, p.model)?.specs ?? null,
   };
+}
+
+// Rebuilds RagProduct entries from stored ids — used to carry the last
+// non-empty result set forward across a stateless turn (see
+// api/rag/route.ts) when a follow-up like "นั่นแหละมีรุ่นไหนบ้างล่ะ" has
+// nothing of its own for keyword retrieval to match. Re-fetches from the DB
+// rather than trusting client-echoed product data, so price/specs/status
+// stay authoritative.
+export async function getProductsByIds(ids: number[]): Promise<RagProduct[]> {
+  if (ids.length === 0) return [];
+  const rows = await prisma.product.findMany({
+    where: { id: { in: ids }, status: { notIn: ["hidden", "SOLD OUT"] } },
+    select: {
+      id: true,
+      brand: true,
+      model: true,
+      name: true,
+      category: true,
+      categoryLabel: true,
+      onlineMin: true,
+      onlineMax: true,
+      publicPriceOverride: true,
+      publicPriceSupplier: true,
+      supplierCosts: true,
+      status: true,
+    },
+  });
+  // preserve the original order/ranking from the turn these ids came from
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  return ids.map((id) => byId.get(id)).filter((r): r is NonNullable<typeof r> => !!r).map(toRagProduct);
 }
 
 // "ร้านนี้ขายอะไรบ้าง" isn't a product search — it's asking for a category
@@ -381,21 +466,38 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
     },
   });
 
+  // A named WiFi generation ("รองรับ WiFi 6 ไหม") is a hard requirement, not
+  // just another OR-term — see wifiGenerationRequiredTerm's comment above.
+  // Applied before keyword matching so it also constrains the category-only
+  // fallback below, not just the keyword-matched path.
+  const requiredWifiGen = wifiGenerationRequiredTerm(lower);
+  const scopedRows = requiredWifiGen
+    ? rows.filter((p) => specHaystack(p).includes(requiredWifiGen))
+    : rows;
+
   // category alone is a strong enough signal to answer with — don't require
   // a keyword match too (there may be none once "กล้อง" itself is stripped
   // as a stopword). Keyword-matched results still take priority when they
   // exist; an unmatched-but-in-category product is a reasonable fallback
   // over returning nothing, but only once real matches come up empty.
-  // (rows is already category-filtered at the DB level above.)
-  const matched = terms.length > 0 ? rows.filter((p) => keywordMatch(p, terms)) : [];
+  const matched = terms.length > 0 ? scopedRows.filter((p) => keywordMatch(p, terms)) : [];
 
   const byPrice = (a: RagProduct, b: RagProduct) => a.price! - b.price!;
+  // 2026-09: staff request — push the whole TP-Link family (brand strings
+  // "TP-Link", "TP-Link Omada", "TP-Link VIGI", "TP-Link Tapo" all count)
+  // to the front, ahead of other brands. This is a business-priority tie-
+  // breaker only: it never outranks a genuinely stronger keyword/identifier
+  // match.
+  const brandRank = (brand: string) => (brand.startsWith("TP-Link") ? 0 : 1);
+  const byBrandThenPrice = (a: RagProduct, b: RagProduct) =>
+    brandRank(a.brand) - brandRank(b.brand) || a.price! - b.price!;
   let result: RagProduct[];
   if (matched.length > 0) {
     // identifier hits (a named model/brand) rank ahead of plain description
     // hits, and among identifier hits more distinct term matches ranks
     // first (the exact named SKU over a same-brand sibling that only
-    // shares a model prefix) — price only breaks ties within a tier.
+    // shares a model prefix) — brand priority, then price, only break ties
+    // within a tier.
     const strong = matched
       .map((p) => ({ p, score: identifierMatchCount(p, terms) }))
       .filter((x) => x.score > 0);
@@ -403,14 +505,28 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
     const strongRanked = strong
       .map((x) => ({ product: toRagProduct(x.p), score: x.score }))
       .filter((x) => x.product.price !== null)
-      .sort((a, b) => b.score - a.score || a.product.price! - b.product.price!)
+      .sort((a, b) => b.score - a.score || byBrandThenPrice(a.product, b.product))
       .map((x) => x.product);
-    const weakRanked = weak.map(toRagProduct).filter((p) => p.price !== null).sort(byPrice);
+    const weakRanked = weak.map(toRagProduct).filter((p) => p.price !== null).sort(byBrandThenPrice);
     result = [...strongRanked, ...weakRanked];
   } else if (category) {
-    result = rows.map(toRagProduct).filter((p) => p.price !== null).sort(byPrice);
+    result = scopedRows.map(toRagProduct).filter((p) => p.price !== null).sort(byBrandThenPrice);
   } else {
     result = [];
+  }
+
+  // Ranking TP-Link first must not silently swallow every other brand once
+  // the list gets cut to `limit` — the customer still needs to see there
+  // ARE other options, just ranked below TP-Link, not hidden. If the top
+  // `limit` slots ended up TP-Link-only and a different-brand match exists
+  // further down, swap it into the last slot instead of dropping it.
+  if (result.length > limit) {
+    const top = result.slice(0, limit);
+    if (top.length > 1 && top.every((p) => brandRank(p.brand) === 0)) {
+      const otherBrand = result.slice(limit).find((p) => brandRank(p.brand) !== 0);
+      if (otherBrand) top[top.length - 1] = otherBrand;
+    }
+    result = top;
   }
 
   // Bundle intent ("จัดชุด") pulls in NVR + PoE switch options alongside
