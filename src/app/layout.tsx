@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SITE_URL, SITE_NAME, localBusinessJsonLd } from "@/lib/seo";
+import RagWidgetGate from "@/components/RagWidgetGate";
 
 const DESCRIPTION =
   "NETDOI Technology — ร้านอุปกรณ์เน็ตเวิร์กและกล้องวงจรปิดครบวงจร Router, Switch, Access Point, NVR ราคาส่ง ส่งทั่วไทย พร้อมบริการติดตั้งโซนแม่สาย จ.เชียงราย";
@@ -63,6 +64,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <RagWidgetGate />
       </body>
     </html>
   );

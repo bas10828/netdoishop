@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import SdCardCalculatorPanel from "./SdCardCalculatorPanel";
 import { calcDailyGB, GENERIC_BITRATE_MBPS_BY_MP } from "@/lib/storageCalc";
+import { channelsFromName } from "@/lib/deviceCapacity";
 
 type Product = {
   id: number;
@@ -34,13 +35,6 @@ const baht = (n: number) => n.toLocaleString("th-TH");
 // 4. Used to match a recommended capacity to a real in-stock SKU + price.
 function capacityFromModel(model: string): number | null {
   const m = model.match(/(\d+)\s*TB/i);
-  return m ? Number(m[1]) : null;
-}
-
-// extract channel count from an NVR's name, e.g. "AcuSense NVR 8CH, 2 HDD"
-// or "VIGI 16 Channel Network Video Recorder" -> 8, 16.
-function channelsFromName(name: string): number | null {
-  const m = name.match(/(\d+)\s*-?\s*(?:ch\b|channel)/i);
   return m ? Number(m[1]) : null;
 }
 

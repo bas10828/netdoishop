@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { readMemberSession } from "@/lib/memberAuth";
 import { prisma } from "@/lib/prisma";
 import {
   retrieveProducts,
@@ -8,6 +9,7 @@ import {
   isCatalogOverviewQuery,
   isBundleQuery,
   getCatalogOverview,
+  estimateApCoverageNote,
   type RagProduct,
 } from "@/lib/ragRetrieval";
 import { askLlm, askOverviewAnswer, PROVIDER, type HistoryTurn } from "@/lib/ragChat";
@@ -49,11 +51,19 @@ async function logChat(message: string, answer: string, provider: string, produc
   }
 }
 
-// POST /api/rag — staff-only prototype. Retrieval is read-only (SELECT via
-// the normal prisma client); no DB writes happen here.
+// POST /api/rag — gated to logged-in staff (NextAuth) OR a สมาชิกช่าง member
+// session (public storefront widget), same two-way check as
+// /api/member-auth/me. Keeps this a real API cost (Claude Haiku per call)
+// from being open to anonymous storefront visitors. Retrieval is read-only
+// (SELECT via the normal prisma client); no DB writes happen here.
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const [staffSession, memberSession] = await Promise.all([
+    getServerSession(authOptions),
+    readMemberSession(),
+  ]);
+  if (!staffSession && !memberSession) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
 
   let body: unknown;
   try {
@@ -118,9 +128,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ answer, products: [] });
   }
 
+  // Rough AP-count estimate ("ครอบคลุมบ้าน 3 ชั้น 300 ตรม กี่ตัว") — only
+  // ever computed from a stated area/floor count, never invented; null for
+  // any query that doesn't give that signal (see estimateApCoverageNote's
+  // own comment for the disclosed-assumption reasoning).
+  const apCoverageNote = estimateApCoverageNote(message);
+
   let answer: string;
   try {
-    answer = await askLlm(message, products, history);
+    answer = await askLlm(message, products, history, apCoverageNote);
   } catch (err) {
     // LLM unreachable (Ollama down, or bad/missing ANTHROPIC_API_KEY) — fall
     // back to a plain product list (products is non-empty here; the empty
@@ -128,7 +144,12 @@ export async function POST(req: Request) {
     answer =
       "แนะนำ:\n" +
       products
-        .map((p) => `- ${p.brand} ${p.model} (${p.name}) ${p.price?.toLocaleString("th-TH")} บาท`)
+        .map(
+          (p) =>
+            `- ${p.brand} ${p.model} (${p.name}) ${
+              p.price !== null ? `${p.price.toLocaleString("th-TH")} บาท` : "ยังไม่เปิดราคา (Coming Soon)"
+            }`
+        )
         .join("\n") +
       `\n\n(${PROVIDER} ไม่ตอบสนอง — แสดงผล retrieval ดิบ)`;
     console.error(`[rag] ${PROVIDER} error:`, err);

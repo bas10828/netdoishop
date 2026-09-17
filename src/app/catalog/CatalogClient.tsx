@@ -5,7 +5,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { productDoc } from "@/data/descriptions";
 import { sellPrice, SUPPLIER_MARKUP } from "@/lib/supplierMarkup";
-import RagAssistant from "./RagAssistant";
+import RagAssistant from "@/components/RagAssistant";
 
 // per-supplier badge color so every row states its cost source at a glance —
 // CMIT included (was previously left unlabeled, which read as "no source").
@@ -637,7 +637,10 @@ export default function CatalogClient({
 
   return (
     <main className="mx-auto p-4">
-      <RagAssistant />
+      {/* lifted clear of the "เลือก N รายการ" bulk-action bar below, which
+          otherwise renders on top of (z-40 > z-30) and visually overlaps
+          the chat button in the same bottom-right corner. */}
+      <RagAssistant liftedBottomPx={selected.size > 0 && !showSummary ? 88 : 16} />
       <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" className="flex items-center gap-3" title="หน้าแรก">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1479,6 +1482,13 @@ export default function CatalogClient({
                           />
                         </label>
                       )}
+                      <button
+                        onClick={() => toggleSelected(p.id)}
+                        className="text-slate-400 hover:text-rose-600"
+                        title="ลบรายการนี้ออกจากใบเสนอราคา"
+                      >
+                        ✕
+                      </button>
                     </div>
                   </div>
                 ))}
