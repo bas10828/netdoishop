@@ -4,9 +4,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { onlinePrices, resolvePublicPrice } from "@/lib/pricing";
+import { sellPrice } from "@/lib/supplierMarkup";
 import { productSlug } from "@/lib/seo";
 
 // PATCH /api/products/:id  — partial update, login required. Accepts any of:
+//   { rawCost: number }                     -> true cost from the active
+//     supplier's pricelist (supplierCosts[supplier]). Staff-editable so a
+//     small pricelist change can be corrected without waiting for a resync.
+//     Auto-recomputes priceMember (rawCost * that supplier's markup) and
+//     onlineMin/onlineMax from this new rawCost.
 //   { priceMember: number | null }          -> ราคาช่าง override; online min/max
 //     stay anchored to the raw cost on file (supplierCosts[supplier]) when
 //     known, so editing a SiS item's ช่างprice never corrupts the storefront
@@ -50,6 +56,29 @@ export async function PATCH(
   const b = body as Record<string, unknown>;
 
   const data: ProductUpdate = {};
+
+  if ("rawCost" in b) {
+    const rawCost = parsePrice(b.rawCost);
+    if (rawCost === undefined || rawCost === null) {
+      return NextResponse.json({ error: "bad cost" }, { status: 400 });
+    }
+    const existing = await prisma.product.findUnique({
+      where: { id },
+      select: { supplier: true, supplierCosts: true },
+    });
+    if (!existing) {
+      return NextResponse.json({ error: "not found" }, { status: 404 });
+    }
+    const supplierCosts = {
+      ...(existing.supplierCosts as Record<string, number> | null),
+      [existing.supplier]: rawCost,
+    };
+    data.supplierCosts = supplierCosts;
+    data.priceMember = sellPrice(rawCost, existing.supplier);
+    const { onlineMin, onlineMax } = onlinePrices(rawCost);
+    data.onlineMin = onlineMin;
+    data.onlineMax = onlineMax;
+  }
 
   if ("priceMember" in b) {
     const priceMember = parsePrice(b.priceMember);

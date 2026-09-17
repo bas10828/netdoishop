@@ -50,7 +50,7 @@ type Product = {
   note: string;
 };
 
-type EditField = "cost" | "public";
+type EditField = "cost" | "public" | "rawcost";
 
 const baht = (n: number | null) =>
   n === null ? "-" : n.toLocaleString("th-TH");
@@ -457,7 +457,12 @@ export default function CatalogClient({
     setError("");
     setEditId(p.id);
     setEditField(field);
-    const cur = field === "cost" ? p.priceMember : p.publicPriceOverride;
+    const cur =
+      field === "rawcost"
+        ? rawCostFor(p, p.supplier)
+        : field === "cost"
+        ? p.priceMember
+        : p.publicPriceOverride;
     setDraft(cur === null ? "" : String(cur));
   }
 
@@ -472,8 +477,15 @@ export default function CatalogClient({
     setError("");
     try {
       const value = draft === "" ? null : Number(draft);
+      if (editField === "rawcost" && value === null) {
+        setError("ต้นทุนห้ามว่าง");
+        setSaving(false);
+        return;
+      }
       const body =
-        editField === "cost"
+        editField === "rawcost"
+          ? { rawCost: value }
+          : editField === "cost"
           ? { priceMember: value }
           : { publicPriceOverride: value };
       const res = await fetch(`/api/products/${id}`, {
@@ -1000,14 +1012,22 @@ export default function CatalogClient({
 
                 {expandedIds.has(p.id) && (
                   <div className="mt-2 space-y-1 border-t border-slate-100 pt-2 text-xs text-slate-500">
-                    <div
-                      title={`ต้นทุนดิบจากใบราคา ${p.supplier} (ก่อน markup) — ไม่ใช่ราคาช่าง แก้ไม่ได้ตรงนี้ ตามใบราคาจริง`}
-                    >
+                    <div>
                       ต้นทุนดิบ:{" "}
                       <span className={`mx-1 rounded px-1 text-[10px] ${supplierBadgeClass(p.supplier)}`}>
                         {p.supplier}
                       </span>
-                      {baht(rawCostFor(p, p.supplier))}
+                      {editId === p.id && editField === "rawcost" ? (
+                        priceEditor(p)
+                      ) : (
+                        <button
+                          onClick={() => startEdit(p, "rawcost")}
+                          title={`ต้นทุนจริงจากใบราคา ${p.supplier} (ก่อน markup) — คลิกเพื่อแก้ตามใบราคาใหม่, ราคาช่างจะคำนวณ markup ให้อัตโนมัติ`}
+                          className="rounded px-1 py-0.5 font-medium hover:bg-amber-100"
+                        >
+                          {baht(rawCostFor(p, p.supplier))} ✏️
+                        </button>
+                      )}
                     </div>
                     <div>ช่วงราคาออนไลน์: {baht(p.onlineMin)}–{baht(p.onlineMax)}</div>
                     <div>👁 เข้าชม {baht(p.viewCount)}</div>
@@ -1272,14 +1292,22 @@ export default function CatalogClient({
                   <td />
                   <td colSpan={10} className="px-3 py-2">
                     <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
-                      <span
-                        title={`ต้นทุนดิบจากใบราคา ${p.supplier} (ก่อน markup) — ไม่ใช่ราคาช่าง แก้ไม่ได้ตรงนี้ ตามใบราคาจริง`}
-                      >
+                      <span>
                         ต้นทุนดิบ:{" "}
                         <span className={`mx-1 rounded px-1 text-[10px] ${supplierBadgeClass(p.supplier)}`}>
                           {p.supplier}
                         </span>
-                        {baht(rawCostFor(p, p.supplier))}
+                        {editId === p.id && editField === "rawcost" ? (
+                          priceEditor(p)
+                        ) : (
+                          <button
+                            onClick={() => startEdit(p, "rawcost")}
+                            title={`ต้นทุนจริงจากใบราคา ${p.supplier} (ก่อน markup) — คลิกเพื่อแก้ตามใบราคาใหม่, ราคาช่างจะคำนวณ markup ให้อัตโนมัติ`}
+                            className="rounded px-1 py-0.5 font-medium hover:bg-amber-100"
+                          >
+                            {baht(rawCostFor(p, p.supplier))} ✏️
+                          </button>
+                        )}
                       </span>
                       <span>👁 เข้าชม {baht(p.viewCount)}</span>
                       <span className="flex items-center gap-1">
