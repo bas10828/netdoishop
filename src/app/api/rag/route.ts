@@ -10,6 +10,7 @@ import {
   isBundleQuery,
   getCatalogOverview,
   estimateApCoverageNote,
+  extractQuantity,
   type RagProduct,
 } from "@/lib/ragRetrieval";
 import { askLlm, askOverviewAnswer, PROVIDER, type HistoryTurn } from "@/lib/ragChat";
@@ -101,10 +102,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ answer, products: [], provider: PROVIDER });
   }
 
-  // default limit (3) is too narrow for a "จัดชุด" bundle answer — it would
-  // cut off the NVR/switch picks retrieveProducts appends for bundle
-  // queries before the LLM ever sees them.
-  let products = await retrieveProducts(message, isBundleQuery(message) ? 8 : 3);
+  // default limit (3) is too narrow for a "จัดชุด" bundle answer (cuts off
+  // the NVR/switch picks retrieveProducts appends) — and, a real gap found
+  // live, also too narrow for a plain quote request that states a real unit
+  // count ("กล้อง 4 ล้าน สี่ตัว"): only 3 of the catalog's 8 real 4MP camera
+  // SKUs made it into context, so the LLM (accurately reporting what it was
+  // shown, just shown too little) told the customer only 2-3 models exist
+  // and refused to quote 4 units. Any query with a stated quantity gets the
+  // same wider limit as a bundle, whether or not "จัดชุด" was said.
+  const wideLimit = isBundleQuery(message) || extractQuantity(message) !== null;
+  let products = await retrieveProducts(message, wideLimit ? 8 : 3);
 
   // Chat is otherwise fully stateless per turn — a follow-up that only
   // makes sense with prior context ("นั่นแหละมีรุ่นไหนบ้างล่ะ") has no

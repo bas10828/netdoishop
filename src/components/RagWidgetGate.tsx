@@ -14,13 +14,22 @@ import RagAssistant from "@/components/RagAssistant";
 export default function RagWidgetGate() {
   const pathname = usePathname();
   const [loggedIn, setLoggedIn] = useState(false);
+  // staff chatting from anywhere (not just /catalog) still needs a way to
+  // turn what the assistant just recommended into a real ใบเสนอราคา — a
+  // customer-facing "ใส่ตะกร้า" button alone doesn't cover that ask. Only
+  // ever true for a staff NextAuth session (never สมาชิกช่าง), same
+  // distinction MemberAuthControl already draws from this same endpoint.
+  const [isStaff, setIsStaff] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     fetch("/api/member-auth/me")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (!cancelled) setLoggedIn(!!data?.name);
+        if (!cancelled) {
+          setLoggedIn(!!data?.name);
+          setIsStaff(data?.source === "staff");
+        }
       })
       .catch(() => {});
     return () => {
@@ -29,5 +38,17 @@ export default function RagWidgetGate() {
   }, []);
 
   if (pathname?.startsWith("/catalog") || !loggedIn) return null;
-  return <RagAssistant />;
+
+  // Hands the matched ids off to /catalog via a URL param instead of
+  // duplicating the proposal-summary logic here — CatalogClient reads
+  // `proposalIds` on mount and opens the same summary modal the /catalog
+  // widget's own button does. Full navigation (not a router push) since
+  // we're leaving the current page entirely.
+  const onAddToProposal = isStaff
+    ? (ids: number[]) => {
+        window.location.href = `/catalog?proposalIds=${ids.join(",")}`;
+      }
+    : undefined;
+
+  return <RagAssistant onAddToProposal={onAddToProposal} />;
 }

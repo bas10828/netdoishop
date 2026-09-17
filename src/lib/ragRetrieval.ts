@@ -557,6 +557,34 @@ export function isBundleQuery(message: string): boolean {
   return BUNDLE_KEYWORDS.some((k) => lower.includes(k));
 }
 
+// "C440 กับ C340I ต่างกันตรงไหน", "เลือกอันไหนดี", "A vs B" — a real gap: the
+// normal `limit` (3) can truncate one of the two named models the customer
+// is actually trying to compare right back out before the LLM ever sees it,
+// especially once TP-Link-first ranking and Coming Soon filtering are in
+// play. Detected here so retrieveProducts can widen the cut specifically
+// for named-identifier hits on a compare-style question — this only ever
+// makes the candidate list bigger for this one intent, never changes
+// ranking or what counts as a match otherwise.
+const COMPARE_KEYWORDS = ["เทียบ", "ต่างกัน", "แตกต่าง", "เลือกอันไหน", "อันไหนดี", " vs ", " vs.", "versus"];
+
+export function isCompareQuery(message: string): boolean {
+  const lower = message.toLowerCase();
+  return COMPARE_KEYWORDS.some((k) => lower.includes(k));
+}
+
+// "ขอใบเสนอราคา...", "เสนอราคาให้หน่อย", "ขอใบเสนอ...ให้หน่อย" (real customer
+// phrasing sometimes drops "ราคา") — a real quote request, not a browsing
+// question ("มีกล้องกันน้ำไหม") — the customer wants ONE decisive lineup, not
+// a menu of alternatives to pick from themselves. "ใบเสนอ" alone covers both
+// "ใบเสนอราคา" and the "ราคา"-less phrasing; "เสนอราคา" catches the form
+// without "ใบ" ("ขอเสนอราคาหน่อย").
+const QUOTE_KEYWORDS = ["ใบเสนอ", "เสนอราคา"];
+
+export function isQuoteRequestQuery(message: string): boolean {
+  const lower = message.toLowerCase();
+  return QUOTE_KEYWORDS.some((k) => lower.includes(k));
+}
+
 // Thai number word (1-64) -> the digit string customers actually type,
 // e.g. "สิบสอง" -> "12", "ยี่สิบ" -> "20", built once at module load. Camera/
 // channel/port counts in this catalog top out well under 64, so that range
@@ -661,6 +689,7 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
   const byBrandThenPrice = (a: RagProduct, b: RagProduct) =>
     brandRank(a.brand) - brandRank(b.brand) || priceOrInfinity(a) - priceOrInfinity(b);
   let result: RagProduct[];
+  let strongMatchCount = 0;
   if (matched.length > 0) {
     // identifier hits (a named model/brand) rank ahead of plain description
     // hits, and among identifier hits more distinct term matches ranks
@@ -684,6 +713,7 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
       .map((x) => x.product);
     const weakRanked = weak.map(toRagProduct).filter((p) => p.price !== null).sort(byBrandThenPrice);
     result = [...strongRanked, ...weakRanked];
+    strongMatchCount = strong.length;
   } else if (category) {
     const priced = scopedRows.map(toRagProduct).filter((p) => p.price !== null).sort(byBrandThenPrice);
     result = Array.isArray(category) && category.length > 1
@@ -691,6 +721,35 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
       : priced;
   } else {
     result = [];
+  }
+
+  // A decisive quote/bundle request ("ขอใบเสนอราคา...", "จัดชุด...") should
+  // commit to ONE camera model per install location actually needed, not
+  // hand back every candidate as if browsing. Real feedback: widening
+  // retrieval so the LLM knows true availability (see extractQuantity note
+  // below) also meant every matching 4MP camera showed up as a separate
+  // card/option, when the customer just wanted one settled pick per spot.
+  // Location is read straight off the message (same keyword set the
+  // outdoor/indoor prompt sections use) — both mentioned (a 2-site bundle
+  // like "หน้าร้าน 2 ตัว ในร้าน 10 ตัว") keeps one pick per site; neither
+  // mentioned defaults to indoor only (the common case) rather than
+  // guessing outdoor. Never touches a compare question — that one
+  // genuinely wants multiple named models kept.
+  if ((isBundleQuery(lower) || isQuoteRequestQuery(lower)) && !isCompareQuery(lower)) {
+    const cams = result.filter((p) => p.installNote);
+    if (cams.length > 1) {
+      const wantsOutdoor = /หน้าร้าน|นอกอาคาร|กลางแจ้ง|outdoor/.test(lower);
+      const wantsIndoor = /ในร้าน|ในอาคาร|ในบ้าน|indoor/.test(lower);
+      const outdoorPool = cams.filter((p) => p.installNote!.startsWith("ติดตั้งกลางแจ้ง"));
+      const indoorPool = cams.filter((p) => p.installNote!.startsWith("ติดตั้งได้เฉพาะในอาคาร"));
+      const cheapest = (pool: RagProduct[]) =>
+        pool.slice().sort((a, b) => priceOrInfinity(a) - priceOrInfinity(b))[0];
+      const picks: RagProduct[] = [];
+      if (wantsOutdoor && outdoorPool.length > 0) picks.push(cheapest(outdoorPool));
+      if (wantsIndoor && indoorPool.length > 0) picks.push(cheapest(indoorPool));
+      if (picks.length === 0) picks.push(cheapest(indoorPool.length > 0 ? indoorPool : cams));
+      result = [...picks, ...result.filter((p) => !p.installNote)];
+    }
   }
 
   // Network switch queries with a stated quantity ("ออฟฟิศมี 30 จุดใช้งาน",
@@ -732,10 +791,14 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
   // ARE other options, just ranked below TP-Link, not hidden. If the top
   // `limit` slots ended up TP-Link-only and a different-brand match exists
   // further down, swap it into the last slot instead of dropping it.
-  if (result.length > limit) {
-    const top = result.slice(0, limit);
+  // A compare-style question ("C440 กับ C340I ต่างกันตรงไหน") widens the cut
+  // to fit every named-identifier hit (capped at 6) so the default limit=3
+  // can't silently drop the second thing being compared.
+  const effectiveLimit = isCompareQuery(lower) ? Math.max(limit, Math.min(strongMatchCount, 6)) : limit;
+  if (result.length > effectiveLimit) {
+    const top = result.slice(0, effectiveLimit);
     if (top.length > 1 && top.every((p) => brandRank(p.brand) === 0)) {
-      const otherBrand = result.slice(limit).find((p) => brandRank(p.brand) !== 0);
+      const otherBrand = result.slice(effectiveLimit).find((p) => brandRank(p.brand) !== 0);
       if (otherBrand) top[top.length - 1] = otherBrand;
     }
     result = top;
@@ -829,5 +892,5 @@ export async function retrieveProducts(message: string, limit = 3): Promise<RagP
     }
   }
 
-  return result.slice(0, limit);
+  return result.slice(0, Math.max(limit, effectiveLimit));
 }

@@ -29,21 +29,49 @@ const baht = (n: number) => n.toLocaleString("th-TH");
 // TP-Link's own taglines pair these terms together ("2K/3MP", "3K/5MP"), and
 // "1080p"/"2MP" are the same industry-standard equivalence — so a search for
 // one should also find products only labeled with the other.
-const RESOLUTION_SYNONYMS: Record<string, string[]> = {
+// Analog camera protocol: the catalog text never spells out "TVI"/"CVI" —
+// Hikvision writes "Turbo HD" (its brand name for TVI), Dahua writes
+// "HDCVI" — same gap ragRetrieval.ts's SPECIFIC_PROTOCOL_SYNONYMS fixes for
+// the chat assistant, duplicated here in this client bundle since this file
+// can't import that server-only module (it pulls in prisma).
+const TERM_SYNONYMS: Record<string, string[]> = {
   "2mp": ["1080p"],
   "1080p": ["2mp"],
   "3mp": ["2k"],
   "2k": ["3mp"],
   "5mp": ["3k"],
   "3k": ["5mp"],
+  tvi: ["turbo hd"],
+  cvi: ["hdcvi"],
 };
 function tokenMatches(haystack: string, token: string): boolean {
   if (haystack.includes(token)) return true;
-  return (RESOLUTION_SYNONYMS[token] ?? []).some((alt) => haystack.includes(alt));
+  return (TERM_SYNONYMS[token] ?? []).some((alt) => haystack.includes(alt));
 }
 // customers type brand names without the dash ("tplink", "dlink") — strip
 // "-" from both the haystack and the query so it doesn't matter.
 const dashless = (s: string) => s.toLowerCase().replace(/-/g, "");
+
+// "กล้องกันน้ำไม่เกิน 1000", "switch เกิน 500 บาท" — a real price ceiling/floor
+// stated in plain language, not just a brand/model keyword. Extracted (and
+// stripped from the remaining text) before token-matching so the number
+// itself never has to literal-match anything in the product name/spec text.
+function extractPriceBound(term: string): { min: number | null; max: number | null; rest: string } {
+  let min: number | null = null;
+  let max: number | null = null;
+  let rest = term;
+  const maxMatch = rest.match(/(?:ไม่เกิน|ต่ำกว่า|ถูกกว่า|under)\s*(\d+)/);
+  if (maxMatch) {
+    max = Number(maxMatch[1]);
+    rest = rest.replace(maxMatch[0], " ");
+  }
+  const minMatch = rest.match(/(?:มากกว่า|เกิน|แพงกว่า|over)\s*(\d+)/);
+  if (minMatch) {
+    min = Number(minMatch[1]);
+    rest = rest.replace(minMatch[0], " ");
+  }
+  return { min, max, rest: rest.replace(/\s+/g, " ").trim() };
+}
 
 // brands shown first in the filter row (best sellers). Names must match the
 // brand strings in the catalog exactly. Any not present are skipped.
@@ -112,10 +140,13 @@ export default function ShopClient({
   }, [products]);
 
   const filtered = useMemo(() => {
-    const term = dashless(q.trim());
+    const rawTerm = dashless(q.trim());
+    const { min: minPrice, max: maxPrice, rest: term } = extractPriceBound(rawTerm);
     return products.filter((p) => {
       if (cat !== "all" && p.category !== cat) return false;
       if (brand !== "all" && p.brand !== brand) return false;
+      if (maxPrice !== null && (p.price === null || p.price > maxPrice)) return false;
+      if (minPrice !== null && (p.price === null || p.price < minPrice)) return false;
       if (!term) return true;
       // multi-word search is AND-across-words over ALL fields combined, not
       // "does any single field contain the whole typed phrase" — otherwise

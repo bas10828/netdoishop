@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { onlinePrices, resolvePublicPrice } from "@/lib/pricing";
 import { sellPrice } from "@/lib/supplierMarkup";
 import { productSlug } from "@/lib/seo";
+import { deviceImage } from "@/lib/deviceImage";
 
 // PATCH /api/products/:id  — partial update, login required. Accepts any of:
 //   { rawCost: number }                     -> true cost from the active
@@ -31,6 +32,34 @@ function parsePrice(raw: unknown): number | null | undefined {
   const n = Number(raw);
   if (!Number.isFinite(n) || n < 0) return undefined; // invalid
   return Math.round(n);
+}
+
+// GET /api/products/:id — staff-only, login required. Used to pull a full
+// staff-shaped row (ราคาช่าง, ต้นทุน, ฯลฯ) for a product the RAG chat widget
+// recommended but that isn't on the currently loaded/paginated catalog
+// page — "เพิ่มเข้าใบเสนอราคา" needs the real row, not the customer-facing
+// RagProduct shape the chat API returns (no priceMember/supplierCosts).
+export async function GET(_req: Request, { params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  const id = Number(params.id);
+  if (!Number.isInteger(id)) {
+    return NextResponse.json({ error: "bad id" }, { status: 400 });
+  }
+  const product = await prisma.product.findUnique({ where: { id } });
+  if (!product) {
+    return NextResponse.json({ error: "not found" }, { status: 404 });
+  }
+  return NextResponse.json({
+    ...product,
+    image: deviceImage(product.model, product.brand),
+    publicPrice: resolvePublicPrice({
+      ...product,
+      supplierCosts: product.supplierCosts as Record<string, number> | null,
+    }),
+  });
 }
 
 export async function PATCH(

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { addToCart } from "@/lib/cart";
 
 // grows with the typed text (Messenger-style) up to this height, then locks
 // and scrolls internally instead of pushing the rest of the chat widget off
@@ -12,6 +13,7 @@ type RagProductCard = {
   id: number;
   brand: string;
   model: string;
+  name: string;
   price: number | null;
   image: string;
   slug: string;
@@ -30,7 +32,19 @@ type ChatMsg = {
 // this further, sending more here just wastes a request.
 const MAX_HISTORY_TURNS = 6;
 
-export default function RagAssistant({ liftedBottomPx = 16 }: { liftedBottomPx?: number }) {
+export default function RagAssistant({
+  liftedBottomPx = 16,
+  onAddToProposal,
+}: {
+  liftedBottomPx?: number;
+  // staff /catalog only (CatalogClient passes this) — adds the matched
+  // product ids to the existing selection + opens the proposal summary
+  // modal, so a bundle the assistant just recommended doesn't have to be
+  // re-found and re-ticked by hand in the table below. The public
+  // storefront widget (RagWidgetGate) never passes this — customers get a
+  // per-card "ใส่ตะกร้า" button instead (rendered when this is undefined).
+  onAddToProposal?: (ids: number[]) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [input, setInput] = useState("");
@@ -39,7 +53,23 @@ export default function RagAssistant({ liftedBottomPx = 16 }: { liftedBottomPx?:
   // a canned "ไม่พบสินค้า" reply mid-thread doesn't wipe out what the
   // customer was actually asking about for the next follow-up.
   const [lastProductIds, setLastProductIds] = useState<number[]>([]);
+  // brief "เพิ่มแล้ว ✓" feedback per product id after a cart-add click, same
+  // pattern as ShopClient's justAdded — cleared after 1.5s.
+  const [justAdded, setJustAdded] = useState<Set<number>>(new Set());
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  function handleAddToCart(p: RagProductCard) {
+    if (p.price === null) return;
+    addToCart({ id: p.id, brand: p.brand, model: p.model, name: p.name, price: p.price, image: p.image });
+    setJustAdded((prev) => new Set(prev).add(p.id));
+    setTimeout(() => {
+      setJustAdded((prev) => {
+        const next = new Set(prev);
+        next.delete(p.id);
+        return next;
+      });
+    }, 1500);
+  }
 
   // re-measure on every value change (typing AND the programmatic clear
   // after send) so the box grows while composing a long question and snaps
@@ -137,25 +167,50 @@ export default function RagAssistant({ liftedBottomPx = 16 }: { liftedBottomPx?:
                   )}
                 </div>
                 {m.role === "assistant" && m.products && m.products.length > 0 && (
-                  <div className="mr-6 mt-1 flex gap-2 overflow-x-auto pb-1">
-                    {m.products.map((p) => (
-                      <Link
-                        key={p.id}
-                        href={`/product/${p.slug}`}
-                        target="_blank"
-                        className="flex w-20 shrink-0 flex-col items-center rounded-md border border-slate-200 p-1.5 text-center hover:border-indigo-400"
+                  <>
+                    <div className="mr-6 mt-1 flex gap-2 overflow-x-auto pb-1">
+                      {m.products.map((p) => (
+                        <div
+                          key={p.id}
+                          className="flex w-20 shrink-0 flex-col items-center rounded-md border border-slate-200 p-1.5 text-center"
+                        >
+                          <Link href={`/product/${p.slug}`} target="_blank" className="flex flex-col items-center hover:opacity-80">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={p.image} alt={p.model} className="h-12 w-12 object-contain" />
+                            <div className="mt-1 line-clamp-2 text-[10px] leading-tight text-slate-700">
+                              {p.brand} {p.model}
+                            </div>
+                            <div className="text-[10px] font-semibold text-indigo-700">
+                              {p.price !== null ? `${p.price.toLocaleString("th-TH")} บาท` : "Coming Soon"}
+                            </div>
+                          </Link>
+                          {/* staff /catalog widget skips this — proposal
+                              add happens once per message below instead,
+                              not the customer cart flow. */}
+                          {!onAddToProposal && p.price !== null && (
+                            <button
+                              onClick={() => handleAddToCart(p)}
+                              className={`mt-1 w-full rounded px-1 py-0.5 text-[10px] font-medium ${
+                                justAdded.has(p.id)
+                                  ? "bg-emerald-100 text-emerald-700"
+                                  : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                              }`}
+                            >
+                              {justAdded.has(p.id) ? "เพิ่มแล้ว ✓" : "🛒 ใส่ตะกร้า"}
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {onAddToProposal && (
+                      <button
+                        onClick={() => onAddToProposal(m.products!.map((p) => p.id))}
+                        className="mr-6 mt-1 rounded-md border border-indigo-300 bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-100"
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={p.image} alt={p.model} className="h-12 w-12 object-contain" />
-                        <div className="mt-1 line-clamp-2 text-[10px] leading-tight text-slate-700">
-                          {p.brand} {p.model}
-                        </div>
-                        <div className="text-[10px] font-semibold text-indigo-700">
-                          {p.price !== null ? `${p.price.toLocaleString("th-TH")} บาท` : "Coming Soon"}
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
+                        📝 เพิ่มรายการนี้เข้าใบเสนอราคา
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             ))}

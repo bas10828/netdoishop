@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { productDoc } from "@/data/descriptions";
 import { sellPrice, SUPPLIER_MARKUP } from "@/lib/supplierMarkup";
 import RagAssistant from "@/components/RagAssistant";
@@ -453,6 +454,56 @@ export default function CatalogClient({
     }
   }
 
+  // "เพิ่มเข้าใบเสนอราคา" from the RAG chat widget — the recommended ids are
+  // often not on the currently loaded/paginated page (`items` is one page
+  // of ~955 products), so a bare `selected.add(id)` would silently show
+  // nothing for them in the summary modal below (it filters `items`, not
+  // the DB). Fetch the real staff-shaped row for any id not already loaded
+  // and merge it in first.
+  async function addChatRecommendationsToProposal(ids: number[]) {
+    setError("");
+    const missing = ids.filter((id) => !items.some((p) => p.id === id));
+    if (missing.length > 0) {
+      try {
+        const fetched = await Promise.all(
+          missing.map((id) =>
+            fetch(`/api/products/${id}`).then((r) => (r.ok ? (r.json() as Promise<Product>) : null))
+          )
+        );
+        const valid = fetched.filter((p): p is Product => p !== null);
+        if (valid.length > 0) setItems((prev) => [...prev, ...valid]);
+      } catch {
+        setError("โหลดข้อมูลสินค้าไม่สำเร็จ");
+        return;
+      }
+    }
+    setSelected((prev) => {
+      const next = new Set(prev);
+      ids.forEach((id) => next.add(id));
+      return next;
+    });
+    setShowSummary(true);
+  }
+
+  // A staff chat session elsewhere (RagWidgetGate on the storefront, not
+  // just this page's own widget) hands off a "เพิ่มเข้าใบเสนอราคา" click via
+  // ?proposalIds=1,2,3 instead of duplicating this page's selection/modal
+  // state in a component that lives on every route. Runs once on mount;
+  // strips the param afterward so a refresh/back-nav doesn't re-trigger it.
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  useEffect(() => {
+    const raw = searchParams.get("proposalIds");
+    if (!raw) return;
+    const ids = raw
+      .split(",")
+      .map((s) => Number(s))
+      .filter((n) => Number.isInteger(n));
+    if (ids.length > 0) addChatRecommendationsToProposal(ids);
+    router.replace("/catalog");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function startEdit(p: Product, field: EditField) {
     setError("");
     setEditId(p.id);
@@ -640,7 +691,10 @@ export default function CatalogClient({
       {/* lifted clear of the "เลือก N รายการ" bulk-action bar below, which
           otherwise renders on top of (z-40 > z-30) and visually overlaps
           the chat button in the same bottom-right corner. */}
-      <RagAssistant liftedBottomPx={selected.size > 0 && !showSummary ? 88 : 16} />
+      <RagAssistant
+        liftedBottomPx={selected.size > 0 && !showSummary ? 88 : 16}
+        onAddToProposal={addChatRecommendationsToProposal}
+      />
       <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" className="flex items-center gap-3" title="หน้าแรก">
           {/* eslint-disable-next-line @next/next/no-img-element */}
