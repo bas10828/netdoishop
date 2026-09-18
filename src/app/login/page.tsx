@@ -35,8 +35,7 @@ function LoginForm() {
       setError("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
       return;
     }
-    router.push(callbackUrl);
-    router.refresh();
+    window.location.href = callbackUrl;
   }
 
   return (
