@@ -1,4 +1,3 @@
-import JSZip from "jszip";
 import { withBrowser } from "./browser";
 import { buildProposalHtml, WIDTH, HEADER_HEIGHT, CARD_MIN_HEIGHT, ITEMS_PER_PAGE, type PriceDisplay, type ProposalFooter } from "./template";
 import { computeTotals, type ProposalItem, type CustomLineItem } from "./data";
@@ -33,28 +32,23 @@ async function renderOnePng(
   });
 }
 
-// Returns either a single PNG (≤ ITEMS_PER_PAGE items) or a ZIP of multiple
-// PNGs (ITEMS_PER_PAGE items each) — keeps every image readable instead of
-// one very tall image.
-export async function renderProposalPng(
+// Returns one PNG per ITEMS_PER_PAGE items — keeps every image readable
+// instead of one very tall image. Pages are returned as separate images
+// (not zipped) because phones often can't extract a ZIP; the client shares
+// or saves them individually.
+export async function renderProposalPngs(
   items: ProposalItem[],
   priceDisplay: PriceDisplay = "both",
   customItems: CustomLineItem[] = []
-): Promise<{ buffer: Buffer; isZip: boolean }> {
+): Promise<Buffer[]> {
   const groups = chunk(items, ITEMS_PER_PAGE);
   const totals = computeTotals(items, customItems);
   const footer: ProposalFooter = { customItems, totals };
 
-  if (groups.length === 1) {
-    return { buffer: await renderOnePng(groups[0], priceDisplay, footer), isZip: false };
-  }
-
-  const zip = new JSZip();
+  const pngs: Buffer[] = [];
   for (let i = 0; i < groups.length; i++) {
     const isLast = i === groups.length - 1;
-    const png = await renderOnePng(groups[i], priceDisplay, isLast ? footer : null);
-    zip.file(`netdoi-proposal-${String(i + 1).padStart(3, "0")}.png`, png);
+    pngs.push(await renderOnePng(groups[i], priceDisplay, isLast ? footer : null));
   }
-  const buffer = await zip.generateAsync({ type: "nodebuffer" });
-  return { buffer, isZip: true };
+  return pngs;
 }

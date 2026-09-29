@@ -180,6 +180,10 @@ export default function CatalogClient({
   const [priceDisplay, setPriceDisplay] = useState<"member" | "public" | "both">("public");
   const [generating, setGenerating] = useState<"pdf" | "png" | null>(null);
   const [showSummary, setShowSummary] = useState(false);
+  // generated PNG pages, shown in a result panel so the user can share/save
+  // them with a fresh tap (navigator.share needs user activation, which has
+  // expired by the time the render request returns)
+  const [pngPages, setPngPages] = useState<{ file: File; url: string }[] | null>(null);
   // editable price per item for THIS document only (id -> draft string), prefilled
   // with the real ราคาช่าง/ราคาหน้าร้าน — never saved back to the Product row
   const [draftMember, setDraftMember] = useState<Record<number, string>>({});
@@ -437,6 +441,17 @@ export default function CatalogClient({
         setError(body?.error ?? "สร้างใบเสนอราคาไม่สำเร็จ");
         return;
       }
+      if (format === "png") {
+        const body = (await res.json()) as { images: { filename: string; base64: string }[] };
+        const pages = body.images.map(({ filename, base64 }) => {
+          const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
+          const file = new File([bytes], filename, { type: "image/png" });
+          return { file, url: URL.createObjectURL(file) };
+        });
+        setPngPages(pages);
+        setShowSummary(false);
+        return;
+      }
       const disposition = res.headers.get("Content-Disposition") ?? "";
       const filenameMatch = disposition.match(/filename="([^"]+)"/);
       const blob = await res.blob();
@@ -452,6 +467,34 @@ export default function CatalogClient({
     } finally {
       setGenerating(null);
     }
+  }
+
+  function closePngPages() {
+    pngPages?.forEach((p) => URL.revokeObjectURL(p.url));
+    setPngPages(null);
+  }
+
+  const canSharePngs =
+    pngPages !== null &&
+    typeof navigator !== "undefined" &&
+    typeof navigator.canShare === "function" &&
+    navigator.canShare({ files: pngPages.map((p) => p.file) });
+
+  async function sharePngPages() {
+    if (!pngPages) return;
+    try {
+      await navigator.share({ files: pngPages.map((p) => p.file) });
+    } catch (err) {
+      // AbortError = user closed the share sheet; not an error
+      if ((err as Error).name !== "AbortError") setError("แชร์ไม่สำเร็จ — กดค้างที่รูปเพื่อบันทึกแทน");
+    }
+  }
+
+  function downloadPngPage(page: { file: File; url: string }) {
+    const a = document.createElement("a");
+    a.href = page.url;
+    a.download = page.file.name;
+    a.click();
   }
 
   // "เพิ่มเข้าใบเสนอราคา" from the RAG chat widget — the recommended ids are
@@ -1655,6 +1698,50 @@ export default function CatalogClient({
                 className="flex-1 rounded-md bg-sky-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-sky-700 disabled:opacity-50 sm:flex-initial"
               >
                 {generating === "png" ? "กำลังสร้าง…" : "🖼️ ดาวน์โหลด PNG"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {pngPages && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-black/60 sm:p-6">
+          <div className="flex h-full w-full flex-1 flex-col overflow-hidden bg-white sm:mx-auto sm:h-auto sm:max-w-2xl sm:rounded-lg">
+            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+              <h2 className="font-semibold">ใบเสนอราคา ({pngPages.length} รูป)</h2>
+              <button onClick={closePngPages} className="text-slate-500 hover:text-slate-800">
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 space-y-4 overflow-y-auto bg-slate-100 px-4 py-3">
+              <p className="text-xs text-slate-500">กดค้างที่รูปเพื่อบันทึกทีละรูปได้</p>
+              {pngPages.map((page, i) => (
+                <div key={page.url} className="space-y-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={page.url} alt={`หน้า ${i + 1}`} className="w-full rounded border border-slate-300 bg-white" />
+                  <button
+                    onClick={() => downloadPngPage(page)}
+                    className="text-xs text-sky-700 hover:underline"
+                  >
+                    ⬇ ดาวน์โหลดหน้า {i + 1}
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-3 border-t border-slate-200 px-4 py-3">
+              {canSharePngs && (
+                <button
+                  onClick={sharePngPages}
+                  className="flex-1 rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                >
+                  📤 แชร์ / บันทึกรูปทั้งหมด
+                </button>
+              )}
+              <button
+                onClick={() => pngPages.forEach(downloadPngPage)}
+                className="flex-1 rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white hover:bg-sky-700"
+              >
+                ⬇ ดาวน์โหลดทั้งหมด
               </button>
             </div>
           </div>

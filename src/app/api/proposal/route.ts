@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { buildProposalItems, MAX_PROPOSAL_ITEMS, type PriceOverrides, type CustomLineItem } from "@/lib/proposal/data";
 import { renderProposalPdf } from "@/lib/proposal/pdf";
-import { renderProposalPng } from "@/lib/proposal/png";
+import { renderProposalPngs } from "@/lib/proposal/png";
 import type { PriceDisplay } from "@/lib/proposal/template";
 
 export const runtime = "nodejs";
@@ -145,14 +145,18 @@ export async function POST(req: Request) {
     const items = await buildProposalItems(productIds, overrides);
     const today = new Date().toISOString().slice(0, 10);
 
+    // PNG comes back as JSON (one base64 image per page) rather than a ZIP —
+    // phones often can't extract ZIPs, so the client shares/saves each image.
     if (format === "png") {
-      const { buffer, isZip } = await renderProposalPng(items, priceDisplay, customItems);
-      return new NextResponse(new Uint8Array(buffer), {
-        headers: {
-          "Content-Type": isZip ? "application/zip" : "image/png",
-          "Content-Disposition": `attachment; filename="netdoi-proposal-${today}.${isZip ? "zip" : "png"}"`,
-        },
-      });
+      const pngs = await renderProposalPngs(items, priceDisplay, customItems);
+      const images = pngs.map((png, i) => ({
+        filename:
+          pngs.length === 1
+            ? `netdoi-proposal-${today}.png`
+            : `netdoi-proposal-${today}-${String(i + 1).padStart(2, "0")}.png`,
+        base64: png.toString("base64"),
+      }));
+      return NextResponse.json({ images });
     }
 
     const buffer = await renderProposalPdf(items, priceDisplay, customItems);
