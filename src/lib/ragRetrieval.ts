@@ -314,7 +314,7 @@ export type RagProduct = {
 // turret/dome models in this catalog with no IP rating are not
 // weatherproofed). Non-camera categories (NVR, switch, etc.) never need
 // this distinction, so they get null.
-function cameraInstallNote(category: string, specs: string[] | null, body: string | undefined): string | null {
+export function cameraInstallNote(category: string, specs: string[] | null, body: string | undefined): string | null {
   if (!category.startsWith("camera-")) return null;
   const haystack = `${(specs ?? []).join(" ")} ${body ?? ""}`;
   const outdoorRated = /IP6[5-8]|กันน้ำ|นอกอาคาร|กลางแจ้ง|outdoor/i.test(haystack);

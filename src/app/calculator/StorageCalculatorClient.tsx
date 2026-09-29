@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import SdCardCalculatorPanel from "./SdCardCalculatorPanel";
-import { calcDailyGB, GENERIC_BITRATE_MBPS_BY_MP } from "@/lib/storageCalc";
+import { calcDailyGB, GENERIC_BITRATE_MBPS_BY_MP, CODEC_FACTORS, capacityFromModel, mpFromName } from "@/lib/storageCalc";
 import { channelsFromName } from "@/lib/deviceCapacity";
 
 type Product = {
@@ -31,21 +31,6 @@ export type TapoCameraProduct = {
 
 const baht = (n: number) => n.toLocaleString("th-TH");
 
-// extract the TB figure embedded in an HDD model string, e.g. "Purple 4TB" ->
-// 4. Used to match a recommended capacity to a real in-stock SKU + price.
-function capacityFromModel(model: string): number | null {
-  const m = model.match(/(\d+)\s*TB/i);
-  return m ? Number(m[1]) : null;
-}
-
-// extract MP from an IP camera's name, e.g. "IP bullet 4MP 2.8mm ColorVu" -> 4.
-// dual-lens models list two ("dual 6MP (3MP+3MP)") — first match is the
-// combined/primary spec, which is what a resolution picker means anyway.
-function mpFromName(name: string): number | null {
-  const m = name.match(/(\d+)\s*MP/i);
-  return m ? Number(m[1]) : null;
-}
-
 // Common camera bitrate presets — cameras typically run at max bitrate setting.
 // Both Mbps and Kbps equivalents shown since camera UIs use either unit.
 const BITRATE_PRESETS: { mbps: number; label: string; sub: string }[] = [
@@ -71,11 +56,10 @@ const RESOLUTION_DEFAULT_BITRATE: Record<string, number> = {
   "8MP": GENERIC_BITRATE_MBPS_BY_MP[8],
 };
 const CODECS = ["H.264", "H.265"];
-// Bitrate presets are calibrated for H.264 at FPS_REFERENCE; H.265 delivers
-// the same quality at a lower bitrate, so scale the PRESET path accordingly.
-// Never applied to the custom bitrate field — that's a real value read off
-// the camera/NVR, already reflecting whatever codec/fps it's actually running.
-const CODEC_FACTORS: Record<string, number> = { "H.264": 1, "H.265": 0.5 };
+// Bitrate presets are calibrated for H.264 at FPS_REFERENCE; CODEC_FACTORS
+// scales the PRESET path for H.265. Never applied to the custom bitrate
+// field — that's a real value read off the camera/NVR, already reflecting
+// whatever codec/fps it's actually running.
 // Bitrate presets assume this fps; the preset path scales proportionally to
 // the selected fps (same reasoning as CODEC_FACTORS — custom entries are
 // exempt since they're already the real measured value at the real fps).

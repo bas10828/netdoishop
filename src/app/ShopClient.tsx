@@ -287,6 +287,13 @@ export default function ShopClient({
               f Facebook
             </a>
             <Link
+              href="/camera-set"
+              className="rounded-md bg-sky-600 px-3 py-2 font-medium text-white hover:brightness-110"
+              title="จัดชุดกล้องวงจรปิด"
+            >
+              🎥<span className="hidden sm:inline"> จัดชุดกล้อง</span>
+            </Link>
+            <Link
               href="/calculator"
               className="rounded-md bg-violet-600 px-3 py-2 font-medium text-white hover:brightness-110"
               title="คำนวณพื้นที่เก็บ CCTV"

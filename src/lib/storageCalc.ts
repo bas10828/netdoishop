@@ -16,3 +16,23 @@ export const GENERIC_BITRATE_MBPS_BY_MP: Record<number, number> = {
   5: 4,
   8: 6,
 };
+
+// GENERIC_BITRATE_MBPS_BY_MP is calibrated for H.264; H.265 delivers the same
+// quality at roughly half the bitrate. Shared by /calculator's preset path
+// and the /camera-set bundle builder so both size HDDs the same way.
+export const CODEC_FACTORS: Record<string, number> = { "H.264": 1, "H.265": 0.5 };
+
+// extract the TB figure embedded in an HDD model string, e.g. "Purple 4TB" ->
+// 4. Used to match a recommended capacity to a real in-stock SKU + price.
+export function capacityFromModel(model: string): number | null {
+  const m = model.match(/(\d+)\s*TB/i);
+  return m ? Number(m[1]) : null;
+}
+
+// extract MP from an IP camera's name, e.g. "IP bullet 4MP 2.8mm ColorVu" -> 4.
+// dual-lens models list two ("dual 6MP (3MP+3MP)") — first match is the
+// combined/primary spec, which is what a resolution picker means anyway.
+export function mpFromName(name: string): number | null {
+  const m = name.match(/(\d+)\s*MP/i);
+  return m ? Number(m[1]) : null;
+}

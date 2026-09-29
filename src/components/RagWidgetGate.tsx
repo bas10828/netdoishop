@@ -50,5 +50,9 @@ export default function RagWidgetGate() {
       }
     : undefined;
 
-  return <RagAssistant onAddToProposal={onAddToProposal} />;
+  // /camera-set has a sticky bottom action bar (total + ใส่ตะกร้า) — lift the
+  // widget above it, same as /catalog does for its bulk-action bar.
+  const liftedBottomPx = pathname === "/camera-set" ? 88 : 16;
+
+  return <RagAssistant onAddToProposal={onAddToProposal} liftedBottomPx={liftedBottomPx} />;
 }
