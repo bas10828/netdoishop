@@ -14,10 +14,15 @@ const nextConfig = {
   // Route these through a dynamic handler that reads from disk per-request
   // instead — keeps existing DB-stored "/uploads/sales/..." URLs working
   // with no data migration.
+  // beforeFiles, not the default afterFiles: otherwise any upload already on
+  // disk at boot is served straight from public/ as a static file, skipping
+  // the route handler's session check and exposing it without login.
   async rewrites() {
-    return [
-      { source: "/uploads/sales/:path*", destination: "/api/uploads/sales/:path*" },
-    ];
+    return {
+      beforeFiles: [
+        { source: "/uploads/sales/:path*", destination: "/api/uploads/sales/:path*" },
+      ],
+    };
   },
 };
 
