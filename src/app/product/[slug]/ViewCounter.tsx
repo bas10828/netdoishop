@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { EyeIcon } from "@/components/icons";
 
 // Displays the storefront view count and bumps it once per browser session.
 // The server-rendered `initial` count is frozen by ISR (up to the revalidate
@@ -39,8 +40,8 @@ export default function ViewCounter({
   }, [productId]);
 
   return (
-    <span className="inline-flex items-center gap-1 text-sm text-slate-400">
-      👁 เข้าชม {count.toLocaleString("th-TH")} ครั้ง
+    <span className="inline-flex items-center gap-1.5 text-sm text-slate-400">
+      <EyeIcon /> เข้าชม {count.toLocaleString("th-TH")} ครั้ง
     </span>
   );
 }

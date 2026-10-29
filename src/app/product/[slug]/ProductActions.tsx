@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { addToCart, useCart, cartCount } from "@/lib/cart";
 import ShareButton from "@/components/ShareButton";
+import { CartIcon, CheckIcon } from "@/components/icons";
 
 // Public, cost-free product snapshot — same shape the cart stores.
 type ActionProduct = {
@@ -36,56 +37,68 @@ export default function ProductActions({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <div className="flex items-center rounded-md border border-slate-300">
+    <div className="space-y-3">
+      <div className="flex items-center gap-3">
+        <div className="flex items-center rounded-full border border-slate-200">
+          <button
+            onClick={() => setQ(qty - 1)}
+            className="h-12 w-11 rounded-l-full text-xl text-slate-500 hover:bg-slate-50"
+            aria-label="ลดจำนวน"
+          >
+            −
+          </button>
+          <input
+            type="number"
+            min={1}
+            value={qty}
+            onChange={(e) => setQ(Number(e.target.value))}
+            className="h-12 w-12 bg-transparent text-center text-base font-semibold outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+            aria-label="จำนวน"
+          />
+          <button
+            onClick={() => setQ(qty + 1)}
+            className="h-12 w-11 rounded-r-full text-xl text-slate-500 hover:bg-slate-50"
+            aria-label="เพิ่มจำนวน"
+          >
+            +
+          </button>
+        </div>
         <button
-          onClick={() => setQ(qty - 1)}
-          className="h-11 w-11 text-xl font-bold text-slate-600 hover:bg-slate-100"
-          aria-label="ลดจำนวน"
+          onClick={handleAdd}
+          className={`flex h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full px-6 text-base font-semibold text-white transition ${
+            added ? "bg-emerald-600" : "bg-brand-900 hover:bg-brand-800"
+          }`}
         >
-          −
-        </button>
-        <input
-          type="number"
-          min={1}
-          value={qty}
-          onChange={(e) => setQ(Number(e.target.value))}
-          className="h-11 w-12 border-x border-slate-300 text-center text-base outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-          aria-label="จำนวน"
-        />
-        <button
-          onClick={() => setQ(qty + 1)}
-          className="h-11 w-11 text-xl font-bold text-slate-600 hover:bg-slate-100"
-          aria-label="เพิ่มจำนวน"
-        >
-          +
+          {added ? (
+            <>
+              <CheckIcon /> เพิ่มลงตะกร้าแล้ว
+            </>
+          ) : (
+            <>
+              <CartIcon /> ใส่ตะกร้า
+            </>
+          )}
         </button>
       </div>
-      <button
-        onClick={handleAdd}
-        className={`h-11 flex-1 rounded-md px-6 text-base font-semibold text-white hover:brightness-110 ${
-          added ? "bg-emerald-600" : "bg-amber-500"
-        }`}
-      >
-        {added ? "✓ เพิ่มลงตะกร้าแล้ว" : "🛒 ใส่ตะกร้า"}
-      </button>
-      <Link
-        href="/checkout"
-        className="relative h-11 rounded-md border border-slate-300 px-4 py-2.5 font-medium text-slate-700 hover:bg-slate-100"
-      >
-        ดูตะกร้า
-        {count > 0 && (
-          <span className="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">
-            {count}
-          </span>
-        )}
-      </Link>
-      <ShareButton
-        url={shareUrl}
-        title={`${product.brand} ${product.model}`}
-        text={`${product.brand} ${product.model} — ${product.name}`}
-        size="md"
-      />
+      <div className="flex items-center gap-2">
+        <Link
+          href="/checkout"
+          className="flex h-11 flex-1 items-center justify-center gap-2 rounded-full border border-slate-200 font-medium text-slate-700 transition hover:bg-slate-50"
+        >
+          ดูตะกร้า
+          {count > 0 && (
+            <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amber-400 px-1 text-xs font-bold text-brand-950">
+              {count}
+            </span>
+          )}
+        </Link>
+        <ShareButton
+          url={shareUrl}
+          title={`${product.brand} ${product.model}`}
+          text={`${product.brand} ${product.model} — ${product.name}`}
+          size="md"
+        />
+      </div>
     </div>
   );
 }

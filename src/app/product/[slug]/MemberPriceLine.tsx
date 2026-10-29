@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { WrenchIcon } from "@/components/icons";
 
 const baht = (n: number) => n.toLocaleString("th-TH");
 
@@ -32,8 +33,8 @@ export default function MemberPriceLine({ productId }: { productId: number }) {
 
   if (price === null) return null;
   return (
-    <div className="-mt-3 mb-3 text-sm font-medium text-sky-700">
-      🔧 ราคาช่าง: ฿{baht(price)}
+    <div className="-mt-2 mb-4 flex w-fit items-center gap-1.5 rounded-full bg-sky-50 px-3 py-1 text-sm font-medium text-sky-700">
+      <WrenchIcon /> ราคาช่าง ฿{baht(price)}
     </div>
   );
 }

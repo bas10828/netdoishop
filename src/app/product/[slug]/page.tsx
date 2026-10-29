@@ -10,7 +10,17 @@ import ProductActions from "./ProductActions";
 import ViewCounter from "./ViewCounter";
 import Gallery from "./Gallery";
 import MemberPriceLine from "./MemberPriceLine";
-import MemberAuthControl from "../../MemberAuthControl";
+import StoreHeader from "@/components/StoreHeader";
+import StoreFooter from "@/components/StoreFooter";
+import { LINE_ID, LINE_URL, PHONE } from "@/lib/contact";
+import {
+  ChatIcon,
+  CheckIcon,
+  ChevronRightIcon,
+  PhoneIcon,
+  TruckIcon,
+  WrenchIcon,
+} from "@/components/icons";
 
 // ISR: detail pages are cached and refreshed at most hourly. A staff price
 // edit (publicPriceOverride) also revalidates this path on demand via the
@@ -176,7 +186,7 @@ export default async function ProductPage(
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productLd) }}
@@ -186,154 +196,137 @@ export default async function ProductPage(
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
-      {/* header */}
-      <header className="sticky top-0 z-30 bg-slate-900 text-white">
-        <div className="mx-auto flex items-center justify-between gap-2 p-3 sm:p-4">
-          <Link href="/" className="flex items-center gap-2 sm:gap-3" title="หน้าแรก">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.png"
-              alt="NETDOI"
-              className="h-9 w-auto rounded bg-white p-1 sm:h-12"
-            />
-            <span className="text-lg font-bold tracking-wide sm:text-2xl">NETDOI</span>
-          </Link>
-          <div className="flex items-center gap-2 text-sm">
-            <Link
-              href="/"
-              className="rounded-md border border-slate-600 px-3 py-2 text-slate-300 hover:bg-slate-800"
-            >
-              ← สินค้าทั้งหมด
-            </Link>
-            <MemberAuthControl />
-          </div>
-        </div>
-      </header>
+      <StoreHeader active="product" />
 
-      <main className="mx-auto p-4">
+      <main className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 sm:py-8">
         {/* breadcrumb */}
-        <nav className="mb-4 text-sm text-slate-500" aria-label="breadcrumb">
-          <Link href="/" className="hover:text-slate-800">
+        <nav className="mb-5 flex items-center gap-1.5 text-sm text-slate-500" aria-label="breadcrumb">
+          <Link href="/" className="hover:text-brand-900">
             หน้าแรก
           </Link>
-          <span className="mx-2">/</span>
-          <span className="text-slate-700">
+          <ChevronRightIcon className="text-slate-300" />
+          <span className="truncate text-slate-700">
             {p.brand} {p.model}
           </span>
         </nav>
 
-        <div className="grid gap-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2 sm:p-6">
+        <div className="grid gap-6 lg:grid-cols-[1.1fr_1fr] lg:gap-10">
           {/* image gallery */}
-          <Gallery images={p.images} alt={`${p.brand} ${p.model} ${p.name}`} />
+          <div className="rounded-3xl border border-slate-200/80 bg-white p-4 shadow-card sm:p-6">
+            <Gallery images={p.images} alt={`${p.brand} ${p.model} ${p.name}`} />
+          </div>
 
           {/* info */}
           <div className="flex flex-col">
-            <span className="mb-2 inline-block w-fit rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
-              {p.categoryLabel}
-            </span>
-            <div className="text-sm font-semibold text-sky-700">{p.brand}</div>
-            <h1 className="text-2xl font-bold">{p.model}</h1>
-            <p className="mt-2 text-slate-600">{p.name}</p>
-            {p.doc && (
-              <p className="mt-2 text-sm font-medium text-slate-700">
-                {p.doc.tagline}
-              </p>
-            )}
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="font-semibold uppercase tracking-wide text-brand-600">{p.brand}</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-500">{p.categoryLabel}</span>
+            </div>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">{p.model}</h1>
+            <p className="mt-3 text-lg leading-relaxed text-slate-600">{p.name}</p>
+            {p.doc && <p className="mt-2 font-medium text-slate-800">{p.doc.tagline}</p>}
 
-            <div className="mt-2">
+            <div className="mt-3">
               <ViewCounter productId={p.id} initial={p.viewCount} />
             </div>
 
-            {p.price !== null ? (
-              <>
-                <div className="my-5 text-3xl font-bold text-emerald-600">
-                  ฿{baht(p.price)}
+            <div className="mt-6 rounded-3xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+              {p.price !== null ? (
+                <>
+                  <div className="text-sm text-slate-500">ราคา</div>
+                  <div className="mb-4 mt-1 text-4xl font-bold tracking-tight text-slate-900">
+                    ฿{baht(p.price)}
+                  </div>
+                  <MemberPriceLine productId={p.id} />
+
+                  <ProductActions
+                    product={{
+                      id: p.id,
+                      brand: p.brand,
+                      model: p.model,
+                      name: p.name,
+                      price: p.price,
+                      image: p.image,
+                    }}
+                    shareUrl={canonicalUrl}
+                  />
+                </>
+              ) : p.soldOut ? (
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="rounded-full bg-slate-100 px-4 py-2 font-semibold text-slate-600">
+                    สินค้าหมด (SOLD OUT)
+                  </span>
                 </div>
-                <MemberPriceLine productId={p.id} />
+              ) : (
+                <>
+                  <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
+                    เร็วๆ นี้ (Coming Soon)
+                  </span>
+                  <p className="mt-3 text-sm text-slate-500">สอบถามราคาและวันที่สินค้าเข้าได้ทันที</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <a
+                      href={LINE_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[#06C755] px-5 font-semibold text-white transition hover:brightness-105"
+                    >
+                      <ChatIcon /> สอบถามราคาทาง LINE
+                    </a>
+                    <a
+                      href={`tel:${PHONE}`}
+                      className="flex h-12 items-center justify-center gap-2 rounded-full border border-slate-200 px-5 font-semibold text-slate-700 transition hover:bg-slate-50"
+                    >
+                      <PhoneIcon /> โทรสอบถาม
+                    </a>
+                  </div>
+                </>
+              )}
+            </div>
 
-                <ProductActions
-                  product={{
-                    id: p.id,
-                    brand: p.brand,
-                    model: p.model,
-                    name: p.name,
-                    price: p.price,
-                    image: p.image,
-                  }}
-                  shareUrl={canonicalUrl}
-                />
-              </>
-            ) : p.soldOut ? (
-              <div className="my-5 flex flex-wrap items-center gap-3">
-                <span className="rounded-md bg-slate-200 px-3 py-1.5 text-lg font-bold text-slate-600">
-                  ❌ สินค้าหมด (SOLD OUT)
-                </span>
-              </div>
-            ) : (
-              <div className="my-5 flex flex-wrap items-center gap-3">
-                <span className="rounded-md bg-amber-100 px-3 py-1.5 text-lg font-bold text-amber-700">
-                  🔜 เร็วๆ นี้ (Coming Soon)
-                </span>
-                <a
-                  href="https://line.me/R/ti/p/%40ndtech"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-md bg-[#06C755] px-4 py-2 font-medium text-white hover:brightness-110"
-                >
-                  💬 สอบถามราคาทาง LINE
-                </a>
-                <a
-                  href="tel:052029550"
-                  className="rounded-md bg-emerald-500 px-4 py-2 font-medium text-white hover:brightness-110"
-                >
-                  📞 โทรสอบถาม
-                </a>
-              </div>
-            )}
+            <ul className="mt-4 grid gap-2 text-sm text-slate-600 sm:grid-cols-3">
+              <li className="flex items-center gap-2 rounded-2xl bg-white px-3 py-2.5 shadow-card">
+                <TruckIcon className="text-lg text-brand-600" /> ส่งทั่วไทย
+              </li>
+              <li className="flex items-center gap-2 rounded-2xl bg-white px-3 py-2.5 shadow-card">
+                <WrenchIcon className="text-lg text-brand-600" /> ติดตั้งแม่สาย–เชียงราย
+              </li>
+              <li className="flex items-center gap-2 rounded-2xl bg-white px-3 py-2.5 shadow-card">
+                <ChatIcon className="text-lg text-brand-600" /> LINE {LINE_ID}
+              </li>
+            </ul>
 
-            <div className="mt-6 border-t border-slate-200 pt-4 text-sm text-slate-500">
+            <p className="mt-4 text-sm text-slate-500">
               สอบถาม / สั่งซื้อ:{" "}
-              <a href="tel:052029550" className="font-medium text-slate-800">
-                📞 052029550
+              <a href={`tel:${PHONE}`} className="font-medium text-slate-800 hover:text-brand-900">
+                {PHONE}
               </a>{" "}
               ·{" "}
-              <a
-                href="https://line.me/R/ti/p/%40ndtech"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-[#06C755]"
-              >
-                💬 LINE @ndtech
+              <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="font-medium text-[#06A84A]">
+                LINE {LINE_ID}
               </a>
-              <p className="mt-2">
-                NETDOI Technology · ส่งทั่วไทย · ติดตั้งโซนแม่สาย จ.เชียงราย
-              </p>
-            </div>
+            </p>
           </div>
         </div>
 
         {/* description + spec sheet (static content map; absent for products
             without sourced copy, so the section just doesn't render) */}
         {p.doc && (
-          <section className="mt-6 grid gap-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2 sm:p-6">
-            <div>
-              <h2 className="mb-3 text-lg font-bold text-slate-800">
-                รายละเอียดสินค้า
-              </h2>
+          <section className="mt-8 grid gap-6 lg:grid-cols-2">
+            <div className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-card">
+              <h2 className="mb-4 text-xl font-bold text-slate-900">รายละเอียดสินค้า</h2>
               {p.doc.body.split("\n\n").map((para, i) => (
-                <p key={i} className="mb-3 text-sm leading-relaxed text-slate-600">
+                <p key={i} className="mb-3 leading-relaxed text-slate-600">
                   {para}
                 </p>
               ))}
             </div>
-            <div>
-              <h2 className="mb-3 text-lg font-bold text-slate-800">
-                สเปคสินค้า
-              </h2>
-              <ul className="space-y-2">
+            <div className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-card">
+              <h2 className="mb-4 text-xl font-bold text-slate-900">สเปคสินค้า</h2>
+              <ul className="divide-y divide-slate-100">
                 {p.doc.specs.map((s, i) => (
-                  <li key={i} className="flex gap-2 text-sm text-slate-700">
-                    <span className="mt-0.5 text-emerald-600">✓</span>
+                  <li key={i} className="flex gap-3 py-2.5 text-slate-700">
+                    <CheckIcon className="mt-1 shrink-0 text-emerald-600" />
                     <span>{s}</span>
                   </li>
                 ))}
@@ -342,6 +335,8 @@ export default async function ProductPage(
           </section>
         )}
       </main>
+
+      <StoreFooter />
     </div>
   );
 }

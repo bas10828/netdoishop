@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/icons";
 
 /**
  * Product image gallery: a large main image with a thumbnail strip below.
@@ -21,7 +22,7 @@ export default function Gallery({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="relative flex h-72 items-center justify-center rounded bg-slate-50 p-4 sm:h-96">
+      <div className="relative flex h-72 items-center justify-center rounded-2xl bg-white p-4 sm:h-[26rem]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={main}
@@ -34,24 +35,24 @@ export default function Gallery({
               type="button"
               onClick={prev}
               aria-label="รูปก่อนหน้า"
-              className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow hover:bg-white"
+              className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-xl text-slate-700 shadow-card hover:bg-white"
             >
-              ‹
+              <ChevronLeftIcon />
             </button>
             <button
               type="button"
               onClick={next}
               aria-label="รูปถัดไป"
-              className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow hover:bg-white"
+              className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-xl text-slate-700 shadow-card hover:bg-white"
             >
-              ›
+              <ChevronRightIcon />
             </button>
           </>
         )}
       </div>
 
       {images.length > 1 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-center gap-2">
           {images.map((src, i) => (
             <button
               key={src}
@@ -59,9 +60,9 @@ export default function Gallery({
               onClick={() => setActive(i)}
               aria-label={`รูปที่ ${i + 1}`}
               aria-current={i === active}
-              className={`flex h-16 w-16 items-center justify-center rounded border bg-white p-1 ${
+              className={`flex h-16 w-16 items-center justify-center rounded-xl border bg-white p-1.5 transition ${
                 i === active
-                  ? "border-emerald-500 ring-2 ring-emerald-200"
+                  ? "border-brand-900 ring-2 ring-brand-100"
                   : "border-slate-200 hover:border-slate-400"
               }`}
             >
