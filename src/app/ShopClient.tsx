@@ -494,8 +494,8 @@ export default function ShopClient({
                   </>
                 ) : p.soldOut ? (
                   <div className="mt-3 flex items-center gap-2">
-                    <span className="flex h-9 flex-1 items-center justify-center rounded-full bg-slate-100 text-sm font-medium text-slate-500">
-                      สินค้าหมด (SOLD OUT)
+                    <span className="flex h-9 min-w-0 flex-1 items-center justify-center whitespace-nowrap rounded-full bg-slate-100 text-[13px] font-medium text-slate-500 sm:text-sm">
+                      สินค้าหมด
                     </span>
                     <ShareButton
                       url={`${siteUrl}/product/${p.slug}`}
@@ -509,7 +509,7 @@ export default function ShopClient({
                     <div className="mt-3 flex items-center gap-2">
                       <button
                         onClick={() => setShowLine(true)}
-                        className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-full border border-[#06C755] text-sm font-semibold text-[#06A84A] transition hover:bg-[#06C755]/10"
+                        className="flex h-9 min-w-0 flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-full border border-[#06C755] text-[13px] font-semibold text-[#06A84A] transition hover:bg-[#06C755]/10 sm:gap-1.5 sm:text-sm"
                       >
                         <ChatIcon /> สอบถามราคา
                       </button>

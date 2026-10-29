@@ -366,9 +366,10 @@ export default function StorageCalculatorClient({
           <SdCardCalculatorPanel products={products} cameraProducts={tapoCameraProducts} />
         ) : (
           <>
-            <div className="grid items-start gap-6 lg:grid-cols-[1fr_400px]">
+            <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
               {/* ===== inputs ===== */}
-              <div className="space-y-6">
+              {/* min-w-0: the horizontally scrolling camera strip must not widen the grid column past the phone screen */}
+              <div className="min-w-0 space-y-6">
                 <section className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
                   <h2 className="mb-5 flex items-center gap-2.5 text-lg font-bold text-slate-900">
                     <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-900 text-sm text-white">1</span>
@@ -674,7 +675,7 @@ export default function StorageCalculatorClient({
               </div>
 
               {/* ===== result (sticky on desktop) ===== */}
-              <aside className="lg:sticky lg:top-24">
+              <aside className="min-w-0 lg:sticky lg:top-24">
                 <div className="overflow-hidden rounded-3xl bg-brand-900 text-white shadow-lift">
                   <div className="p-6">
                     <p className="text-sm font-medium text-sky-300">ผลลัพธ์</p>
