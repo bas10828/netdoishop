@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
+import { IBM_Plex_Sans_Thai } from "next/font/google";
 import "./globals.css";
 import { SITE_URL, SITE_NAME, localBusinessJsonLd } from "@/lib/seo";
 import RagWidgetGate from "@/components/RagWidgetGate";
+
+// Self-hosted at build time by next/font (no runtime request to Google).
+const fontSans = IBM_Plex_Sans_Thai({
+  subsets: ["thai", "latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-sans",
+});
 
 const DESCRIPTION =
   "NETDOI Technology — ร้านอุปกรณ์เน็ตเวิร์กและกล้องวงจรปิดครบวงจร Router, Switch, Access Point, NVR ราคาส่ง ส่งทั่วไทย พร้อมบริการติดตั้งโซนแม่สาย จ.เชียงราย";
@@ -55,8 +64,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="th">
-      <body className="bg-slate-100 text-slate-900 antialiased">
+    <html lang="th" className={fontSans.variable}>
+      <body className="bg-slate-100 font-sans text-slate-900 antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

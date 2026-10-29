@@ -4,7 +4,22 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { addToCart, useCart, cartCount, cartTotal } from "@/lib/cart";
 import ShareButton from "@/components/ShareButton";
-import MemberAuthControl from "./MemberAuthControl";
+import StoreHeader from "@/components/StoreHeader";
+import LineQrModal from "@/components/LineQrModal";
+import StoreFooter from "@/components/StoreFooter";
+import { LINE_ID } from "@/lib/contact";
+import {
+  CameraIcon,
+  CartIcon,
+  ChatIcon,
+  CheckIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  EyeIcon,
+  SearchIcon,
+  TruckIcon,
+  WrenchIcon,
+} from "@/components/icons";
 import { productDoc } from "@/data/descriptions";
 
 // Public product. Deliberately has NO cost price and NO min/max range —
@@ -90,10 +105,6 @@ const POPULAR_BRANDS = [
   "Cisco",
 ];
 
-const FB_URL = "https://www.facebook.com/profile.php?id=100087740514812";
-const LINE_ID = "@ndtech";
-const LINE_URL = "https://line.me/R/ti/p/%40ndtech";
-const PHONE = "052029550";
 
 export default function ShopClient({
   products,
@@ -208,142 +219,121 @@ export default function ShopClient({
     setPage(Math.min(Math.max(1, n), totalPages));
   };
 
+  const pagerBtn =
+    "flex h-9 items-center gap-1 rounded-full border border-slate-200 bg-white px-3.5 text-sm font-medium text-slate-700 transition enabled:hover:border-slate-300 enabled:hover:bg-slate-50 disabled:opacity-40";
+
   const renderPager = () =>
     totalPages <= 1 ? null : (
-      <div className="my-4 flex items-center justify-center gap-2 text-sm">
-        <button
-          onClick={() => goToPage(1)}
-          disabled={curPage === 1}
-          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
-        >
+      <div className="my-6 flex flex-wrap items-center justify-center gap-2">
+        <button onClick={() => goToPage(1)} disabled={curPage === 1} className={pagerBtn}>
           « แรก
         </button>
-        <button
-          onClick={() => goToPage(curPage - 1)}
-          disabled={curPage === 1}
-          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
-        >
-          ‹ ก่อนหน้า
+        <button onClick={() => goToPage(curPage - 1)} disabled={curPage === 1} className={pagerBtn}>
+          <ChevronLeftIcon /> ก่อนหน้า
         </button>
-        <span className="px-2">
-          หน้า {curPage} / {totalPages}
+        <span className="px-3 text-sm text-slate-500">
+          หน้า <span className="font-semibold text-slate-900">{curPage}</span> / {totalPages}
         </span>
-        <button
-          onClick={() => goToPage(curPage + 1)}
-          disabled={curPage === totalPages}
-          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
-        >
-          ถัดไป ›
+        <button onClick={() => goToPage(curPage + 1)} disabled={curPage === totalPages} className={pagerBtn}>
+          ถัดไป <ChevronRightIcon />
         </button>
-        <button
-          onClick={() => goToPage(totalPages)}
-          disabled={curPage === totalPages}
-          className="rounded border border-slate-300 px-3 py-1.5 disabled:opacity-40 enabled:hover:bg-slate-100"
-        >
+        <button onClick={() => goToPage(totalPages)} disabled={curPage === totalPages} className={pagerBtn}>
           สุดท้าย »
         </button>
       </div>
     );
 
-  return (
-    <div className="min-h-screen">
-      {/* header */}
-      <header className="sticky top-0 z-30 bg-slate-900 text-white">
-        <div className="mx-auto flex items-center justify-between gap-2 p-3 sm:gap-3 sm:p-4">
-          <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3" title="หน้าแรก">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.png"
-              alt="NETDOI"
-              className="h-9 w-auto rounded bg-white p-1 sm:h-12"
-            />
-            <div className="min-w-0">
-              <h1 className="text-lg font-bold tracking-wide sm:text-2xl">NETDOI</h1>
-              <p className="hidden text-xs text-slate-300 sm:block">
-                อุปกรณ์เน็ตเวิร์ก กล้องวงจรปิด ครบวงจร · ส่งทั่วไทย · ติดตั้งแม่สาย
-              </p>
-            </div>
-          </Link>
-          <div className="flex shrink-0 items-center gap-2 text-sm">
-            <a
-              href={`tel:${PHONE}`}
-              className="rounded-md bg-emerald-500 px-3 py-2 font-medium hover:brightness-110"
-              aria-label="โทร"
-            >
-              📞<span className="hidden sm:inline"> {PHONE}</span>
-            </a>
-            <button
-              onClick={() => setShowLine(true)}
-              className="rounded-md bg-[#06C755] px-3 py-2 font-medium hover:brightness-110"
-            >
-              💬<span className="hidden sm:inline"> LINE</span>
-            </button>
-            <a
-              href={FB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden rounded-md bg-[#1877F2] px-3 py-2 font-medium hover:brightness-110 sm:inline-block"
-            >
-              f Facebook
-            </a>
-            <Link
-              href="/camera-set"
-              className="rounded-md bg-sky-600 px-3 py-2 font-medium text-white hover:brightness-110"
-              title="จัดชุดกล้องวงจรปิด"
-            >
-              🎥<span className="hidden sm:inline"> จัดชุดกล้อง</span>
-            </Link>
-            <Link
-              href="/calculator"
-              className="rounded-md bg-violet-600 px-3 py-2 font-medium text-white hover:brightness-110"
-              title="คำนวณพื้นที่เก็บ CCTV"
-            >
-              📊<span className="hidden sm:inline"> คำนวณ HDD</span>
-            </Link>
-            <Link
-              href="/checkout"
-              className="relative rounded-md bg-amber-500 px-3 py-2 font-medium text-slate-900 hover:brightness-110"
-            >
-              🛒<span className="hidden sm:inline"> ตะกร้า</span>
-              {count > 0 && (
-                <span className="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">
-                  {count}
-                </span>
-              )}
-            </Link>
-            <MemberAuthControl />
-          </div>
-        </div>
-      </header>
+  const chip = (selected: boolean) =>
+    `shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
+      selected
+        ? "border-brand-900 bg-brand-900 text-white"
+        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900"
+    }`;
 
-      <main className="mx-auto p-4">
-        {/* search + filter */}
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <input
-            placeholder="ค้นหาสินค้า แบรนด์ / รุ่น / ชื่อ..."
-            value={q}
-            onChange={(e) => {
-              setQ(e.target.value);
-              setPage(1);
-            }}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-base outline-none focus:border-slate-500 sm:w-72"
-          />
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <StoreHeader active="shop" />
+
+      {/* hero + search */}
+      <section className="relative overflow-hidden bg-brand-900 text-white">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] [background-size:32px_32px]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-sky-400/20 blur-3xl"
+        />
+        <div className="relative mx-auto grid max-w-[1400px] gap-8 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="max-w-2xl">
+            <p className="text-sm font-medium text-sky-300">NETDOI TECHNOLOGY</p>
+            <h1 className="mt-2 text-3xl font-bold leading-tight sm:text-4xl">
+              อุปกรณ์เน็ตเวิร์ก &amp; กล้องวงจรปิด
+              <span className="block text-slate-300">ราคาส่ง ส่งทั่วไทย</span>
+            </h1>
+            <div className="relative mt-6">
+              <SearchIcon className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400" />
+              <input
+                placeholder="ค้นหา แบรนด์ / รุ่น / เช่น กล้องกันน้ำไม่เกิน 1000"
+                value={q}
+                onChange={(e) => {
+                  setQ(e.target.value);
+                  setPage(1);
+                }}
+                className="h-14 w-full rounded-2xl border-0 bg-white pl-12 pr-4 text-base text-slate-900 shadow-lift outline-none ring-sky-300 placeholder:text-slate-400 focus:ring-4"
+              />
+            </div>
+            <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-300">
+              <li className="flex items-center gap-2">
+                <TruckIcon className="text-base text-sky-300" /> ส่งทั่วไทย
+              </li>
+              <li className="flex items-center gap-2">
+                <WrenchIcon className="text-base text-sky-300" /> ติดตั้งโซนแม่สาย–เชียงราย
+              </li>
+              <li className="flex items-center gap-2">
+                <ChatIcon className="text-base text-sky-300" /> สอบถามทาง LINE {LINE_ID}
+              </li>
+            </ul>
+          </div>
+
+          <Link
+            href="/camera-set"
+            className="group hidden w-80 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur transition hover:bg-white/10 lg:block"
+          >
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-400/20 text-2xl text-sky-200">
+              <CameraIcon />
+            </span>
+            <div className="mt-4 text-lg font-semibold">จัดชุดกล้องวงจรปิด</div>
+            <p className="mt-1 text-sm text-slate-300">ตอบ 3 ข้อ ได้ชุดกล้อง TP-Link VIGI พร้อมราคาทันที</p>
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-sky-300 group-hover:gap-2">
+              เริ่มจัดชุด <ChevronRightIcon />
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      <main className="mx-auto max-w-[1400px] px-4 sm:px-6">
+        {/* filters */}
+        <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 py-4">
           <select
             value={cat}
             onChange={(e) => {
               setCat(e.target.value);
               setPage(1);
             }}
-            className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-base outline-none focus:border-slate-500 sm:flex-none"
+            className="h-10 flex-1 rounded-full border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 outline-none focus:border-brand-400 sm:max-w-xs"
           >
-            <option value="all">ทุกหมวด</option>
+            <option value="all">ทุกหมวดสินค้า</option>
             {categories.map((c) => (
               <option key={c.key} value={c.key}>
                 {c.label}
               </option>
             ))}
           </select>
-          <label className="hidden items-center gap-1 text-sm text-slate-500 sm:flex">
+          <span className="text-sm text-slate-500">
+            <span className="font-semibold text-slate-900">{filtered.length.toLocaleString("th-TH")}</span> รายการ
+          </span>
+          <label className="ml-auto hidden items-center gap-2 text-sm text-slate-500 sm:flex">
             แสดง
             <select
               value={pageSize}
@@ -351,7 +341,7 @@ export default function ShopClient({
                 setPageSize(Number(e.target.value));
                 setPage(1);
               }}
-              className="rounded-md border border-slate-300 px-2 py-2 outline-none focus:border-slate-500"
+              className="h-9 rounded-full border border-slate-200 bg-white px-3 text-sm outline-none focus:border-brand-400"
             >
               {[10, 20, 30, 40, 50, 100].map((n) => (
                 <option key={n} value={n}>
@@ -359,13 +349,12 @@ export default function ShopClient({
                 </option>
               ))}
             </select>
-            /หน้า
+            ต่อหน้า
           </label>
-          <span className="text-sm text-slate-500">{filtered.length} รายการ</span>
         </div>
 
         {/* brand filter: popular chips + dropdown for the rest */}
-        <div className="mb-4 flex flex-wrap items-center gap-2">
+        <div className="-mx-4 flex items-center gap-2 overflow-x-auto px-4 py-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
           {chipBrands.map((b) => (
             <button
               key={b}
@@ -373,11 +362,7 @@ export default function ShopClient({
                 setBrand(b);
                 setPage(1);
               }}
-              className={`shrink-0 rounded-full border px-3 py-1 text-sm ${
-                brand === b
-                  ? "border-sky-600 bg-sky-600 text-white"
-                  : "border-slate-300 hover:border-slate-400"
-              }`}
+              className={chip(brand === b)}
             >
               {b === "all" ? "ทุกแบรนด์" : b}
             </button>
@@ -389,11 +374,7 @@ export default function ShopClient({
               setBrand(e.target.value);
               setPage(1);
             }}
-            className={`shrink-0 rounded-full border px-3 py-1 text-sm outline-none ${
-              otherBrands.includes(brand)
-                ? "border-sky-600 bg-sky-600 text-white"
-                : "border-slate-300 hover:border-slate-400"
-            }`}
+            className={`${chip(otherBrands.includes(brand))} outline-none`}
           >
             <option value="">แบรนด์อื่น ({otherBrands.length})</option>
             {otherBrands.map((b) => (
@@ -409,82 +390,113 @@ export default function ShopClient({
         {renderPager()}
 
         {/* product grid */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {paged.map((p) => (
-            <div
+            <article
               key={p.id}
-              className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lift"
             >
-              <Link
-                href={`/product/${p.slug}`}
-                target="_blank"
-                rel="noopener"
-                className="group block"
-              >
-                <div className="mb-3 flex h-36 items-center justify-center rounded bg-slate-50 p-2">
+              <Link href={`/product/${p.slug}`} target="_blank" rel="noopener" className="block">
+                <div className="relative flex aspect-[16/11] items-center justify-center bg-white p-6">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={p.image}
                     alt={p.model}
                     loading="lazy"
-                    className="max-h-full max-w-full object-contain"
+                    className="max-h-full max-w-full object-contain transition duration-300 group-hover:scale-[1.04]"
                   />
-                </div>
-                <span className="mb-1 inline-block w-fit rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
-                  {p.categoryLabel}
-                </span>
-                <div className="text-xs font-semibold text-sky-700">{p.brand}</div>
-                <div className="font-bold group-hover:text-sky-700">{p.model}</div>
-                <p className="mt-1 text-sm text-slate-600">{p.name}</p>
-              </Link>
-              <div className="mt-1 text-xs text-slate-400">
-                👁 เข้าชม {baht(p.viewCount)} ครั้ง
-              </div>
-              <div className="mb-3 mt-1 flex-1" />
-              {p.price !== null ? (
-                <>
-                  <span className="text-xl font-bold text-emerald-600">
-                    ฿{baht(p.price)}
-                  </span>
-                  {memberPrices[p.id] !== undefined && (
-                    <span className="text-sm font-medium text-sky-700">
-                      🔧 ราคาช่าง: ฿{baht(memberPrices[p.id])}
+                  {p.soldOut ? (
+                    <span className="absolute left-3 top-3 rounded-full bg-slate-900/80 px-2.5 py-1 text-[11px] font-semibold text-white">
+                      สินค้าหมด
                     </span>
-                  )}
-                  <div className="mt-2 flex items-center gap-2">
-                    {/* quantity chooser */}
-                    <div className="flex items-center rounded-md border border-slate-300">
-                      <button
-                        onClick={() => setQtyOf(p.id, qtyOf(p.id) - 1)}
-                        className="h-9 w-9 text-lg font-bold text-slate-600 hover:bg-slate-100"
-                        aria-label="ลดจำนวน"
-                      >
-                        −
-                      </button>
-                      <input
-                        type="number"
-                        min={1}
-                        value={qtyOf(p.id)}
-                        onChange={(e) => setQtyOf(p.id, Number(e.target.value))}
-                        className="h-9 w-10 border-x border-slate-300 text-center text-base outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-                        aria-label="จำนวน"
+                  ) : p.price === null ? (
+                    <span className="absolute left-3 top-3 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold text-amber-800">
+                      เร็วๆ นี้
+                    </span>
+                  ) : null}
+                </div>
+                <div className="border-t border-slate-100 px-3 pt-3 sm:px-4">
+                  <div className="flex items-center gap-1.5 text-[11px] sm:text-xs">
+                    <span className="font-semibold uppercase tracking-wide text-brand-600">{p.brand}</span>
+                    <span className="text-slate-300">•</span>
+                    <span className="truncate text-slate-500">{p.categoryLabel}</span>
+                  </div>
+                  <h3 className="mt-1 font-semibold leading-snug text-slate-900 group-hover:text-brand-700">
+                    {p.model}
+                  </h3>
+                  <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-slate-500">{p.name}</p>
+                </div>
+              </Link>
+              <div className="flex flex-1 flex-col px-3 pb-3 sm:px-4 sm:pb-4">
+                <div className="mt-2 flex items-center gap-1 text-[11px] text-slate-400">
+                  <EyeIcon /> เข้าชม {baht(p.viewCount)} ครั้ง
+                </div>
+                <div className="flex-1" />
+                {p.price !== null ? (
+                  <>
+                    <div className="mt-3 text-xl font-bold tracking-tight text-slate-900">
+                      ฿{baht(p.price)}
+                    </div>
+                    {memberPrices[p.id] !== undefined && (
+                      <div className="mt-0.5 flex items-center gap-1 text-xs font-medium text-sky-700">
+                        <WrenchIcon /> ราคาช่าง ฿{baht(memberPrices[p.id])}
+                      </div>
+                    )}
+                    <div className="mt-3 flex items-center justify-between gap-2">
+                      {/* quantity chooser */}
+                      <div className="flex items-center rounded-full border border-slate-200">
+                        <button
+                          onClick={() => setQtyOf(p.id, qtyOf(p.id) - 1)}
+                          className="h-9 w-8 rounded-l-full text-lg text-slate-500 hover:bg-slate-50"
+                          aria-label="ลดจำนวน"
+                        >
+                          −
+                        </button>
+                        <input
+                          type="number"
+                          min={1}
+                          value={qtyOf(p.id)}
+                          onChange={(e) => setQtyOf(p.id, Number(e.target.value))}
+                          className="h-9 w-8 bg-transparent text-center text-sm font-medium outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                          aria-label="จำนวน"
+                        />
+                        <button
+                          onClick={() => setQtyOf(p.id, qtyOf(p.id) + 1)}
+                          className="h-9 w-8 rounded-r-full text-lg text-slate-500 hover:bg-slate-50"
+                          aria-label="เพิ่มจำนวน"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <ShareButton
+                        url={`${siteUrl}/product/${p.slug}`}
+                        title={`${p.brand} ${p.model}`}
+                        text={`${p.brand} ${p.model} — ${p.name}`}
+                        size="sm"
                       />
-                      <button
-                        onClick={() => setQtyOf(p.id, qtyOf(p.id) + 1)}
-                        className="h-9 w-9 text-lg font-bold text-slate-600 hover:bg-slate-100"
-                        aria-label="เพิ่มจำนวน"
-                      >
-                        +
-                      </button>
                     </div>
                     <button
                       onClick={() => handleAdd(p)}
-                      className={`h-9 flex-1 rounded-md text-sm font-semibold text-white hover:brightness-110 ${
-                        justAdded === p.id ? "bg-emerald-600" : "bg-amber-500"
+                      className={`mt-2 flex h-10 w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-full text-sm font-semibold text-white transition ${
+                        justAdded === p.id ? "bg-emerald-600" : "bg-brand-900 hover:bg-brand-800"
                       }`}
                     >
-                      {justAdded === p.id ? "✓ เพิ่มแล้ว" : "🛒 ใส่ตะกร้า"}
+                      {justAdded === p.id ? (
+                        <>
+                          <CheckIcon /> เพิ่มแล้ว
+                        </>
+                      ) : (
+                        <>
+                          <CartIcon /> ใส่ตะกร้า
+                        </>
+                      )}
                     </button>
+                  </>
+                ) : p.soldOut ? (
+                  <div className="mt-3 flex items-center gap-2">
+                    <span className="flex h-9 flex-1 items-center justify-center rounded-full bg-slate-100 text-sm font-medium text-slate-500">
+                      สินค้าหมด (SOLD OUT)
+                    </span>
                     <ShareButton
                       url={`${siteUrl}/product/${p.slug}`}
                       title={`${p.brand} ${p.model}`}
@@ -492,121 +504,59 @@ export default function ShopClient({
                       size="sm"
                     />
                   </div>
-                </>
-              ) : p.soldOut ? (
-                <>
-                  <span className="w-fit rounded-md bg-slate-200 px-2 py-1 text-sm font-bold text-slate-600">
-                    ❌ สินค้าหมด (SOLD OUT)
-                  </span>
-                  <div className="mt-2 flex items-center gap-2">
-                    <ShareButton
-                      url={`${siteUrl}/product/${p.slug}`}
-                      title={`${p.brand} ${p.model}`}
-                      text={`${p.brand} ${p.model} — ${p.name}`}
-                      size="sm"
-                    />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <span className="w-fit rounded-md bg-amber-100 px-2 py-1 text-sm font-bold text-amber-700">
-                    🔜 เร็วๆ นี้ (Coming Soon)
-                  </span>
-                  <div className="mt-2 flex items-center gap-2">
-                    <button
-                      onClick={() => setShowLine(true)}
-                      className="h-9 flex-1 rounded-md bg-[#06C755] text-sm font-semibold text-white hover:brightness-110"
-                    >
-                      💬 สอบถามราคา
-                    </button>
-                    <ShareButton
-                      url={`${siteUrl}/product/${p.slug}`}
-                      title={`${p.brand} ${p.model}`}
-                      text={`${p.brand} ${p.model} — ${p.name}`}
-                      size="sm"
-                    />
-                  </div>
-                </>
-              )}
-            </div>
+                ) : (
+                  <>
+                    <div className="mt-3 flex items-center gap-2">
+                      <button
+                        onClick={() => setShowLine(true)}
+                        className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-full border border-[#06C755] text-sm font-semibold text-[#06A84A] transition hover:bg-[#06C755]/10"
+                      >
+                        <ChatIcon /> สอบถามราคา
+                      </button>
+                      <ShareButton
+                        url={`${siteUrl}/product/${p.slug}`}
+                        title={`${p.brand} ${p.model}`}
+                        text={`${p.brand} ${p.model} — ${p.name}`}
+                        size="sm"
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+            </article>
           ))}
           {filtered.length === 0 && (
-            <p className="col-span-full py-12 text-center text-slate-400">
-              ไม่พบสินค้า
-            </p>
+            <div className="col-span-full flex flex-col items-center py-20 text-center">
+              <SearchIcon className="text-4xl text-slate-300" />
+              <p className="mt-3 font-medium text-slate-600">ไม่พบสินค้า</p>
+              <p className="mt-1 text-sm text-slate-400">ลองคำค้นอื่น หรือสอบถามทาง LINE {LINE_ID}</p>
+            </div>
           )}
         </div>
 
         {renderPager()}
       </main>
 
-      <footer className="mt-8 border-t border-slate-200 py-6 text-center text-sm text-slate-500">
-        <div className="mb-2 flex flex-wrap items-center justify-center gap-4">
-          <a href={`tel:${PHONE}`} className="hover:text-slate-800">
-            📞 {PHONE}
-          </a>
-          <button onClick={() => setShowLine(true)} className="hover:text-slate-800">
-            💬 LINE {LINE_ID}
-          </button>
-          <a
-            href={FB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-slate-800"
-          >
-            f Facebook
-          </a>
-        </div>
-        NETDOI Technology · อุปกรณ์เน็ตเวิร์ก & กล้องวงจรปิด · ส่งทั่วไทย ติดตั้งโซนแม่สาย-เชียงราย
-        {count > 0 && <div className="h-20 sm:hidden" />}
-      </footer>
+      <StoreFooter />
+      {count > 0 && <div className="h-20 sm:hidden" />}
 
       {/* sticky cart bar — mobile only, shown when cart has items */}
       {count > 0 && (
         <Link
           href="/checkout"
-          className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-amber-600 bg-amber-500 px-4 py-3 font-bold text-slate-900 shadow-lg sm:hidden"
+          className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-white/10 bg-brand-900 px-4 py-3 text-white shadow-lift sm:hidden"
         >
-          <span className="flex items-center gap-2">
-            🛒 {count} ชิ้น
-            <span className="text-emerald-900">฿{baht(total)}</span>
+          <span className="flex items-center gap-2 font-semibold">
+            <CartIcon className="text-lg" /> {count} ชิ้น
+            <span className="text-amber-300">฿{baht(total)}</span>
           </span>
-          <span className="rounded-md bg-slate-900 px-4 py-2 text-white">
+          <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-brand-900">
             ดูตะกร้า →
           </span>
         </Link>
       )}
 
-      {showLine && (
-        <div
-          onClick={() => setShowLine(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="flex flex-col items-center gap-3 rounded-xl bg-white p-6"
-          >
-            <h3 className="text-lg font-bold">เพิ่มเพื่อน LINE</h3>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/line-qr.png" alt="LINE QR" className="h-56 w-56" />
-            <p className="font-medium text-[#06C755]">{LINE_ID}</p>
-            <a
-              href={LINE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-md bg-[#06C755] px-4 py-2 font-medium text-white hover:brightness-110"
-            >
-              เปิดแอป LINE เพิ่มเพื่อน
-            </a>
-            <button
-              onClick={() => setShowLine(false)}
-              className="text-sm text-slate-500 hover:text-slate-800"
-            >
-              ปิด
-            </button>
-          </div>
-        </div>
-      )}
+      {showLine && <LineQrModal onClose={() => setShowLine(false)} />}
     </div>
   );
 }

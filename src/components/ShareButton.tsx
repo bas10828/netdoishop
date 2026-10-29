@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { CheckIcon, ShareIcon } from "./icons";
 
 interface Props {
   url: string;
@@ -68,11 +69,15 @@ export default function ShareButton({ url, title, text, size = "sm" }: Props) {
 
   return (
     <div className="relative" ref={ref}>
+      {/* sm = icon-only square for product cards; md = icon + label */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className={`${btnH} ${btnPx} ${btnText} flex items-center gap-1.5 rounded-md border border-slate-300 font-medium text-slate-600 hover:bg-slate-50 active:bg-slate-100`}
+        aria-label="แชร์"
+        title="แชร์"
+        className={`${btnH} ${size === "sm" ? "w-9 justify-center" : btnPx} ${btnText} flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200 font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 active:bg-slate-100`}
       >
-        {copied ? "✓ คัดลอกแล้ว" : "🔗 แชร์"}
+        {copied ? <CheckIcon className="text-emerald-600" /> : <ShareIcon />}
+        {size === "md" && <span>{copied ? "คัดลอกแล้ว" : "แชร์"}</span>}
       </button>
 
       {open && (

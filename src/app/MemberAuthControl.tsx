@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { UserIcon, WrenchIcon } from "@/components/icons";
 
 export default function MemberAuthControl() {
   const [name, setName] = useState<string | null>(null);
@@ -66,16 +67,17 @@ export default function MemberAuthControl() {
     <div className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="rounded-md border border-slate-600 px-3 py-2 font-medium text-slate-300 hover:bg-slate-800"
+        className="flex h-10 items-center gap-2 rounded-full border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
       >
         {name ? (
           <>
-            {source === "staff" ? "👔" : "🔧"}
-            <span className="hidden sm:inline"> {name}</span>
+            {source === "staff" ? <UserIcon className="text-lg" /> : <WrenchIcon className="text-lg" />}
+            <span className="hidden max-w-[8rem] truncate sm:inline">{name}</span>
           </>
         ) : (
           <>
-            👤<span className="hidden sm:inline"> บัญชี</span>
+            <UserIcon className="text-lg" />
+            <span className="hidden sm:inline">บัญชี</span>
           </>
         )}
       </button>
@@ -83,7 +85,7 @@ export default function MemberAuthControl() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={closeMenu} />
-          <div className="absolute right-0 top-full z-50 mt-2 w-56 rounded-md border border-slate-200 bg-white p-2 text-slate-900 shadow-lg">
+          <div className="absolute right-0 top-full z-50 mt-2 w-60 rounded-xl border border-slate-200 bg-white p-2 text-slate-900 shadow-lift">
             {source === "staff" ? (
               <>
                 <Link
