@@ -24,10 +24,8 @@ const CONTENT_TYPE: Record<string, string> = {
   pdf: "application/pdf",
 };
 
-export async function GET(
-  _req: Request,
-  { params }: { params: { path: string[] } }
-) {
+export async function GET(_req: Request, props: { params: Promise<{ path: string[] }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });

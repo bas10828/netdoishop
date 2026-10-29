@@ -17,7 +17,8 @@ async function loadEditableDevice(id: number, session: { user?: { id?: string; r
 }
 
 // PATCH /api/sales-report-devices/:id — edit one device row's fields.
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -57,7 +58,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
 // DELETE /api/sales-report-devices/:id — remove a single attached device
 // row. Same permission as editing the parent report: its own staff, or admin.
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });

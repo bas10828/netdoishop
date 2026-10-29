@@ -9,11 +9,12 @@ export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 30;
 
-export default async function SalesPage({
-  searchParams,
-}: {
-  searchParams: { q?: string; from?: string; to?: string; staffId?: string; page?: string };
-}) {
+export default async function SalesPage(
+  props: {
+    searchParams: Promise<{ q?: string; from?: string; to?: string; staffId?: string; page?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
 

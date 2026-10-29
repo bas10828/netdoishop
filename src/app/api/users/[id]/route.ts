@@ -8,10 +8,8 @@ type Prisma = typeof import("@/lib/prisma").prisma;
 type UserUpdate = Parameters<Prisma["user"]["update"]>[0]["data"];
 
 // PATCH /api/users/:id  { name?, role?, password? }  — ADMIN only.
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -72,10 +70,8 @@ export async function PATCH(
 // DELETE /api/users/:id  — ADMIN only. Can't delete your own account (avoids
 // locking yourself out) or an account that still owns sales reports (the FK
 // would fail anyway — surfaced here as a clear error instead of a raw 500).
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });

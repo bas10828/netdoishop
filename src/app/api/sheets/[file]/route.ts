@@ -8,10 +8,8 @@ import { authOptions } from "@/lib/auth";
 // these sheets show the cost/ราคาช่าง, so they must never be public.
 const SHEETS_DIR = join(process.cwd(), "data", "sheets");
 
-export async function GET(
-  _req: Request,
-  { params }: { params: { file: string } }
-) {
+export async function GET(_req: Request, props: { params: Promise<{ file: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });

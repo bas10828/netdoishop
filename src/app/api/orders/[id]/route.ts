@@ -13,10 +13,8 @@ const ORDER_STATUSES = [
 ] as const;
 
 // PATCH /api/orders/:id  { status } — any logged-in staff. Move order through the workflow.
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });

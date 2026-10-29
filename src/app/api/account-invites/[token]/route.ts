@@ -5,10 +5,8 @@ import { prisma } from "@/lib/prisma";
 
 // DELETE /api/account-invites/:token  — ADMIN only. Revoke/clean up an
 // invite link (used, expired, or a pending one no longer needed).
-export async function DELETE(
-  req: Request,
-  { params }: { params: { token: string } }
-) {
+export async function DELETE(req: Request, props: { params: Promise<{ token: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });

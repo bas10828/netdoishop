@@ -13,11 +13,12 @@ const PAGE_SIZE = 30;
 // [[feedback_content_sourcing_rigor]] applied to chat instead of content.
 const TOP_MISS_LIMIT = 15;
 
-export default async function RagLogsPage({
-  searchParams,
-}: {
-  searchParams: { q?: string; provider?: string; from?: string; to?: string; page?: string };
-}) {
+export default async function RagLogsPage(
+  props: {
+    searchParams: Promise<{ q?: string; provider?: string; from?: string; to?: string; page?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
   if (session.user?.role !== "admin") redirect("/catalog");

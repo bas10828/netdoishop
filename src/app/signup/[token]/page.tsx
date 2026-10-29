@@ -10,7 +10,8 @@ const TITLE: Record<string, { title: string; subtitle: string }> = {
   admin: { title: "สมัครบัญชีแอดมิน", subtitle: "ตั้งชื่อผู้ใช้และรหัสผ่านของตัวเอง" },
 };
 
-export default async function SignupPage({ params }: { params: { token: string } }) {
+export default async function SignupPage(props: { params: Promise<{ token: string }> }) {
+  const params = await props.params;
   const invite = await prisma.accountInvite.findUnique({ where: { token: params.token } });
   const valid = !!invite && !invite.used && invite.expiresAt.getTime() > Date.now();
   const copy = (valid && TITLE[invite!.intendedRole]) || TITLE.member;
