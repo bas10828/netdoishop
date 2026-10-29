@@ -96,11 +96,15 @@ function subscribe(cb: () => void) {
   };
 }
 
+// Server snapshot must be a stable reference: returning a fresh [] on every
+// call makes React treat it as changed each render (infinite-loop warning).
+const EMPTY_CART: CartItem[] = [];
+
 // Reactive cart hook for client components.
 export function useCart(): CartItem[] {
   return useSyncExternalStore(
     subscribe,
     () => cache,
-    () => [] as CartItem[]
+    () => EMPTY_CART
   );
 }

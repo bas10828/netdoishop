@@ -9,6 +9,8 @@ const nextConfig = {
   // own Prisma pool; that exhausts Postgres max_connections ("too many
   // clients already"). Cap the build workers to keep total connections sane.
   experimental: { cpus: 2 },
+  // next dev otherwise writes an AGENTS.md into the repo root on every start.
+  agentRules: false,
   // output:"standalone" scans public/ once at boot, so files written into
   // public/uploads/sales/* after boot 404 until the container restarts.
   // Route these through a dynamic handler that reads from disk per-request
