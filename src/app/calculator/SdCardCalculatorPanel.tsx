@@ -24,9 +24,9 @@ const baht = (n: number) => n.toLocaleString("th-TH");
 
 const MP_OPTIONS = [2, 3, 4, 5, 8];
 
-const btnBase = "rounded-md border px-3 py-2 text-sm font-medium transition";
-const btnActive = "border-sky-600 bg-sky-600 text-white";
-const btnInactive = "border-slate-300 text-slate-600 hover:bg-slate-50";
+const btnBase = "rounded-full border px-4 py-2 text-sm font-medium transition";
+const btnActive = "border-brand-900 bg-brand-900 text-white";
+const btnInactive = "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900";
 
 function formatDays(d: number): string {
   if (d >= 10) return d.toFixed(0);
@@ -125,11 +125,12 @@ export default function SdCardCalculatorPanel({
     size ? sdProducts.find((p) => capacityFromModel(p.model) === size) : undefined;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* camera picker */}
-      <div className="rounded-xl bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-sm font-bold text-slate-500 uppercase tracking-wide">
-          เลือกรุ่นกล้อง (Tapo — จากสินค้าในร้าน)
+      <div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+<h2 className="mb-5 flex items-center gap-2.5 text-lg font-bold text-slate-900">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-900 text-sm text-white">1</span>
+          เลือกรุ่นกล้อง <span className="text-sm font-normal text-slate-400">Tapo จากสินค้าในร้าน</span>
         </h2>
 
         {!manualMode && (
@@ -145,10 +146,10 @@ export default function SdCardCalculatorPanel({
               onFocus={() => setShowList(true)}
               onBlur={() => setTimeout(() => setShowList(false), 150)}
               placeholder="พิมพ์ค้นหา หรือกดเพื่อดูรายการรุ่นทั้งหมด..."
-              className="h-11 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-sky-500"
+              className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-base outline-none focus:border-brand-400 focus:ring-4 focus:ring-brand-100"
             />
             {showList && matches.length > 0 && (
-              <div className="absolute z-10 mt-1 max-h-72 w-full overflow-y-auto rounded-md border border-slate-200 bg-white shadow-lg">
+              <div className="absolute z-10 mt-2 max-h-72 w-full overflow-y-auto rounded-2xl border border-slate-200 bg-white p-1 shadow-lift">
                 {matches.map((c) => (
                   <button
                     key={c.model}
@@ -157,7 +158,7 @@ export default function SdCardCalculatorPanel({
                       setQuery("");
                       setShowList(false);
                     }}
-                    className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-sky-50"
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm hover:bg-brand-50"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={c.image} alt={c.model} className="h-9 w-9 shrink-0 rounded bg-slate-50 p-0.5 object-contain" />
@@ -172,14 +173,14 @@ export default function SdCardCalculatorPanel({
                         SOLD OUT
                       </span>
                     ) : (
-                      <span className="shrink-0 font-bold text-emerald-600">฿{baht(c.price)}</span>
+                      <span className="shrink-0 font-bold text-slate-900">฿{baht(c.price)}</span>
                     )}
                   </button>
                 ))}
               </div>
             )}
             {showList && matches.length === 0 && (
-              <div className="absolute z-10 mt-1 w-full rounded-md border border-slate-200 bg-white p-3 text-xs text-slate-400 shadow-lg">
+              <div className="absolute z-10 mt-2 w-full rounded-2xl border border-slate-200 bg-white p-3 text-xs text-slate-400 shadow-lift">
                 ไม่เจอรุ่นนี้ในร้าน — กด &quot;ไม่เจอรุ่น/กรอกเอง&quot; ด้านล่าง แล้วดูความละเอียดจากสเปกกล้องมาใส่เอง
               </div>
             )}
@@ -199,7 +200,7 @@ export default function SdCardCalculatorPanel({
             setSelected(null);
             setQuery("");
           }}
-          className="mt-3 text-xs font-medium text-sky-700 hover:underline"
+          className="mt-3 text-sm font-medium text-brand-700 hover:underline"
         >
           {manualMode ? "← กลับไปเลือกจากรุ่นในร้าน (Tapo)" : "กล้องแบรนด์อื่น / ไม่เจอรุ่น (Imou, VIGI, ...)"}
         </button>
@@ -244,7 +245,7 @@ export default function SdCardCalculatorPanel({
                       </button>
                     ))}
                   </div>
-                  <p className="mt-1.5 text-xs text-amber-700">
+                  <p className="mt-2 text-xs text-amber-700">
                     ใช้ค่าจากตาราง official ของ Tapo แทน (ประมาณการ — แบรนด์อื่นอาจตั้ง fps/bitrate ต่างจาก Tapo จริง)
                   </p>
                 </div>
@@ -289,7 +290,7 @@ export default function SdCardCalculatorPanel({
                     step={0.1}
                     value={manualBitrateStr}
                     onChange={(e) => setManualBitrateStr(e.target.value)}
-                    className="h-9 w-24 rounded-md border border-slate-300 px-2 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                    className="h-9 w-24 rounded-full border border-slate-200 bg-white px-2 text-center text-sm outline-none focus:border-brand-400 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
                   />
                   <span className="text-sm text-slate-500">Mbps</span>
                 </div>
@@ -302,11 +303,21 @@ export default function SdCardCalculatorPanel({
         )}
       </div>
 
+      {dailyGb === null && (
+        <div className="rounded-3xl border border-dashed border-slate-300 bg-white/60 px-6 py-10 text-center text-slate-500">
+          เลือกรุ่นกล้องด้านบนก่อน แล้วจะคำนวณได้ว่าต้องใช้ SD Card ขนาดเท่าไหร่
+        </div>
+      )}
+
       {dailyGb !== null && (
         <>
           {/* calc mode toggle */}
-          <div className="rounded-xl bg-white p-5 shadow-sm">
-            <div className="mb-4 flex flex-wrap gap-2">
+          <div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+            <h2 className="mb-5 flex items-center gap-2.5 text-lg font-bold text-slate-900">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-900 text-sm text-white">2</span>
+          อยากรู้อะไร
+        </h2>
+            <div className="mb-6 flex flex-wrap gap-2">
               <button
                 onClick={() => setCalcMode("fromDays")}
                 className={`${btnBase} ${calcMode === "fromDays" ? btnActive : btnInactive}`}
@@ -342,24 +353,24 @@ export default function SdCardCalculatorPanel({
                       min={1}
                       value={targetDaysStr}
                       onChange={(e) => setTargetDaysStr(e.target.value)}
-                      className="h-9 w-20 rounded-md border border-slate-300 px-2 text-center text-sm outline-none focus:border-sky-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                      className="h-9 w-20 rounded-full border border-slate-200 bg-white px-2 text-center text-sm outline-none focus:border-brand-400 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
                     />
                     <span className="text-sm text-slate-500">วัน</span>
                   </div>
                 </div>
 
                 {neededGb !== null && (
-                  <div className="mt-4 rounded-xl border-2 border-emerald-300 bg-emerald-50 p-4">
-                    <p className="text-sm text-slate-600">
+                  <div className="mt-6 rounded-3xl bg-brand-900 p-6 text-white shadow-lift">
+                    <p className="text-sm text-slate-300">
                       ต้องการพื้นที่ประมาณ{" "}
                       <strong>{neededGb < 1000 ? `${neededGb.toFixed(1)} GB` : `${(neededGb / 1000).toFixed(2)} TB`}</strong>
                     </p>
-                    <p className="mt-2 text-xs text-slate-500">แนะนำการ์ด</p>
-                    <p className="text-3xl font-extrabold text-emerald-700">
+                    <p className="mt-3 text-sm text-slate-300">แนะนำการ์ด</p>
+                    <p className="mt-1 text-5xl font-bold tracking-tight">
                       {recommended ? `${recommended.size} GB` : "-"}
                     </p>
                     {recommended?.insufficient && (
-                      <p className="mt-1 text-xs text-amber-700">
+                      <p className="mt-3 rounded-xl bg-amber-400/15 px-3 py-2 text-sm text-amber-200">
                         {activeMaxCardGb
                           ? `⚠️ กล้องรุ่นนี้รองรับ microSD สูงสุด ${activeMaxCardGb}GB เท่านั้น — การ์ด ${recommended.size}GB จะเก็บได้ไม่ครบตามจำนวนวันที่ตั้งไว้ พิจารณาลดวันหรือใช้ cloud storage เสริม`
                           : "เกินความจุการ์ดสูงสุดที่ไล่ในตาราง (512GB) — พิจารณาลดจำนวนวัน หรือใช้ cloud storage เสริม"}
@@ -392,17 +403,17 @@ export default function SdCardCalculatorPanel({
                   })}
                 </div>
                 {!!activeMaxCardGb && cardSize > activeMaxCardGb && (
-                  <p className="mt-1.5 text-xs text-amber-700">
+                  <p className="mt-2 text-xs text-amber-700">
                     ⚠️ กล้องรุ่นนี้รองรับ microSD สูงสุด {activeMaxCardGb}GB — การ์ดขนาดนี้อาจใช้ไม่ได้จริง
                   </p>
                 )}
 
                 {daysForCard !== null && (
-                  <div className="mt-4 rounded-xl border-2 border-emerald-300 bg-emerald-50 p-4">
-                    <p className="text-sm text-slate-600">
+                  <div className="mt-6 rounded-3xl bg-brand-900 p-6 text-white shadow-lift">
+                    <p className="text-sm text-slate-300">
                       การ์ด <strong>{cardSize} GB</strong> เก็บได้ประมาณ
                     </p>
-                    <p className="text-3xl font-extrabold text-emerald-700">
+                    <p className="mt-1 text-5xl font-bold tracking-tight">
                       {formatDays(daysForCard)} <span className="text-base font-medium">วัน</span>
                     </p>
                     {matchedProduct(cardSize) && <ProductLink p={matchedProduct(cardSize)!} />}
@@ -424,7 +435,7 @@ export default function SdCardCalculatorPanel({
       {/* all SD card products */}
       {sdProducts.length > 0 && (
         <div>
-          <h2 className="mb-3 font-bold text-slate-700">SD Card ในร้าน</h2>
+          <h2 className="mb-4 text-lg font-bold text-slate-900">SD Card ในร้าน</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {sdProducts.map((p) => (
               <Link
@@ -432,18 +443,18 @@ export default function SdCardCalculatorPanel({
                 href={`/product/${p.slug}`}
                 target="_blank"
                 rel="noopener"
-                className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3 shadow-sm transition hover:border-sky-300 hover:shadow-md"
+                className="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-card transition hover:-translate-y-0.5 hover:shadow-lift"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={p.image}
                   alt={p.model}
-                  className="h-16 w-16 shrink-0 rounded bg-slate-50 p-1 object-contain"
+                  className="h-16 w-16 shrink-0 object-contain"
                 />
                 <div className="min-w-0">
-                  <div className="text-xs font-semibold text-sky-700">{p.brand}</div>
-                  <div className="truncate text-sm font-bold text-slate-800">{p.model}</div>
-                  <div className="mt-0.5 font-bold text-emerald-600">฿{baht(p.price)}</div>
+                  <div className="text-[11px] font-semibold uppercase tracking-wide text-brand-600">{p.brand}</div>
+                  <div className="truncate font-semibold text-slate-900">{p.model}</div>
+                  <div className="mt-0.5 font-bold text-slate-900">฿{baht(p.price)}</div>
                 </div>
               </Link>
             ))}
@@ -460,15 +471,15 @@ function ProductLink({ p }: { p: Product }) {
       href={`/product/${p.slug}`}
       target="_blank"
       rel="noopener"
-      className="mt-3 flex items-center gap-3 rounded-lg border border-emerald-200 bg-white/70 p-2.5 transition hover:border-emerald-400"
+      className="mt-5 flex items-center gap-3 rounded-2xl bg-white p-3 text-slate-900 transition hover:shadow-lift"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={p.image} alt={p.model} className="h-12 w-12 shrink-0 rounded bg-slate-50 p-1 object-contain" />
+      <img src={p.image} alt={p.model} className="h-12 w-12 shrink-0 object-contain" />
       <div className="min-w-0">
         <div className="truncate text-sm font-bold text-slate-800">
           {p.brand} {p.model}
         </div>
-        <div className="font-bold text-emerald-600">฿{baht(p.price)}</div>
+        <div className="text-lg font-bold">฿{baht(p.price)}</div>
       </div>
     </Link>
   );
