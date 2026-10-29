@@ -3,7 +3,7 @@ import CheckoutClient from "./CheckoutClient";
 
 // Cart/checkout is a private, per-visitor page — keep it out of search results.
 export const metadata: Metadata = {
-  title: "ตะกร้าสินค้า | NETDOI",
+  title: "ตะกร้าสินค้า",
   robots: { index: false, follow: false },
 };
 
