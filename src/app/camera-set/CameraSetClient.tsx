@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import StoreHeader from "@/components/StoreHeader";
+import { ChatIcon, CartIcon, CheckIcon } from "@/components/icons";
 import { addToCart } from "@/lib/cart";
 import {
   DAY_OPTIONS,
@@ -15,11 +17,11 @@ import {
   type Tier,
 } from "@/lib/cameraSet";
 import { mpFromName } from "@/lib/storageCalc";
+import { LINE_ID } from "@/lib/contact";
 import { nvrPoePortsFromName } from "@/lib/deviceCapacity";
 
 const baht = (n: number) => n.toLocaleString("th-TH");
 
-const LINE_ID = "@ndtech";
 
 // The real 4-camera promo (see project memory: VIGI EasyCam C320 ×4 +
 // NVR1004H-4P + WD Purple 1TB, installed). The installed price depends on
@@ -55,7 +57,7 @@ function Stepper({
   max: number;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3">
+    <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 p-4">
       <div className="min-w-0">
         <div className="font-semibold text-slate-800">{label}</div>
         <div className="text-xs text-slate-500">{hint}</div>
@@ -64,7 +66,7 @@ function Stepper({
         <button
           onClick={() => onChange(Math.max(0, value - 1))}
           disabled={value === 0}
-          className="h-10 w-10 rounded-full border border-slate-300 text-xl font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-30"
+          className="h-10 w-10 rounded-full border border-slate-200 text-xl text-slate-500 hover:bg-slate-50 disabled:opacity-30"
           aria-label={`ลด${label}`}
         >
           −
@@ -73,7 +75,7 @@ function Stepper({
         <button
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
-          className="h-10 w-10 rounded-full border border-slate-300 text-xl font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-30"
+          className="h-10 w-10 rounded-full border border-slate-200 text-xl text-slate-500 hover:bg-slate-50 disabled:opacity-30"
           aria-label={`เพิ่ม${label}`}
         >
           +
@@ -147,37 +149,32 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
   const complete = count > 0 && plan.lines.length > 0 && plan.problems.length === 0;
 
   return (
-    <div className="min-h-screen bg-slate-100 pb-28">
-      <header className="sticky top-0 z-30 bg-slate-900 text-white">
-        <div className="mx-auto flex max-w-3xl items-center gap-3 p-3 sm:p-4">
-          <Link
-            href="/"
-            className="flex shrink-0 items-center gap-1.5 rounded-md border border-slate-600 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
-          >
-            ← กลับร้าน
-          </Link>
-          <div className="min-w-0">
-            <h1 className="truncate text-base font-bold sm:text-xl">🎥 จัดชุดกล้องวงจรปิด</h1>
-            <p className="hidden text-xs text-slate-400 sm:block">ตอบ 3 ข้อ ได้ชุดกล้อง TP-Link VIGI พร้อมราคาทันที</p>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-slate-50 pb-28">
+      <StoreHeader active="camera-set" />
 
-      <main className="mx-auto max-w-3xl space-y-4 p-4">
+      <div className="mx-auto max-w-3xl px-4 pt-8">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">จัดชุดกล้องวงจรปิด</h1>
+        <p className="mt-1 text-slate-500">ตอบ 3 ข้อ ได้ชุดกล้อง TP-Link VIGI พร้อมราคาทันที</p>
+      </div>
+
+      <main className="mx-auto max-w-3xl space-y-5 px-4 py-6">
         {/* 1. camera count */}
-        <section className="rounded-2xl bg-white p-5 shadow-sm">
-          <h2 className="mb-1 text-lg font-bold text-slate-800">1. ติดกล้องกี่ตัว</h2>
-          <p className="mb-4 text-sm text-slate-500">แยกในอาคารกับนอกอาคาร เพราะกล้องนอกอาคารต้องกันน้ำกันฝุ่น</p>
+        <section className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+          <h2 className="mb-1 flex items-center gap-2.5 text-lg font-bold text-slate-900">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-900 text-sm text-white">1</span>
+            ติดกล้องกี่ตัว
+          </h2>
+          <p className="mb-4 pl-[2.375rem] text-sm text-slate-500">แยกในอาคารกับนอกอาคาร เพราะกล้องนอกอาคารต้องกันน้ำกันฝุ่น</p>
           <div className="space-y-3">
             <Stepper
-              label="🏠 ในอาคาร"
+              label="ในอาคาร"
               hint="ในบ้าน ในร้าน ในออฟฟิศ"
               value={indoor}
               onChange={(v) => setCount("in", v)}
               max={MAX_CAMERAS - outdoor}
             />
             <Stepper
-              label="🌧️ นอกอาคาร"
+              label="นอกอาคาร"
               hint="หน้าบ้าน ลานจอดรถ รอบรั้ว"
               value={outdoor}
               onChange={(v) => setCount("out", v)}
@@ -187,8 +184,11 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
         </section>
 
         {/* 2. tier */}
-        <section className="rounded-2xl bg-white p-5 shadow-sm">
-          <h2 className="mb-4 text-lg font-bold text-slate-800">2. ระดับความคมชัด</h2>
+        <section className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+          <h2 className="mb-4 flex items-center gap-2.5 text-lg font-bold text-slate-900">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-900 text-sm text-white">2</span>
+            ระดับความคมชัด
+          </h2>
           <div className="grid gap-3 sm:grid-cols-3">
             {TIERS.map((t) => (
               <button
@@ -199,13 +199,13 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
                   // a new tier means new recommended cameras — drop hand-picked ones
                   setOverrides(({ "camera-in": _in, "camera-out": _out, ...rest }) => rest);
                 }}
-                className={`rounded-xl border-2 p-4 text-left transition ${
-                  tier === t.id ? "border-sky-600 bg-sky-50" : "border-slate-200 hover:border-slate-300"
+                className={`rounded-2xl border-2 p-4 text-left transition ${
+                  tier === t.id ? "border-brand-900 bg-brand-50" : "border-slate-200 hover:border-slate-300"
                 }`}
               >
                 <div className="flex items-baseline justify-between gap-2">
                   <span className="text-base font-bold text-slate-800">{t.label}</span>
-                  <span className="rounded-full bg-slate-900 px-2 py-0.5 text-xs font-bold text-white">{t.mp}MP</span>
+                  <span className="rounded-full bg-brand-900 px-2 py-0.5 text-xs font-bold text-white">{t.mp}MP</span>
                 </div>
                 <div className="mt-1 text-sm text-slate-600">{t.desc}</div>
                 {tierFrom[t.id] !== undefined && (
@@ -219,9 +219,12 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
         </section>
 
         {/* 3. retention */}
-        <section className="rounded-2xl bg-white p-5 shadow-sm">
-          <h2 className="mb-1 text-lg font-bold text-slate-800">3. อยากดูย้อนหลังกี่วัน</h2>
-          <p className="mb-4 text-sm text-slate-500">บันทึกตลอด 24 ชม. ยิ่งเก็บนานยิ่งต้องใช้ฮาร์ดดิสก์ใหญ่ขึ้น</p>
+        <section className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+          <h2 className="mb-1 flex items-center gap-2.5 text-lg font-bold text-slate-900">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-900 text-sm text-white">3</span>
+            อยากดูย้อนหลังกี่วัน
+          </h2>
+          <p className="mb-4 pl-[2.375rem] text-sm text-slate-500">บันทึกตลอด 24 ชม. ยิ่งเก็บนานยิ่งต้องใช้ฮาร์ดดิสก์ใหญ่ขึ้น</p>
           <div className="flex gap-2">
             {DAY_OPTIONS.map((d) => (
               <button
@@ -230,8 +233,8 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
                   setDays(d);
                   setAdded(false);
                 }}
-                className={`flex-1 rounded-xl border-2 py-3 text-base font-bold transition ${
-                  days === d ? "border-sky-600 bg-sky-50 text-sky-800" : "border-slate-200 text-slate-600 hover:border-slate-300"
+                className={`flex-1 rounded-full border-2 py-3 text-base font-semibold transition ${
+                  days === d ? "border-brand-900 bg-brand-900 text-white" : "border-slate-200 text-slate-600 hover:border-slate-300"
                 }`}
               >
                 {d} วัน
@@ -242,7 +245,7 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
 
         {/* promo */}
         {count === 4 && (
-          <section className="overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 to-sky-900 p-5 text-white shadow-sm">
+          <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-brand-950 to-brand-700 p-6 text-white shadow-lift">
             <div className="mb-2 inline-block rounded-full bg-amber-400 px-3 py-0.5 text-xs font-bold text-slate-900">
               ชุดโปร 4 กล้อง
             </div>
@@ -264,16 +267,16 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
               href={lineUrl("สนใจชุดโปร VIGI 4 กล้อง ขอราคารวมติดตั้ง")}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 block rounded-xl bg-[#06C755] py-3 text-center font-bold text-white hover:brightness-110"
+              className="mt-5 flex items-center justify-center gap-2 rounded-full bg-[#06C755] py-3 text-center font-semibold text-white hover:brightness-105"
             >
-              💬 สอบถามราคาชุดโปรทาง LINE
+              <ChatIcon /> สอบถามราคาชุดโปรทาง LINE
             </a>
           </section>
         )}
 
         {/* result */}
-        <section className="rounded-2xl bg-white p-5 shadow-sm">
-          <h2 className="mb-4 text-lg font-bold text-slate-800">
+        <section className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+          <h2 className="mb-4 text-lg font-bold text-slate-900">
             {count === 4 ? "หรือจัดชุดเอง (อุปกรณ์อย่างเดียว)" : "ชุดที่แนะนำ"}
           </h2>
 
@@ -288,10 +291,10 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
                     <img
                       src={l.product.image}
                       alt={l.product.model}
-                      className="h-16 w-16 shrink-0 rounded-lg bg-slate-50 object-contain p-1"
+                      className="h-16 w-16 shrink-0 rounded-xl border border-slate-100 bg-white object-contain p-1"
                     />
                     <div className="min-w-0 flex-1">
-                      <div className="text-xs font-semibold text-sky-700">{ROLE_LABEL[l.role]}</div>
+                      <div className="text-xs font-semibold text-brand-600">{ROLE_LABEL[l.role]}</div>
                       <Link href={`/product/${l.product.slug}`} className="block truncate font-semibold text-slate-800 hover:underline">
                         {l.product.brand} {l.product.model}
                       </Link>
@@ -306,7 +309,7 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
                       {l.options.length > 1 && (
                         <button
                           onClick={() => setPicking(l.role)}
-                          className="mt-1 text-xs font-semibold text-sky-700 hover:underline"
+                          className="mt-1 text-xs font-semibold text-brand-700 hover:underline"
                         >
                           เปลี่ยนรุ่น ({l.options.length}) ›
                         </button>
@@ -320,7 +323,7 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
               </ul>
 
               {plan.problems.length > 0 && (
-                <div className="mt-3 space-y-1 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+                <div className="mt-3 space-y-1 rounded-2xl bg-amber-50 p-4 text-sm text-amber-800">
                   {plan.problems.map((p) => (
                     <p key={p}>⚠️ {p}</p>
                   ))}
@@ -331,14 +334,14 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
                 <span className="font-semibold text-slate-600">
                   รวมอุปกรณ์{!complete && <span className="text-xs text-amber-700"> (ยังไม่ครบชุด)</span>}
                 </span>
-                <span className="text-2xl font-bold text-rose-600">{baht(plan.total)} บาท</span>
+                <span className="text-3xl font-bold tracking-tight text-slate-900">฿{baht(plan.total)}</span>
               </div>
               <p className="mt-1 text-xs text-slate-500">
                 ต้องใช้พื้นที่ประมาณ {plan.hddNeedTB < 1 ? `${Math.ceil(plan.hddNeedTB * 1000)} GB` : `${plan.hddNeedTB.toFixed(1)} TB`}{" "}
                 สำหรับ {days} วัน (H.265 บันทึก 24 ชม.)
               </p>
 
-              <div className="mt-4 rounded-lg bg-slate-50 p-3 text-xs text-slate-600">
+              <div className="mt-4 rounded-2xl bg-slate-50 p-4 text-xs leading-relaxed text-slate-600">
                 ราคานี้เป็นอุปกรณ์เท่านั้น <b>ยังไม่รวมสาย LAN ท่อ/รางเดินสาย และค่าแรงติดตั้ง</b> ซึ่งขึ้นกับระยะและหน้างาน ทักร้านเพื่อประเมินราคา
               </div>
 
@@ -346,9 +349,9 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
                 href={lineUrl(summaryText)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 block rounded-xl border-2 border-[#06C755] py-2.5 text-center text-sm font-bold text-[#06a347] hover:bg-green-50"
+                className="mt-3 flex items-center justify-center gap-2 rounded-full border border-[#06C755] py-3 text-center text-sm font-semibold text-[#06A84A] hover:bg-[#06C755]/10"
               >
-                💬 ส่งชุดนี้ให้ร้านประเมินค่าติดตั้ง
+                <ChatIcon /> ส่งชุดนี้ให้ร้านประเมินค่าติดตั้ง
               </a>
             </>
           )}
@@ -357,9 +360,9 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
 
       {/* model picker */}
       {pickingLine && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/50 sm:items-center sm:justify-center" onClick={() => setPicking(null)}>
+        <div className="fixed inset-0 z-50 flex items-end bg-brand-950/60 backdrop-blur-sm sm:items-center sm:justify-center" onClick={() => setPicking(null)}>
           <div
-            className="flex max-h-[85vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white sm:max-w-lg sm:rounded-2xl"
+            className="flex max-h-[85vh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-lift sm:max-w-lg sm:rounded-3xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
@@ -390,7 +393,7 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
                   <li key={o.id}>
                     <button
                       onClick={() => choose(pickingLine.role, o.id)}
-                      className={`flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 ${selected ? "bg-sky-50" : ""}`}
+                      className={`flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 ${selected ? "bg-brand-50" : ""}`}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={o.image} alt={o.model} className="h-14 w-14 shrink-0 rounded-lg bg-slate-50 object-contain p-1" />
@@ -398,7 +401,7 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="font-semibold text-slate-800">{o.model}</span>
                           {mp !== null && (
-                            <span className="rounded-full bg-slate-900 px-1.5 py-0.5 text-[10px] font-bold text-white">{mp}MP</span>
+                            <span className="rounded-full bg-brand-900 px-1.5 py-0.5 text-[10px] font-bold text-white">{mp}MP</span>
                           )}
                           {o.id === pickingLine.recommendedId && (
                             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">แนะนำ</span>
@@ -415,7 +418,7 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
                       <div className="shrink-0 text-right">
                         <div className="font-bold tabular-nums text-slate-800">{baht(o.price)}</div>
                         {selected ? (
-                          <div className="text-xs font-semibold text-sky-700">✓ เลือกอยู่</div>
+                          <div className="text-xs font-semibold text-brand-700">✓ เลือกอยู่</div>
                         ) : diff === 0 ? (
                           <div className="text-xs text-slate-500">เท่ากัน</div>
                         ) : (
@@ -436,12 +439,12 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
 
       {/* sticky action bar */}
       {count > 0 && (
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 backdrop-blur">
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/90 shadow-lift backdrop-blur-md">
           <div className="mx-auto flex max-w-3xl items-center gap-3 p-3">
             <div className="min-w-0 flex-1">
               <div className="text-xs text-slate-500">ชุด {count} กล้อง</div>
               {complete ? (
-                <div className="text-lg font-bold text-rose-600">{baht(plan.total)} บาท</div>
+                <div className="text-xl font-bold tracking-tight text-slate-900">฿{baht(plan.total)}</div>
               ) : (
                 <div className="text-sm font-bold text-amber-700">ชุดยังไม่ครบ ให้ร้านจัดให้</div>
               )}
@@ -451,23 +454,23 @@ export default function CameraSetClient({ catalog }: { catalog: SetProduct[] }) 
                 href={lineUrl(summaryText)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-xl bg-[#06C755] px-5 py-3 text-sm font-bold text-white hover:brightness-110"
+                className="flex items-center gap-2 rounded-full bg-[#06C755] px-5 py-3 text-sm font-semibold text-white hover:brightness-105"
               >
-                💬 ให้ร้านจัดชุดทาง LINE
+                <ChatIcon /> ให้ร้านจัดชุดทาง LINE
               </a>
             ) : added ? (
               <Link
                 href="/checkout"
-                className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white hover:brightness-110"
+                className="flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:brightness-105"
               >
-                ✓ ไปที่ตะกร้า →
+                <CheckIcon /> ไปที่ตะกร้า →
               </Link>
             ) : (
               <button
                 onClick={addSetToCart}
-                className="rounded-xl bg-amber-500 px-5 py-3 text-sm font-bold text-slate-900 hover:brightness-110"
+                className="flex items-center gap-2 rounded-full bg-brand-900 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-800"
               >
-                🛒 ใส่ตะกร้าทั้งชุด
+                <CartIcon /> ใส่ตะกร้าทั้งชุด
               </button>
             )}
           </div>
